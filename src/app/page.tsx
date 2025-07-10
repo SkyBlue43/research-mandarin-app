@@ -13,13 +13,13 @@ export default function Home() {
         <div className='flex flex-col'>
           <button
             className="bg-green-500 hover:bg-green-600 text-[18px] text-black border rounded p-2 bolded px-4"
-            onClick={() => router.push('/test?choice=1a')}>
+            onClick={() => router.push('/test?group=1&test=a')}>
             Test 1a
           </button>
 
           <button
             className="bg-blue-500 hover:bg-blue-600 text-[18px] text-black border rounded p-2 bolded px-4"
-            onClick={() => router.push('/test?choice=1b')}>
+            onClick={() => router.push('/test?group=1&test=b')}>
             Test 1b
           </button>
         </div>
@@ -27,13 +27,13 @@ export default function Home() {
         <div className='flex flex-col'>
           <button
             className="bg-green-500 hover:bg-green-600 text-[18px] text-black border rounded p-2 bolded px-4"
-            onClick={() => router.push('/test?choice=2a')}>
+            onClick={() => router.push('/test?group=2&test=a')}>
             Test 2a
           </button>
 
           <button
             className="bg-blue-500 hover:bg-blue-600 text-[18px] text-black border rounded p-2 bolded px-4"
-            onClick={() => router.push('/test?choice=2b')}>
+            onClick={() => router.push('/test?group=2&test=b')}>
             Test 2b
           </button>
         </div>
