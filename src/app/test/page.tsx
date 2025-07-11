@@ -8,9 +8,22 @@ export default function TestPage() {
   const test = searchParams.get('test');
   const group = searchParams.get('group')
 
-  const useEffect = () => {
-    
-  }
+  useEffect(() => {
+    const fetchCharacters = async () => {
+      const result = await fetch("http://localhost:8000/get-characters", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          test: test
+        })
+      });
+      const data = await result.json();
+      console.log(data);
+    };
+    fetchCharacters();
+  }, [test]);
 
   return (
     <div className="p-8">
