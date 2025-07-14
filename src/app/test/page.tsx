@@ -1,7 +1,8 @@
 'use client'
 
 import { useSearchParams, useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
+import { Mic, Play, Square } from 'lucide-react';
 
 export default function TestPage() {
   const [characters, setCharacters] = useState<any>([])
@@ -13,6 +14,14 @@ export default function TestPage() {
   const [arrayIndex, setArrayIndex] = useState(0);
   const [currentPhrase, setCurrentPhrase] = useState('');
   const [currentPinyin, setCurrentPinyin] = useState('');
+  const [chosenAudio, setChosenAudio] = useState('');
+  const [audioChoice, setAudioChoice] = useState(0);
+  const [recording, setRecording] = useState(false);
+  const [audioURL, setAudioURL] = useState<string | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunks = useRef<Blob[]>([]);
+  const [referenceBlob, setReferenceBlob] = useState<Blob | null>(null);
+  const [userBlob, setUserBlob] = useState<Blob | null>(null);
 
   useEffect(() => {
     if (timeLeft === 0) {
@@ -47,6 +56,41 @@ export default function TestPage() {
     fetchCharacters();
   }, [test]);
 
+  const handlePlay = async () => {
+    const audio = new Audio(chosenAudio);
+    audio.play();
+    const response = await fetch(chosenAudio);
+    const blob = await response.blob();
+    setReferenceBlob(blob);
+  };
+
+  const startRecording = async () => {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const mediaRecorder = new MediaRecorder(stream);
+    mediaRecorderRef.current = mediaRecorder;
+    mediaRecorder.ondataavailable = (event) => {
+      audioChunks.current.push(event.data);
+    };
+    mediaRecorder.onstop = async () => {
+      const audioBlob = new Blob(audioChunks.current, { type: 'audio/wav' });
+      const url = URL.createObjectURL(audioBlob);
+      setAudioURL(url);
+      setUserBlob(audioBlob);
+    };
+    audioChunks.current = [];
+    mediaRecorder.start();
+    setRecording(true);
+  }
+
+  const stopRecording = () => {
+    mediaRecorderRef.current?.stop();
+    setRecording(false);
+  };
+
+  useEffect(() => {
+    setChosenAudio(`/backend/sounds${group}/${currentPhrase}.mp3`);
+  }, [currentPhrase]);
+
   return (
     <div className='h-screen flex flex-col items-center text-center'>
       <header className='m-8'>
@@ -61,9 +105,15 @@ export default function TestPage() {
         </div>
       </header>
 
-      <div className="p-8">
-        <h1 className="text-xl font-bold">You selected test: {test}</h1>
-        <h1 className="text-xl font-bold">Group: {group}</h1>
+      <div className="grid grid-cols-2 w-screen p-8">
+      <button className="p-4 rounded-full bg-blue-500 text-white hover:bg-blue-600" onClick={handlePlay}>
+            <Play />
+          </button>
+          <button
+            className={`p-4 rounded-full text-white ${recording ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'}`}
+            onClick={recording ? stopRecording : startRecording}>
+            {recording ? <Square /> : <Mic />}
+          </button>
       </div>
     </div>
   );

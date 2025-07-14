@@ -37,3 +37,8 @@ async def get_characters(request: Request):
             })
         
     return {'characters': character_list}
+
+
+@app.post('/get-audio')
+async def get_audio():
+    pass
