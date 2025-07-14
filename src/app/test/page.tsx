@@ -24,17 +24,28 @@ export default function TestPage() {
   const [userBlob, setUserBlob] = useState<Blob | null>(null);
 
   useEffect(() => {
-    if (timeLeft === 0) {
-      router.push('/test_over');
-      return;
+    const storedEndTime = localStorage.getItem('timerEnd');
+    let endTime: number;
+
+    if (storedEndTime) {
+      endTime = parseInt(storedEndTime, 10);
+    } else {
+      endTime = Date.now() + 900 * 1000; // ms
+      localStorage.setItem('timerEnd', endTime.toString());
     }
+    const updateTime = () => {
+      const remaining = Math.max(0, Math.floor((endTime - Date.now()) / 1000));
+      setTimeLeft(remaining);
+      if (remaining === 0) {
+        localStorage.removeItem('timerEnd');
+        router.push('/test_over');
+      }
+    };
+    updateTime(); // initial call
+    const interval = setInterval(updateTime, 1000);
 
-    const timer = setTimeout(() => {
-      setTimeLeft((prev) => prev - 1);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, [timeLeft]);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const fetchCharacters = async () => {
@@ -76,6 +87,8 @@ export default function TestPage() {
       const url = URL.createObjectURL(audioBlob);
       setAudioURL(url);
       setUserBlob(audioBlob);
+
+      mediaRecorder.stream.getTracks().forEach(track => track.stop());
     };
     audioChunks.current = [];
     mediaRecorder.start();
@@ -88,14 +101,14 @@ export default function TestPage() {
   };
 
   useEffect(() => {
-    setChosenAudio(`/backend/sounds${group}/${currentPhrase}.mp3`);
+    setChosenAudio(`/backend/sounds${test}/${currentPinyin}.mp3`);
   }, [currentPhrase]);
 
   return (
     <div className='h-screen flex flex-col items-center text-center'>
       <header className='m-8'>
         <div className='text-3xl font-bold bg-blue-500 p-3 rounded-xl border border-[#ffffff] mb-5'>
-          Time Left: {timeLeft}
+        Time Left: {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}
         </div>
         <div className='font-bold text-[70px]'>
           {currentPhrase}
@@ -106,14 +119,18 @@ export default function TestPage() {
       </header>
 
       <div className="grid grid-cols-2 w-screen p-8">
-      <button className="p-4 rounded-full bg-blue-500 text-white hover:bg-blue-600" onClick={handlePlay}>
+        <div>
+          <button className="p-4 rounded-full bg-blue-500 text-white hover:bg-blue-600" onClick={handlePlay}>
             <Play />
           </button>
+        </div>
+        <div>
           <button
             className={`p-4 rounded-full text-white ${recording ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'}`}
             onClick={recording ? stopRecording : startRecording}>
             {recording ? <Square /> : <Mic />}
           </button>
+        </div>
       </div>
     </div>
   );

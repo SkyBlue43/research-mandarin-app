@@ -13,9 +13,12 @@ def get_audio(lines, folder):
     for line in lines:
         things = line.split(",")
         chinese = things[0]
+        if chinese == "Character" or chinese == "Phrase":
+            continue
+        pinyin = things[1]
         if chinese != "Chinese":
             tts = gTTS(text=chinese, lang="zh")
-            tts.save(os.path.join(folder, f"{chinese}.mp3"))
+            tts.save(os.path.join(folder, f"{pinyin}.mp3"))
 
 
 def main(infile, folder):
