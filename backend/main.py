@@ -29,7 +29,7 @@ async def get_characters(request: Request):
     character_list = []
     for line in lines:
         split_line = line.split(',')
-        if split_line[0] == "Character":
+        if split_line[0] == "Character" or split_line[0] == "Phrase":
             continue
         character_list.append({
             'chinese': split_line[0],

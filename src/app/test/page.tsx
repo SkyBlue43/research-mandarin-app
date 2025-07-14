@@ -48,16 +48,16 @@ export default function TestPage() {
   }, [test]);
 
   return (
-    <div className='h-screen flex flex-col items-center'>
-      <header className='m-4'>
-        <div className='text-3xl font-bold bg-blue-500 p-3 rounded-xl border border-[#ffffff]'>
+    <div className='h-screen flex flex-col items-center text-center'>
+      <header className='m-8'>
+        <div className='text-3xl font-bold bg-blue-500 p-3 rounded-xl border border-[#ffffff] mb-5'>
           Time Left: {timeLeft}
         </div>
-        <div>
+        <div className='font-bold text-[70px]'>
           {currentPhrase}
         </div>
-        <div>
-          {currentPinyin}
+        <div className='text-[60px]'>
+          ({currentPinyin})
         </div>
       </header>
 
