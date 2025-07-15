@@ -3,6 +3,12 @@
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useEffect, useState, useRef } from 'react'
 import { Mic, Play, Square, ArrowRight, ArrowLeft } from 'lucide-react';
+import { LineChart, Line, XAxis, YAxis } from 'recharts';
+
+type PitchPoint = {
+  time: number;
+  frequency: number;
+};
 
 export default function TestPage() {
   const [characters, setCharacters] = useState<any>([])
@@ -23,6 +29,31 @@ export default function TestPage() {
   const audioChunks = useRef<Blob[]>([]);
   const [referenceBlob, setReferenceBlob] = useState<Blob | null>(null);
   const [userBlob, setUserBlob] = useState<Blob | null>(null);
+  const [referencePitch, setReferencePitch] = useState<PitchPoint[]>([]);
+
+  useEffect(() => {
+    const analyzeReference = async () => {
+      const data = await analyzeAudio(referenceBlob, chosenAudio);
+      if (data) setReferencePitch(data.pitch);
+    };
+
+    if (referenceBlob) {
+      analyzeReference();
+    }
+  }, [referenceBlob, chosenAudio]);
+
+  const analyzeAudio = async (audio_blob: Blob | null, audio_location: string) => {
+    if (audio_blob === null) { return null }
+    const formData = new FormData();
+    formData.append('file', audio_blob, audio_location);
+    const result = await fetch('http://localhost:8000/analyze-audio-voiceless', {
+      method: 'POST',
+      body: formData,
+    });
+    const data = await result.json();
+    console.log('Pitch data:', data);
+    return data
+  };
 
   useEffect(() => {
     const storedEndTime = localStorage.getItem('timerEnd');
@@ -107,7 +138,7 @@ export default function TestPage() {
   }, [currentPhrase]);
 
   const handleLeftClick = () => {
-    if (arrayIndex === 0){
+    if (arrayIndex === 0) {
       setArrayIndex(9);
       setCurrentIndex("10");
       setCurrentPhrase(characters[9]['chinese'])
@@ -122,7 +153,7 @@ export default function TestPage() {
   }
 
   const handleRightClick = () => {
-    if (arrayIndex === 9){
+    if (arrayIndex === 9) {
       setArrayIndex(0);
       setCurrentIndex("1");
       setCurrentPhrase(characters[0]['chinese'])
@@ -135,10 +166,11 @@ export default function TestPage() {
       setCurrentPinyin(characters[arrayIndex + 1]['pinyin'])
     }
   }
+  
 
   return (
     <div className='h-screen flex flex-col items-center text-center'>
-      <header className='m-8'>
+      <header className='m-8 w-screen'>
         <div className='text-3xl font-bold bg-purple-500 p-3 rounded-xl border border-[#ffffff] mb-5'>
           Time Left: {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}
         </div>
@@ -160,7 +192,13 @@ export default function TestPage() {
 
         {group === "a" &&
           <div className='w-200 bg-blue-100 flex items-center justify-center mr-4 ml-4 text-black'>
-            graph 1
+            {referencePitch.length > 0 && (
+              <LineChart width={500} height={300} data={referencePitch}>
+                <XAxis dataKey="time" tick={{ fontSize: 14 }} />
+                <YAxis tick={{ fontSize: 14 }} domain={['dataMin - 0.5', 'dataMax + 0.5']} tickFormatter={(value) => value.toFixed(1)} />
+                <Line type="monotone" dataKey="frequency" stroke="#8884d8" dot={false} strokeWidth={5} />
+              </LineChart>
+            )}
           </div>}
 
         {group === "a" &&
@@ -172,7 +210,7 @@ export default function TestPage() {
           <div className='w-200 flex items-center justify-center mr-4 ml-4 text-black'>
             graph 1
           </div>}
-          
+
         {group === "b" &&
           <div className='w-200 flex items-center justify-center ml-4 mr-4 text-black'>
             graph 2
@@ -203,3 +241,6 @@ export default function TestPage() {
     </div>
   );
 }
+
+
+
