@@ -2,7 +2,7 @@
 
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useEffect, useState, useRef } from 'react'
-import { Mic, Play, Square } from 'lucide-react';
+import { Mic, Play, Square, ArrowRight, ArrowLeft } from 'lucide-react';
 
 export default function TestPage() {
   const [characters, setCharacters] = useState<any>([])
@@ -106,11 +106,19 @@ export default function TestPage() {
     setChosenAudio(`http://localhost:8000/sounds/${test}/${currentIndex}.mp3`);
   }, [currentPhrase]);
 
+  const handleLeftClick = () => {
+
+  }
+
+  const handleRightClick = () => {
+
+  }
+
   return (
     <div className='h-screen flex flex-col items-center text-center'>
       <header className='m-8'>
-        <div className='text-3xl font-bold bg-blue-500 p-3 rounded-xl border border-[#ffffff] mb-5'>
-        Time Left: {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}
+        <div className='text-3xl font-bold bg-purple-500 p-3 rounded-xl border border-[#ffffff] mb-5'>
+          Time Left: {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}
         </div>
         <div className='font-bold text-[70px]'>
           {currentPhrase}
@@ -120,7 +128,31 @@ export default function TestPage() {
         </div>
       </header>
 
-      <div className="grid grid-cols-2 w-screen p-8">
+      <div className="flex flex-row w-full h-40">
+
+        <div>
+          <button className='p-4 rounded-full bg-purple-500 text-white hover:bg-purple-600' onClick={handleLeftClick}>
+            <ArrowLeft />
+          </button>
+        </div>
+
+        <div className='flex-1 bg-blue-100 flex items-center justify-center'>
+          graph 1
+        </div>
+
+        <div className='w-40 bg-green-100 flex items-center justify-center'>
+          graph 2
+        </div>
+
+        <div>
+          <button className='p-4 rounded-full bg-purple-500 text-white hover:bg-purple-600' onClick={handleRightClick}>
+            <ArrowRight />
+          </button>
+        </div>
+      </div>
+
+
+      <footer className="grid grid-cols-2 w-screen p-8">
         <div>
           <button className="p-4 rounded-full bg-blue-500 text-white hover:bg-blue-600" onClick={handlePlay}>
             <Play />
@@ -133,7 +165,7 @@ export default function TestPage() {
             {recording ? <Square /> : <Mic />}
           </button>
         </div>
-      </div>
+      </footer>
     </div>
   );
 }
