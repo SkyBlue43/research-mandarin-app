@@ -107,11 +107,33 @@ export default function TestPage() {
   }, [currentPhrase]);
 
   const handleLeftClick = () => {
-
+    if (arrayIndex === 0){
+      setArrayIndex(9);
+      setCurrentIndex("10");
+      setCurrentPhrase(characters[9]['chinese'])
+      setCurrentPinyin(characters[9]['pinyin'])
+    }
+    else {
+      setArrayIndex(arrayIndex - 1);
+      setCurrentIndex(String(Number(currentIndex) - 1));
+      setCurrentPhrase(characters[arrayIndex - 1]['chinese'])
+      setCurrentPinyin(characters[arrayIndex - 1]['pinyin'])
+    }
   }
 
   const handleRightClick = () => {
-
+    if (arrayIndex === 9){
+      setArrayIndex(0);
+      setCurrentIndex("1");
+      setCurrentPhrase(characters[0]['chinese'])
+      setCurrentPinyin(characters[0]['pinyin'])
+    }
+    else {
+      setArrayIndex(arrayIndex + 1);
+      setCurrentIndex(String(Number(currentIndex) + 1));
+      setCurrentPhrase(characters[arrayIndex + 1]['chinese'])
+      setCurrentPinyin(characters[arrayIndex + 1]['pinyin'])
+    }
   }
 
   return (
@@ -128,7 +150,7 @@ export default function TestPage() {
         </div>
       </header>
 
-      <div className="flex flex-row w-full h-40">
+      <div className="flex flex-row w-full h-100">
 
         <div>
           <button className='p-4 rounded-full bg-purple-500 text-white hover:bg-purple-600' onClick={handleLeftClick}>
@@ -136,13 +158,25 @@ export default function TestPage() {
           </button>
         </div>
 
-        <div className='flex-1 bg-blue-100 flex items-center justify-center'>
-          graph 1
-        </div>
+        {group === "a" &&
+          <div className='w-200 bg-blue-100 flex items-center justify-center mr-4 ml-4 text-black'>
+            graph 1
+          </div>}
 
-        <div className='w-40 bg-green-100 flex items-center justify-center'>
-          graph 2
-        </div>
+        {group === "a" &&
+          <div className='w-200 bg-green-100 flex items-center justify-center ml-4 mr-4 text-black'>
+            graph 2
+          </div>}
+
+        {group === "b" &&
+          <div className='w-200 flex items-center justify-center mr-4 ml-4 text-black'>
+            graph 1
+          </div>}
+          
+        {group === "b" &&
+          <div className='w-200 flex items-center justify-center ml-4 mr-4 text-black'>
+            graph 2
+          </div>}
 
         <div>
           <button className='p-4 rounded-full bg-purple-500 text-white hover:bg-purple-600' onClick={handleRightClick}>
