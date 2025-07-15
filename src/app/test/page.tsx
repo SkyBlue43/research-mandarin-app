@@ -14,6 +14,7 @@ export default function TestPage() {
   const [arrayIndex, setArrayIndex] = useState(0);
   const [currentPhrase, setCurrentPhrase] = useState('');
   const [currentPinyin, setCurrentPinyin] = useState('');
+  const [currentIndex, setCurrentIndex] = useState("1");
   const [chosenAudio, setChosenAudio] = useState('');
   const [audioChoice, setAudioChoice] = useState(0);
   const [recording, setRecording] = useState(false);
@@ -62,7 +63,8 @@ export default function TestPage() {
       console.log(data);
       setCharacters(data.characters);
       setCurrentPhrase(data.characters[arrayIndex]['chinese']);
-      setCurrentPinyin(data.characters[arrayIndex]['pinyin'])
+      setCurrentPinyin(data.characters[arrayIndex]['pinyin']);
+      setCurrentIndex(data.characters[arrayIndex]['index']);
     };
     fetchCharacters();
   }, [test]);
@@ -101,7 +103,7 @@ export default function TestPage() {
   };
 
   useEffect(() => {
-    setChosenAudio(`/backend/sounds${test}/${currentPinyin}.mp3`);
+    setChosenAudio(`http://localhost:8000/sounds/${test}/${currentIndex}.mp3`);
   }, [currentPhrase]);
 
   return (

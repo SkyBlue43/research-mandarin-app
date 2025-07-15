@@ -1,11 +1,11 @@
-Phrase,Pinyin,English
-你好,nǐ hǎo,hello
-谢谢,xièxie,thank you
-再见,zàijiàn,goodbye
-请问,qǐng wèn,excuse me / may I ask
-对不起,duìbuqǐ,sorry
-没关系,méi guānxi,it's okay / no problem
-老师,lǎoshī,teacher
-学生,xuéshēng,student
-中国,Zhōngguó,China
-美国,Měiguó,USA
+Phrase,Pinyin,English,Index
+你好,nǐ hǎo,hello,1
+谢谢,xièxie,thank you,2
+再见,zàijiàn,goodbye,3
+请问,qǐng wèn,excuse me / may I ask,4
+对不起,duìbuqǐ,sorry,5
+没关系,méi guānxi,it's okay / no problem,6
+老师,lǎoshī,teacher,7
+学生,xuéshēng,student,8
+中国,Zhōngguó,China,9
+美国,Měiguó,USA,10
