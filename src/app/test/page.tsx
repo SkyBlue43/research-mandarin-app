@@ -12,14 +12,13 @@ type PitchPoint = {
   frequency: number;
 };
 
-// ✅ Memoized Chart Component
+// Memoized Chart Components
 const PitchChart = React.memo(({ data }: { data: PitchPoint[] }) => {
-  console.log('Rendering PitchChart'); // Debug
   return (
-    <LineChart width={500} height={300} data={data}>
-      <XAxis dataKey="time" tick={{ fontSize: 14 }} />
+    <LineChart width={600} height={400} data={data}>
+      <XAxis tick={false} dataKey="time" />
       <YAxis
-        tick={{ fontSize: 14 }}
+        tick={false}
         domain={['dataMin - 0.5', 'dataMax + 0.5']}
         tickFormatter={(value) => value.toFixed(1)}
       />
@@ -27,6 +26,26 @@ const PitchChart = React.memo(({ data }: { data: PitchPoint[] }) => {
         type="monotone"
         dataKey="frequency"
         stroke="#8884d8"
+        dot={false}
+        strokeWidth={5}
+      />
+    </LineChart>
+  );
+});
+
+const UserPitchChart = React.memo(({ data }: { data: PitchPoint[] }) => {
+  return (
+    <LineChart width={600} height={400} data={data}>
+      <XAxis tick={false} dataKey="time" />
+      <YAxis
+        tick={false}
+        domain={['dataMin - 0.5', 'dataMax + 0.5']}
+        tickFormatter={(value) => value.toFixed(1)}
+      />
+      <Line
+        type="monotone"
+        dataKey="frequency"
+        stroke="#82ca9d"
         dot={false}
         strokeWidth={5}
       />
@@ -54,8 +73,9 @@ export default function TestPage() {
   const [referenceBlob, setReferenceBlob] = useState<Blob | null>(null);
   const [userBlob, setUserBlob] = useState<Blob | null>(null);
   const [referencePitch, setReferencePitch] = useState<PitchPoint[]>([]);
+  const [userPitch, setUserPitch] = useState<PitchPoint[]>([]);
 
-  // ✅ Analyze reference audio
+  // Analyze reference and user audio
   useEffect(() => {
     const analyzeReference = async () => {
       if (!referenceBlob) return;
@@ -66,6 +86,21 @@ export default function TestPage() {
     };
     analyzeReference();
   }, [referenceBlob, chosenAudio]);
+
+  useEffect(() => {
+    const analyzeUser = async () => {
+      const data = await analyzeAudio(userBlob, "recording" + chosenAudio);
+      if (data) {
+        setUserPitch(data.pitch);
+        if (referencePitch.length > 0) {
+        }
+      }
+    };
+
+    if (userBlob) {
+      analyzeUser();
+    }
+  }, [userBlob, chosenAudio]);
 
   const analyzeAudio = async (audio_blob: Blob | null, audio_location: string) => {
     if (!audio_blob) return null;
@@ -80,7 +115,7 @@ export default function TestPage() {
     return data;
   };
 
-  // ✅ Timer logic
+  // Timer logic
   useEffect(() => {
     const storedEndTime = localStorage.getItem('timerEnd');
     let endTime: number;
@@ -106,7 +141,7 @@ export default function TestPage() {
     return () => clearInterval(interval);
   }, []);
 
-  // ✅ Fetch characters
+  // Fetch characters
   useEffect(() => {
     const fetchCharacters = async () => {
       const result = await fetch("http://localhost:8000/get-characters", {
@@ -191,8 +226,9 @@ export default function TestPage() {
     }
   };
 
-  // ✅ Memoize referencePitch for chart
+  // Memoize referencePitch for chart
   const memoizedPitch = useMemo(() => referencePitch, [referencePitch]);
+  const memoizedUserPitch = useMemo(() => userPitch, [userPitch]);
 
   return (
     <div className='h-screen flex flex-col items-center text-center'>
@@ -212,21 +248,21 @@ export default function TestPage() {
         </div>
 
         {group === "a" && (
-          <div className='w-200 bg-blue-100 flex items-center justify-center mr-4 ml-4 text-black'>
+          <div className='w-200 flex items-center justify-center mr-4 ml-4 text-black'>
             {memoizedPitch.length > 0 && <PitchChart data={memoizedPitch} />}
           </div>
         )}
 
         {group === "a" && (
-          <div className='w-200 bg-green-100 flex items-center justify-center ml-4 mr-4 text-black'>
-            graph 2
+          <div className='w-200 flex items-center justify-center ml-4 mr-4 text-black'>
+            {memoizedUserPitch.length > 0 && <UserPitchChart data={memoizedUserPitch} />}
           </div>
         )}
 
         {group === "b" && (
           <>
-            <div className='w-200 flex items-center justify-center mr-4 ml-4 text-black'>graph 1</div>
-            <div className='w-200 flex items-center justify-center ml-4 mr-4 text-black'>graph 2</div>
+            <div className='w-200 flex items-center justify-center mr-4 ml-4'></div>
+            <div className='w-200 flex items-center justify-center ml-4 mr-4'></div>
           </>
         )}
 
