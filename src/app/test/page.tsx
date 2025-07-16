@@ -74,6 +74,8 @@ export default function TestPage() {
   const [userBlob, setUserBlob] = useState<Blob | null>(null);
   const [referencePitch, setReferencePitch] = useState<PitchPoint[]>([]);
   const [userPitch, setUserPitch] = useState<PitchPoint[]>([]);
+  const [playReady, setPlayReady] = useState(false);
+  const [recordReady, setRecordReady] = useState(false);
 
   // Analyze reference and user audio
   useEffect(() => {
@@ -161,6 +163,7 @@ export default function TestPage() {
   }, [test]);
 
   const handlePlay = async () => {
+    setPlayReady(true);
     const audio = new Audio(chosenAudio);
     audio.play();
     const response = await fetch(chosenAudio);
@@ -192,6 +195,7 @@ export default function TestPage() {
   const stopRecording = () => {
     mediaRecorderRef.current?.stop();
     setRecording(false);
+    setRecordReady(true);
   };
 
   useEffect(() => {
@@ -199,6 +203,11 @@ export default function TestPage() {
   }, [currentPhrase]);
 
   const handleLeftClick = () => {
+    setPlayReady(false);
+    setRecordReady(false);
+    setReferencePitch([]);
+    setUserPitch([]);
+    
     if (arrayIndex === 0) {
       setArrayIndex(9);
       setCurrentIndex("10");
@@ -213,6 +222,11 @@ export default function TestPage() {
   };
 
   const handleRightClick = () => {
+    setPlayReady(false);
+    setRecordReady(false);
+    setReferencePitch([]);
+    setUserPitch([]);
+
     if (arrayIndex === 9) {
       setArrayIndex(0);
       setCurrentIndex("1");
@@ -226,7 +240,7 @@ export default function TestPage() {
     }
   };
 
-  // Memoize referencePitch for chart
+  // Memoize Pitches for charts
   const memoizedPitch = useMemo(() => referencePitch, [referencePitch]);
   const memoizedUserPitch = useMemo(() => userPitch, [userPitch]);
 
@@ -249,13 +263,13 @@ export default function TestPage() {
 
         {group === "a" && (
           <div className='w-200 flex items-center justify-center mr-4 ml-4 text-black'>
-            {memoizedPitch.length > 0 && <PitchChart data={memoizedPitch} />}
+            {playReady && referencePitch.length > 0 && <PitchChart data={memoizedPitch} />}
           </div>
         )}
 
         {group === "a" && (
           <div className='w-200 flex items-center justify-center ml-4 mr-4 text-black'>
-            {memoizedUserPitch.length > 0 && <UserPitchChart data={memoizedUserPitch} />}
+            {recordReady && userPitch.length > 0 && <UserPitchChart data={memoizedUserPitch} />}
           </div>
         )}
 
