@@ -1,10 +1,15 @@
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi import FastAPI, UploadFile, File, Request
+from fastapi import FastAPI, UploadFile, File, Request, Form
 from pydub import AudioSegment
 import parselmouth
 import numpy as np
 import shutil, os
+from faster_whisper import WhisperModel
+import json
+from zhon.hanzi import punctuation
+from fastdtw import fastdtw
+from scipy.spatial.distance import euclidean
 
 app = FastAPI()
 
@@ -92,3 +97,163 @@ async def analyze_audio(file: UploadFile = File(...)):
     os.remove(output_path)
 
     return {"pitch": norm_pitch_values}
+
+@app.post('/transcribe/')
+async def transcribe(
+    file: UploadFile= File(...)
+):
+    
+    print(file.filename)
+    print(file.content_type)
+
+    unique_filename = "temp.mp3"
+    with open(unique_filename, "wb") as f:
+        shutil.copyfileobj(file.file, f)
+
+    # model = whisper.load_model("base")  # You can try "tiny", "base", "small", "medium", "large"
+    # result = model.transcribe(unique_filename, language="zh", initial_prompt='你好！你今天怎么样？')
+
+    model = WhisperModel("base", device="cpu", compute_type="int8")  # 'cuda' if on GPU
+    segments, info = model.transcribe(unique_filename, language='zh', word_timestamps=True, initial_prompt="你好，你今天怎么样？")
+
+    os.remove(unique_filename)
+
+    return segments
+
+
+@app.post("/dtw_characters/")
+async def dtw_new(
+    reference_pitch: str = Form(...),
+    user_pitch: str = Form(...),
+    words_reference: str = Form(...),
+    words_user: str = Form(...)
+):
+    reference_pitch = json.loads(reference_pitch)
+    user_pitch = json.loads(user_pitch)
+    words_reference_data = json.loads(words_reference)
+    words_user_data = json.loads(words_user)
+
+
+    characters = get_character_array(words_reference_data)
+    characters_user = get_character_array(words_user_data)
+    
+    if len(characters_user) != len(characters):
+        return "Error"
+
+    char_amount = len(characters)
+    reference_alignment = align_pitch(reference_pitch, characters)
+    user_alignment = align_pitch(user_pitch, characters_user)
+
+    alignment = []
+    counter = 0
+    user_counter = 0
+    for i in range(char_amount):
+        user_phrase = []
+        reference_phrase = []
+        ref_time = []
+        count = 0
+        for j in range(counter, len(reference_alignment['character'])):
+            
+            if reference_alignment['character'][j] != None:
+                counter += count
+                break
+            else:
+                count += 1
+                alignment.append({
+                    "time": reference_alignment['time'][j],
+                    "reference": None,
+                    "user": None
+                    })
+        count = 0
+        for j in range(counter, len(reference_alignment['character'])):
+            if reference_alignment['character'][j] == None:
+                counter += count
+                break
+            else:
+                count += 1
+                reference_phrase.append(reference_alignment['frequency'][j])
+                ref_time.append(reference_alignment['time'][j])
+        count = 0
+        for j in range(user_counter, len(user_alignment['character'])):
+            if user_alignment['character'][j] != None:
+                user_counter += count
+                break
+            else:
+                count += 1
+        count = 0
+        for j in range(user_counter, len(user_alignment['character'])):
+            if user_alignment['character'][j] == None:
+                user_counter += count
+                break
+            else:
+                count += 1
+                user_phrase.append(user_alignment['frequency'][j])
+        user_series = [(f,) for f in user_phrase]
+        reference_series = [(f,) for f in reference_phrase]
+        dist, path = fastdtw(reference_series, user_series, dist=euclidean)
+        # if dist < 50:
+        print(path)
+        print(dist)
+        for x, y in path:
+            if x < len(reference_phrase) and y < len(user_phrase) and x < len(ref_time):
+                alignment.append({
+                    "time": ref_time[x],
+                    "reference": reference_phrase[x],
+                    "user": user_phrase[y]
+                })
+
+    return {"alignment": alignment}
+
+
+def align_pitch(reference_pitch, characters):
+    alignment = {'frequency': [], 'time': [], 'character': []}
+    is_char = False
+    for pitch, time in zip(reference_pitch['frequency'], reference_pitch['time']):
+        if pitch == None and not is_char:
+            alignment['frequency'].append(pitch)
+            alignment['time'].append(time)
+            alignment['character'].append(None)
+        elif pitch is not None:
+            if len(characters) == 0:
+                break
+            if time > characters[0]['end']:
+                characters.pop(0)
+                is_char = False
+                alignment['frequency'].append(None)
+                alignment['time'].append(time)
+                alignment['character'].append(None)
+            elif time < characters[0]['start']:
+                alignment['frequency'].append(None)
+                alignment['time'].append(time)
+                alignment['character'].append(None)
+            else:
+                alignment['frequency'].append(pitch)
+                alignment['time'].append(time)
+                alignment['character'].append(characters[0]['char'])
+                is_char = True
+        elif pitch == None and is_char:
+            characters.pop(0)
+            is_char = False
+            alignment['frequency'].append(pitch)
+            alignment['time'].append(time)
+            alignment['character'].append(None)
+    return alignment
+
+def get_character_array(words_reference_data):
+    characters = []
+    for i in range(len(words_reference_data)):
+        if len(words_reference_data[i]['word']) > 1:
+            individual = words_reference_data[i]['word'].strip().strip(punctuation)
+            start = words_reference_data[i]['start']
+            end = words_reference_data[i]['end']
+            time_per = (end - start) / len(individual)
+            end = start
+            for char in individual:
+                end = end + time_per
+                characters.append({"char": char, "start": start, "end": end})
+                start = end
+        else:
+            start = words_reference_data[i]['start']
+            end = words_reference_data[i]['end']
+            characters.append({"char": words_reference_data[i]['word'], "start": start, "end": end})
+    return characters
