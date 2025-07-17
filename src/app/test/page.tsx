@@ -99,10 +99,10 @@ export default function TestPage() {
       if (data) {
         setUserPitch(data.pitch);
         if (referencePitch.length > 0) {
-          const reference_words_array = await transcribeAudio(referenceBlob, "recording" + chosenAudio);
+          const reference_words_array = await transcribeAudio(referenceBlob, chosenAudio, currentPhrase);
           setReferenceWordsArray(reference_words_array);
           console.log('Reference Array: ', reference_words_array);
-          const user_words_array = await transcribeAudio(userBlob, "recording2" + chosenAudio);
+          const user_words_array = await transcribeAudio(userBlob, "recording" + chosenAudio, currentPhrase);
           setUserWordsArray(user_words_array);
           console.log('User Array: ', user_words_array);
           DTW(data.pitch, referencePitch, reference_words_array, user_words_array);
@@ -117,10 +117,11 @@ export default function TestPage() {
   }, [userBlob, chosenAudio]);
 
 
-  const transcribeAudio = async (audio_blob: Blob | null, audio_location: string) => {
+  const transcribeAudio = async (audio_blob: Blob | null, audio_location: string, current_phrase: string) => {
     if (audio_blob === null) { return null}
     const formData = new FormData();
     formData.append('file', audio_blob, audio_location);
+    formData.append('current_phrase', current_phrase);
     const result = await fetch('http://localhost:8000/transcribe', {
       method: 'POST',
       body: formData,
@@ -242,6 +243,13 @@ export default function TestPage() {
       audioChunks.current.push(event.data);
     };
 
+    mediaRecorder.onstart = () => {
+      setTimeout(() => {
+        setRecording(true);
+      }, 250);
+    };
+    
+
     mediaRecorder.onstop = async () => {
       const audioBlob = new Blob(audioChunks.current, { type: 'audio/wav' });
       setAudioURL(URL.createObjectURL(audioBlob));
@@ -251,7 +259,6 @@ export default function TestPage() {
 
     audioChunks.current = [];
     mediaRecorder.start();
-    setRecording(true);
   };
 
   const stopRecording = () => {
@@ -262,13 +269,15 @@ export default function TestPage() {
 
   useEffect(() => {
     setChosenAudio(`http://localhost:8000/sounds/${test}/${currentIndex}.mp3`);
-  }, [currentPhrase]);
+  }, [currentIndex]);
 
   const handleLeftClick = () => {
     setPlayReady(false);
     setRecordReady(false);
     setReferencePitch([]);
     setUserPitch([]);
+    setReferenceBlob(null);
+    setUserBlob(null);
     
     if (arrayIndex === 0) {
       setArrayIndex(9);
@@ -288,6 +297,8 @@ export default function TestPage() {
     setRecordReady(false);
     setReferencePitch([]);
     setUserPitch([]);
+    setReferenceBlob(null);
+    setUserBlob(null);
 
     if (arrayIndex === 9) {
       setArrayIndex(0);

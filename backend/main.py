@@ -100,7 +100,8 @@ async def analyze_audio(file: UploadFile = File(...)):
 
 @app.post('/transcribe/')
 async def transcribe(
-    file: UploadFile= File(...)
+    file: UploadFile= File(...),
+    current_phrase: str = Form(...)
 ):
     
     print(file.filename)
@@ -114,7 +115,7 @@ async def transcribe(
     # result = model.transcribe(unique_filename, language="zh", initial_prompt='你好！你今天怎么样？')
 
     model = WhisperModel("base", device="cpu", compute_type="int8")  # 'cuda' if on GPU
-    segments, info = model.transcribe(unique_filename, language='zh', word_timestamps=True, initial_prompt="你好，你今天怎么样？")
+    segments, info = model.transcribe(unique_filename, language='zh', word_timestamps=True, initial_prompt=current_phrase)
 
     os.remove(unique_filename)
 
