@@ -43,3 +43,7 @@ next-env.d.ts
 # Ignore Python cache files
 __pycache__/
 *.pyc
+
+
+backend/vosk-model-cn-0.22/
+backend/MFA/pretrained_models/
