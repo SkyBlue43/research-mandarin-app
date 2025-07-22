@@ -1,0 +1,3 @@
+Found the following OOVs:
+{}
+{(1, '今天'): {'id': 79617, 'word': '今天', 'word_type': <WordType.oov: 4>, 'mapping_id': 79616, 'count': 1, 'dictionary_id': 1, 'included': False}, (1, '怎么样'): {'id': 79618, 'word': '怎么样', 'word_type': <WordType.oov: 4>, 'mapping_id': 79617, 'count': 1, 'dictionary_id': 1, 'included': False}}

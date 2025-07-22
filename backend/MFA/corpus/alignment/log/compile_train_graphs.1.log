@@ -1,0 +1,7 @@
+2025-07-02 12:16:29,315 - kalpy.graphs - 13438578688 - 1 - DEBUG - Tree path: /Users/sky43/Documents/MFA/corpus/alignment/tree
+2025-07-02 12:16:29,315 - kalpy.graphs - 13438578688 - 1 - DEBUG - Model path: /Users/sky43/Documents/MFA/corpus/alignment/final.alimdl
+2025-07-02 12:16:29,506 - kalpy.graphs - 13438578688 - 1 - DEBUG - Set up took 0.18954706192016602 seconds
+2025-07-02 12:16:29,506 - kalpy.graphs - 13438578688 - 1 - INFO - Compiling graphs for mandarin_mfa
+2025-07-02 12:16:29,506 - kalpy.graphs - 13438578688 - 1 - DEBUG - DISAMBIGUATION: False
+2025-07-02 12:16:29,521 - kalpy.graphs - 13438578688 - 1 - INFO - Done 1 utterances, errors on 0.
+2025-07-02 12:16:29,521 - kalpy.graphs - 13438578688 - 1 - DEBUG - Total compilation time: 0.2049877643585205 seconds
