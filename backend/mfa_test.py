@@ -2,8 +2,7 @@ import os
 import sys
 import subprocess
 import tempfile
-import time
-import csv
+import json
 from textgrid import TextGrid
 
 def convert_mp3_to_wav(mp3_path, wav_path):
@@ -29,22 +28,27 @@ def run_mfa_align(corpus_dir, dictionary_path, acoustic_model_path, output_dir):
 def parse_textgrid(textgrid_path):
     tg = TextGrid.fromFile(textgrid_path)
     for tier in tg.tiers:
-        if "word" in tier.name.lower():
+        if "word" in tier.name.lower():  # This now represents characters after splitting
             for interval in tier.intervals:
                 if interval.mark.strip():
                     yield {
-                        "word": interval.mark.strip(),
+                        "char": interval.mark.strip(),
                         "start": round(interval.minTime, 2),
                         "end": round(interval.maxTime, 2)
                     }
 
+def split_characters_with_spaces(text):
+    """Insert spaces between every character, skipping whitespace."""
+    return " ".join(list(text.replace(" ", "")))
+
 if __name__ == "__main__":
-    if len(sys.argv) < 3:
-        print("Usage: python mfa_batch.py <folder_of_mp3_files> <transcripts_folder>")
+    if len(sys.argv) < 4:
+        print("Usage: python mfa_batch.py <folder_of_mp3_files> <transcripts_folder> <output_folder>")
         sys.exit(1)
 
     mp3_folder = sys.argv[1]
     transcripts_folder = sys.argv[2]
+    output_folder = sys.argv[3]
 
     dictionary_path = "MFA/pretrained_models/dictionary/mandarin_mfa.dict"
     acoustic_model_path = "MFA/pretrained_models/acoustic/mandarin_mfa.zip"
@@ -56,6 +60,7 @@ if __name__ == "__main__":
     if not os.path.exists(transcripts_folder):
         print(f"Error: Transcripts folder {transcripts_folder} does not exist.")
         sys.exit(1)
+    os.makedirs(output_folder, exist_ok=True)
 
     with tempfile.TemporaryDirectory() as temp_dir:
         wav_dir = os.path.join(temp_dir, "corpus")
@@ -80,32 +85,33 @@ if __name__ == "__main__":
                     print(f"Warning: No transcript found for {mp3_file}. Skipping.")
                     continue
 
+                # Insert spaces between characters
+                spaced_transcript = split_characters_with_spaces(transcript)
+
                 with open(lab_path, "w", encoding="utf-8") as f:
-                    f.write(transcript + "\n")
+                    f.write(spaced_transcript + "\n")
 
                 file_map[base_name] = mp3_file
 
         output_dir = os.path.join(temp_dir, "aligned")
         run_mfa_align(wav_dir, dictionary_path, acoustic_model_path, output_dir)
 
-        # Parse all TextGrids and store results in CSV
-        csv_file = "alignment_results.csv"
-        with open(csv_file, "w", newline="", encoding="utf-8") as csv_out:
-            writer = csv.DictWriter(csv_out, fieldnames=["filename", "word", "start", "end"])
-            writer.writeheader()
+        # Parse all TextGrids and store results in individual JSON files
+        for tg_file in os.listdir(output_dir):
+            if tg_file.endswith(".TextGrid"):
+                base_name = os.path.splitext(tg_file)[0]
+                mp3_name = file_map.get(base_name, base_name)
+                tg_path = os.path.join(output_dir, tg_file)
 
-            for tg_file in os.listdir(output_dir):
-                if tg_file.endswith(".TextGrid"):
-                    base_name = os.path.splitext(tg_file)[0]
-                    mp3_name = file_map.get(base_name, base_name)
-                    tg_path = os.path.join(output_dir, tg_file)
+                data = {
+                    "filename": mp3_name,
+                    "alignment": list(parse_textgrid(tg_path))
+                }
 
-                    for entry in parse_textgrid(tg_path):
-                        writer.writerow({
-                            "filename": mp3_name,
-                            "word": entry["word"],
-                            "start": entry["start"],
-                            "end": entry["end"]
-                        })
+                json_path = os.path.join(output_folder, f"{base_name}.json")
+                with open(json_path, "w", encoding="utf-8") as json_out:
+                    json.dump(data, json_out, ensure_ascii=False, indent=2)
 
-        print(f"\n✅ All alignments complete. Results saved to {csv_file}")
+                print(f"✅ Saved {json_path}")
+
+        print("\n✅ All alignments complete. JSON files created in", output_folder)
