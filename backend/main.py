@@ -21,7 +21,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.mount("/sounds", StaticFiles(directory="sounds"), name="sounds")
+app.mount("/sounds", StaticFiles(directory="backend/sounds"), name="sounds")
 
 def read_lines(infile):
     with open(infile) as file:
@@ -34,7 +34,7 @@ async def get_characters(request: Request):
     test_number = data.get('test')
     
     try:
-        lines = read_lines(f'{test_number}.csv')
+        lines = read_lines(f'backend/{test_number}.csv')
     except FileNotFoundError:
         return {"error": f"File not found."}
     
@@ -103,9 +103,6 @@ async def transcribe(
     file: UploadFile= File(...),
     current_phrase: str = Form(...)
 ):
-    
-    print(file.filename)
-    print(file.content_type)
 
     unique_filename = "temp.mp3"
     with open(unique_filename, "wb") as f:
@@ -114,8 +111,8 @@ async def transcribe(
     # model = whisper.load_model("base")  # You can try "tiny", "base", "small", "medium", "large"
     # result = model.transcribe(unique_filename, language="zh", initial_prompt='你好！你今天怎么样？')
 
-    model = WhisperModel("base", device="cpu", compute_type="int8")  # 'cuda' if on GPU
-    segments, info = model.transcribe(unique_filename, language='zh', word_timestamps=True, initial_prompt=current_phrase)
+    model = WhisperModel("large", device="cpu", compute_type="int8")  # 'cuda' if on GPU
+    segments, info = model.transcribe(unique_filename, language='zh', word_timestamps=True, initial_prompt=current_phrase, vad_filter=False)
 
     os.remove(unique_filename)
 
@@ -210,7 +207,7 @@ def align_pitch(reference_pitch, characters):
     alignment = {'frequency': [], 'time': [], 'character': []}
     is_char = False
     for pitch, time in zip(reference_pitch['frequency'], reference_pitch['time']):
-        if pitch == None and not is_char:
+        if pitch is None and not is_char:
             alignment['frequency'].append(pitch)
             alignment['time'].append(time)
             alignment['character'].append(None)
@@ -232,7 +229,7 @@ def align_pitch(reference_pitch, characters):
                 alignment['time'].append(time)
                 alignment['character'].append(characters[0]['char'])
                 is_char = True
-        elif pitch == None and is_char:
+        elif pitch is None and is_char:
             characters.pop(0)
             is_char = False
             alignment['frequency'].append(pitch)

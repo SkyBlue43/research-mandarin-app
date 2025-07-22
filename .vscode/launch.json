@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: FastAPI",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": [
+                "backend.main:app",   // <- Points to backend/main.py
+                "--reload",
+                "--host", "127.0.0.1",
+                "--port", "8000"
+            ],
+            "jinja": true,
+            "cwd": "${workspaceFolder}"  // Ensures the root is the project folder
+        }
+    ]
+}

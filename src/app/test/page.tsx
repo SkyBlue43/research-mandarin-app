@@ -144,7 +144,7 @@ export default function TestPage() {
     }));
     formData.append('words_reference', JSON.stringify(referenceWordArray));
     formData.append('words_user', JSON.stringify(userWordArray));
-    const result = await fetch('/dtw_characters', {
+    const result = await fetch('http://localhost:8000/dtw_characters', {
       method: 'POST',
       body: formData
     });
