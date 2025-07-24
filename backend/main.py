@@ -98,25 +98,104 @@ async def analyze_audio(file: UploadFile = File(...)):
 
     return {"pitch": norm_pitch_values}
 
-@app.post('/transcribe/')
-async def transcribe(
-    file: UploadFile= File(...),
-    current_phrase: str = Form(...)
-):
+# @app.post('/transcribe/')
+# async def transcribe(
+#     file: UploadFile= File(...),
+#     current_phrase: str = Form(...)
+# ):
 
-    unique_filename = "temp.mp3"
-    with open(unique_filename, "wb") as f:
-        shutil.copyfileobj(file.file, f)
+#     unique_filename = "temp.mp3"
+#     with open(unique_filename, "wb") as f:
+#         shutil.copyfileobj(file.file, f)
 
-    # model = whisper.load_model("base")  # You can try "tiny", "base", "small", "medium", "large"
-    # result = model.transcribe(unique_filename, language="zh", initial_prompt='你好！你今天怎么样？')
+#     # model = whisper.load_model("base")  # You can try "tiny", "base", "small", "medium", "large"
+#     # result = model.transcribe(unique_filename, language="zh", initial_prompt='你好！你今天怎么样？')
 
-    model = WhisperModel("large", device="cpu", compute_type="int8")  # 'cuda' if on GPU
-    segments, info = model.transcribe(unique_filename, language='zh', word_timestamps=True, initial_prompt=current_phrase, vad_filter=False)
+#     model = WhisperModel("large", device="cpu", compute_type="int8")  # 'cuda' if on GPU
+#     segments, info = model.transcribe(unique_filename, language='zh', word_timestamps=True, initial_prompt=current_phrase, vad_filter=False)
 
-    os.remove(unique_filename)
+#     os.remove(unique_filename)
 
-    return segments
+#     return segments
+
+import os
+import subprocess
+import wave
+import json
+from vosk import Model, KaldiRecognizer, SetLogLevel
+from fastapi import FastAPI, File, Form, UploadFile
+from fastapi.responses import JSONResponse
+import uvicorn
+import tempfile
+
+SetLogLevel(-1)
+
+MODEL_PATH = "backend/vosk-model-cn-0.22"
+if not os.path.exists(MODEL_PATH):
+    raise RuntimeError("❌ Vosk model not found! Download from https://alphacephei.com/vosk/models")
+
+model = Model(MODEL_PATH)
+
+def convert_to_wav(input_path, output_path):
+    cmd = ["ffmpeg", "-y", "-i", input_path, "-ar", "16000", "-ac", "1", output_path]
+    subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+def transcribe_with_vosk(audio_path, phrase_list):
+    wf = wave.open(audio_path, "rb")
+    if wf.getnchannels() != 1 or wf.getsampwidth() != 2 or wf.getframerate() != 16000:
+        raise ValueError("Audio must be WAV PCM 16kHz Mono")
+
+    # ✅ Use grammar-based recognition
+    rec = KaldiRecognizer(model, wf.getframerate(), json.dumps(phrase_list))
+    rec.SetWords(True)
+
+    results = []
+    while True:
+        data = wf.readframes(4000)
+        if len(data) == 0:
+            break
+        if rec.AcceptWaveform(data):
+            results.append(json.loads(rec.Result()))
+    results.append(json.loads(rec.FinalResult()))
+
+    # ✅ Convert to char-level timestamps
+    char_segments = []
+    for res in results:
+        for word_info in res.get("result", []):
+            word = word_info["word"]
+            start = word_info["start"]
+            end = word_info["end"]
+
+            char_duration = (end - start) / len(word)
+            for i, char in enumerate(word):
+                char_start = round(start + i * char_duration, 2)
+                char_end = round(char_start + char_duration, 2)
+                char_segments.append({"char": char, "start": char_start, "end": char_end})
+
+    return char_segments
+
+@app.post("/transcribe/")
+async def transcribe_audio(file: UploadFile = File(...), current_phrase: str = Form(...)):
+    # Save MP3
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as temp_mp3:
+        mp3_path = temp_mp3.name
+        await file.seek(0)
+        temp_mp3.write(await file.read())
+
+    wav_path = mp3_path.replace(".mp3", ".wav")
+    convert_to_wav(mp3_path, wav_path)
+
+    try:
+        # ✅ Split phrase into words for Vosk biasing
+        phrase_list = current_phrase.strip().split()
+        result = transcribe_with_vosk(wav_path, phrase_list)
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"error": str(e)})
+    finally:
+        os.remove(mp3_path)
+        os.remove(wav_path)
+
+    return JSONResponse(content=result)
 
 
 @app.post("/dtw_characters/")

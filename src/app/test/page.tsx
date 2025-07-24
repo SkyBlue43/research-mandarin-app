@@ -77,7 +77,6 @@ export default function TestPage() {
   const [playReady, setPlayReady] = useState(false);
   const [recordReady, setRecordReady] = useState(false);
   const [userWordsArray, setUserWordsArray] = useState<any[]>([]);
-  const [referenceWordsArray, setReferenceWordsArray] = useState<any[]>([]);
   const [alignedGraphData, setAlignedGraphData] = useState<any[]>([]);
 
   // Analyze reference and user audio
@@ -98,15 +97,13 @@ export default function TestPage() {
       const data = await analyzeAudio(userBlob, "recording" + chosenAudio);
       if (data) {
         setUserPitch(data.pitch);
-        if (referencePitch.length > 0) {
-          const reference_words_array = await transcribeAudio(referenceBlob, chosenAudio, currentPhrase);
-          setReferenceWordsArray(reference_words_array);
-          console.log('Reference Array: ', reference_words_array);
-          const user_words_array = await transcribeAudio(userBlob, "recording" + chosenAudio, currentPhrase);
-          setUserWordsArray(user_words_array);
-          console.log('User Array: ', user_words_array);
-          DTW(data.pitch, referencePitch, reference_words_array, user_words_array);
 
+        if (referencePitch.length > 0) {
+          const user_chars_array = await transcribeAudio(userBlob, "recording" + chosenAudio, currentPhrase);
+          setUserWordsArray(user_chars_array);
+
+          console.log("✅ User Character Segments:", user_chars_array);
+          // If you want to align later: DTW(data.pitch, referencePitch, reference_words_array, user_chars_array);
         }
       }
     };
@@ -116,21 +113,38 @@ export default function TestPage() {
     }
   }, [userBlob, chosenAudio]);
 
-
-  const transcribeAudio = async (audio_blob: Blob | null, audio_location: string, current_phrase: string) => {
-    if (audio_blob === null) { return null}
+  const transcribeAudio = async (
+    audio_blob: Blob | null,
+    audio_location: string,
+    currentPhrase: string // ✅ New param
+  ) => {
+    if (audio_blob === null) return null;
+  
     const formData = new FormData();
-    formData.append('file', audio_blob, audio_location);
-    formData.append('current_phrase', current_phrase);
-    const result = await fetch('http://localhost:8000/transcribe', {
-      method: 'POST',
-      body: formData,
-    });
-    const data = await result.json();
-    console.log('Transcribed data: ', data);
-    const wordsArray = data[0]?.words || [];
-    return wordsArray;
-  }
+    formData.append("file", audio_blob, audio_location);
+    formData.append("current_phrase", currentPhrase); // ✅ Send phrase to backend
+  
+    try {
+      const result = await fetch("http://localhost:8000/transcribe", {
+        method: "POST",
+        body: formData,
+      });
+  
+      if (!result.ok) {
+        console.error("❌ Failed to transcribe audio:", result.statusText);
+        return null;
+      }
+  
+      const data = await result.json();
+      console.log("✅ Full API Response:", data);
+      return data; // Array of {char, start, end}
+    } catch (error) {
+      console.error("❌ Error during fetch:", error);
+      return null;
+    }
+  };
+  
+
 
   const DTW = async (userPitch: PitchPoint[], referencePitch: PitchPoint[], referenceWordArray: any[], userWordArray: any[]) => {
     const formData = new FormData();
@@ -248,7 +262,7 @@ export default function TestPage() {
         setRecording(true);
       }, 250);
     };
-    
+
 
     mediaRecorder.onstop = async () => {
       const audioBlob = new Blob(audioChunks.current, { type: 'audio/wav' });
@@ -278,7 +292,7 @@ export default function TestPage() {
     setUserPitch([]);
     setReferenceBlob(null);
     setUserBlob(null);
-    
+
     if (arrayIndex === 0) {
       setArrayIndex(9);
       setCurrentIndex("10");
