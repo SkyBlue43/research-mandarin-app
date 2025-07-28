@@ -12,6 +12,12 @@ type PitchPoint = {
   frequency: number;
 };
 
+type AlignedPoint = {
+  time: number;
+  refernce: number;
+  user: number;
+};
+
 // Memoized Chart Components
 const PitchChart = React.memo(({ data }: { data: PitchPoint[] }) => {
   return (
@@ -48,6 +54,36 @@ const UserPitchChart = React.memo(({ data }: { data: PitchPoint[] }) => {
         stroke="#82ca9d"
         dot={false}
         strokeWidth={5}
+      />
+    </LineChart>
+  );
+});
+
+const AlignedPitchChart = React.memo(({ data }: { data: AlignedPoint[] }) => {
+  return (
+    <LineChart width={600} height={400} data={data}>
+      <XAxis tick={false} dataKey="time" />
+      <YAxis
+        tick={false}
+        domain={['dataMin - 0.5', 'dataMax + 0.5']}
+        tickFormatter={(value) => value.toFixed(1)}
+      />
+      <Line
+        type="monotone"
+        dataKey="user"
+        stroke="#82ca9d"
+        dot={false}
+        strokeWidth={4}
+        name="User"
+      />
+      <Line
+        type="monotone"
+        dataKey="reference"
+        stroke="#8884d8"
+        strokeDasharray="5 5"
+        dot={false}
+        strokeWidth={4}
+        name="Reference"
       />
     </LineChart>
   );
@@ -103,7 +139,7 @@ export default function TestPage() {
           setUserWordsArray(user_chars_array);
 
           console.log("✅ User Character Segments:", user_chars_array);
-          // If you want to align later: DTW(data.pitch, referencePitch, reference_words_array, user_chars_array);
+          DTW(data.pitch, referencePitch, test, user_chars_array);
         }
       }
     };
@@ -119,22 +155,22 @@ export default function TestPage() {
     currentPhrase: string // ✅ New param
   ) => {
     if (audio_blob === null) return null;
-  
+
     const formData = new FormData();
     formData.append("file", audio_blob, audio_location);
     formData.append("current_phrase", currentPhrase); // ✅ Send phrase to backend
-  
+
     try {
       const result = await fetch("http://localhost:8000/transcribe", {
         method: "POST",
         body: formData,
       });
-  
+
       if (!result.ok) {
         console.error("❌ Failed to transcribe audio:", result.statusText);
         return null;
       }
-  
+
       const data = await result.json();
       console.log("✅ Full API Response:", data);
       return data; // Array of {char, start, end}
@@ -143,10 +179,8 @@ export default function TestPage() {
       return null;
     }
   };
-  
 
-
-  const DTW = async (userPitch: PitchPoint[], referencePitch: PitchPoint[], referenceWordArray: any[], userWordArray: any[]) => {
+  const DTW = async (userPitch: PitchPoint[], referencePitch: PitchPoint[], test: string | null, userWordArray: any[]) => {
     const formData = new FormData();
     formData.append('reference_pitch', JSON.stringify({
       frequency: referencePitch.map(p => p.frequency),
@@ -156,7 +190,8 @@ export default function TestPage() {
       frequency: userPitch.map(p => p.frequency),
       time: userPitch.map(p => p.time)
     }));
-    formData.append('words_reference', JSON.stringify(referenceWordArray));
+    formData.append('test', JSON.stringify(test));
+    formData.append('currentIndex', JSON.stringify(currentIndex))
     formData.append('words_user', JSON.stringify(userWordArray));
     const result = await fetch('http://localhost:8000/dtw_characters', {
       method: 'POST',
@@ -164,7 +199,7 @@ export default function TestPage() {
     });
     const data = await result.json();
     console.log("DTW result:", data);
-    setAlignedGraphData(data.alignement);
+    setAlignedGraphData(data.alignment);
   };
   // useEffect(() => {
   //   const analyzeUser = async () => {
@@ -330,6 +365,7 @@ export default function TestPage() {
   // Memoize Pitches for charts
   const memoizedPitch = useMemo(() => referencePitch, [referencePitch]);
   const memoizedUserPitch = useMemo(() => userPitch, [userPitch]);
+  const memoizedAlignedPitch = useMemo(() => alignedGraphData, [alignedGraphData]);
 
   return (
     <div className='h-screen flex flex-col items-center text-center'>
@@ -349,14 +385,20 @@ export default function TestPage() {
         </div>
 
         {group === "a" && (
-          <div className='w-200 flex items-center justify-center mr-4 ml-4 text-black'>
+          <div className='w-120 flex items-center justify-center mr-4 ml-4 text-black'>
             {playReady && referencePitch.length > 0 && <PitchChart data={memoizedPitch} />}
           </div>
         )}
 
         {group === "a" && (
-          <div className='w-200 flex items-center justify-center ml-4 mr-4 text-black'>
+          <div className='w-120 flex items-center justify-center ml-4 mr-4 text-black'>
             {recordReady && userPitch.length > 0 && <UserPitchChart data={memoizedUserPitch} />}
+          </div>
+        )}
+
+        {group === "a" && (
+          <div className='w-130 flex items-center justify-center ml-4 mr-4 text-black'>
+            {alignedGraphData != undefined && alignedGraphData.length > 0 && <AlignedPitchChart data={memoizedAlignedPitch} />}
           </div>
         )}
 

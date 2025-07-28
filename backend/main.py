@@ -202,17 +202,19 @@ async def transcribe_audio(file: UploadFile = File(...), current_phrase: str = F
 async def dtw_new(
     reference_pitch: str = Form(...),
     user_pitch: str = Form(...),
-    words_reference: str = Form(...),
+    test: str = Form(...),
+    currentIndex: str = Form(...),
     words_user: str = Form(...)
 ):
     reference_pitch = json.loads(reference_pitch)
     user_pitch = json.loads(user_pitch)
-    words_reference_data = json.loads(words_reference)
+    test = json.loads(test)
+    currentIndex = json.loads(currentIndex)
     words_user_data = json.loads(words_user)
 
-
-    characters = get_character_array(words_reference_data)
-    characters_user = get_character_array(words_user_data)
+    with open(f'backend/transcripts/results_{test}/{currentIndex}.json') as file:
+        characters = json.load(file)['alignment']
+    characters_user = words_user_data
     
     if len(characters_user) != len(characters):
         return "Error"
@@ -282,38 +284,63 @@ async def dtw_new(
     return {"alignment": alignment}
 
 
-def align_pitch(reference_pitch, characters):
+def align_pitch(pitch, characters):
     alignment = {'frequency': [], 'time': [], 'character': []}
-    is_char = False
-    for pitch, time in zip(reference_pitch['frequency'], reference_pitch['time']):
-        if pitch is None and not is_char:
-            alignment['frequency'].append(pitch)
-            alignment['time'].append(time)
-            alignment['character'].append(None)
-        elif pitch is not None:
-            if len(characters) == 0:
-                break
-            if time > characters[0]['end']:
+    if pitch['frequency'][0] is None:
+        is_none = True
+        char = False
+    else:
+        is_none = False
+        char = True
+    blocked_end = False
+    blocked_first = False
+    for i, (frequency, time) in enumerate(zip(pitch['frequency'], pitch['time'])):
+        if i == len(pitch['frequency']) - 1:
+            alignment["frequency"].append(None)
+            alignment["time"].append(time)
+            alignment["character"].append(None)
+            break
+        
+        if is_none or blocked_end or blocked_first:
+            alignment["frequency"].append(None)
+            alignment["time"].append(time)
+            alignment["character"].append(None)
+            if pitch['frequency'][i + 1] is not None:
+                char = True
+                is_none = False
+            if pitch['frequency'][i + 1] is None:
+                blocked_first = False
+                is_none = True 
+
+        elif char:
+            alignment["frequency"].append(frequency)
+            alignment["time"].append(time)
+            alignment["character"].append(characters[0]['char'])
+            if pitch['frequency'][i + 1] is None:
+                blocked_end = True
+                char = False
+                is_none = True
+            
+        if pitch['time'][i + 1] > characters[0]['end'] and len(characters) > 1:
+                k = i + 1
+                first_word = []
+                second_word = []
+                first = True
+                second = False
+                while pitch['time'][k] < characters[1]['end']:
+                    k += 1
+                    if pitch['frequency'][k] is None:
+                        first = False
+                        second = True
+                    elif first:
+                        first_word.append(None)
+                    elif second:
+                        second_word.append(None)
+                if len(first_word) < len(second_word):
+                    blocked_first = True
                 characters.pop(0)
-                is_char = False
-                alignment['frequency'].append(None)
-                alignment['time'].append(time)
-                alignment['character'].append(None)
-            elif time < characters[0]['start']:
-                alignment['frequency'].append(None)
-                alignment['time'].append(time)
-                alignment['character'].append(None)
-            else:
-                alignment['frequency'].append(pitch)
-                alignment['time'].append(time)
-                alignment['character'].append(characters[0]['char'])
-                is_char = True
-        elif pitch is None and is_char:
-            characters.pop(0)
-            is_char = False
-            alignment['frequency'].append(pitch)
-            alignment['time'].append(time)
-            alignment['character'].append(None)
+                blocked_end = False
+    characters.pop(0)
     return alignment
 
 def get_character_array(words_reference_data):
