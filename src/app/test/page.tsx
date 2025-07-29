@@ -71,7 +71,7 @@ const AlignedPitchChart = React.memo(({ data }: { data: AlignedPoint[] }) => {
       <Line
         type="monotone"
         dataKey="user"
-        stroke="#82ca9d"
+        stroke="#8884d8"
         dot={false}
         strokeWidth={4}
         name="User"
@@ -79,8 +79,7 @@ const AlignedPitchChart = React.memo(({ data }: { data: AlignedPoint[] }) => {
       <Line
         type="monotone"
         dataKey="reference"
-        stroke="#8884d8"
-        strokeDasharray="5 5"
+        stroke="#82ca9d"
         dot={false}
         strokeWidth={4}
         name="Reference"
@@ -327,6 +326,7 @@ export default function TestPage() {
     setUserPitch([]);
     setReferenceBlob(null);
     setUserBlob(null);
+    setAlignedGraphData([]);
 
     if (arrayIndex === 0) {
       setArrayIndex(9);
@@ -348,6 +348,7 @@ export default function TestPage() {
     setUserPitch([]);
     setReferenceBlob(null);
     setUserBlob(null);
+    setAlignedGraphData([])
 
     if (arrayIndex === 9) {
       setArrayIndex(0);

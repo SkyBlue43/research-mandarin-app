@@ -10,6 +10,7 @@ import json
 from zhon.hanzi import punctuation
 from fastdtw import fastdtw
 from scipy.spatial.distance import euclidean
+import textgrid
 
 app = FastAPI()
 
@@ -51,10 +52,6 @@ async def get_characters(request: Request):
         
     return {'characters': character_list}
 
-
-@app.post('/get-audio')
-async def get_audio():
-    pass
 
 @app.post("/analyze-audio-voiceless/")
 async def analyze_audio(file: UploadFile = File(...)):
