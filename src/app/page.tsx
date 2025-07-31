@@ -1,43 +1,48 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-
+import { useState } from 'react'
+ 
 export default function Home() {
   const router = useRouter();
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  
+  const handleLogin = (username: string, password: string) => {
+    console.log(password, username);
+  }
 
-
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    handleLogin(username, password);
+  }
 
   return (
-    <div className="h-screen flex justify-center items-center">
-      <div className='flex flex-row'>
-        <div className='flex flex-col'>
-          <button
-            className="bg-green-500 hover:bg-green-600 text-[18px] text-black border rounded p-2 bolded px-4"
-            onClick={() => router.push('/test?group=a&test=1')}>
-            Test 1a
-          </button>
-
-          <button
-            className="bg-blue-500 hover:bg-blue-600 text-[18px] text-black border rounded p-2 bolded px-4"
-            onClick={() => router.push('/test?group=b&test=1')}>
-            Test 1b
-          </button>
+    <div className='flex justify-center items-center text-center min-h-screen'>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <input className='text-white p-2 border-green-500 border-2 m-4 focus:ring-pink-500 focus:border-pink-500'
+          placeholder='Username'
+          type='text'
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}>
+          </input>
         </div>
 
-        <div className='flex flex-col'>
-          <button
-            className="bg-green-500 hover:bg-green-600 text-[18px] text-black border rounded p-2 bolded px-4"
-            onClick={() => router.push('/test?group=a&test=2')}>
-            Test 2a
-          </button>
-
-          <button
-            className="bg-blue-500 hover:bg-blue-600 text-[18px] text-black border rounded p-2 bolded px-4"
-            onClick={() => router.push('/test?group=b&test=2')}>
-            Test 2b
-          </button>
+        <div>
+          <input className='text-white p-2 border-green-500 border-2 m-4 focus:ring-pink-500 focus:border-pink-500'
+          placeholder='Password'
+          type='text'
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}>
+          </input>
         </div>
-      </div>
+
+        <button className='m-2 p-2 bg-green-500 text-lg text-black rounded hover:bg-pink-500'
+          type='submit'>
+          Submit
+        </button>
+      </form>
     </div>
   );
 }

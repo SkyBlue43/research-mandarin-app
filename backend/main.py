@@ -11,6 +11,7 @@ from zhon.hanzi import punctuation
 from fastdtw import fastdtw
 from scipy.spatial.distance import euclidean
 import textgrid
+from scipy.signal import savgol_filter
 
 app = FastAPI()
 
@@ -115,6 +116,43 @@ async def analyze_audio(file: UploadFile = File(...)):
 
 #     return segments
 
+# from fastapi import FastAPI, UploadFile, File, Form
+# import shutil
+# import os
+# import tempfile
+# import torch
+# import whisperx
+
+# @app.post('/transcribe/')
+# async def transcribe(
+#     file: UploadFile = File(...),
+#     current_phrase: str = Form(...)
+# ):
+#     # Save the uploaded file to a temporary location
+#     with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as tmp:
+#         shutil.copyfileobj(file.file, tmp)
+#         tmp_path = tmp.name
+
+#     # Select device
+#     device = "cuda" if torch.cuda.is_available() else "cpu"
+
+#     # Load model
+#     model = whisperx.load_model("large-v2", device, compute_type="int8")
+
+#     # Step 1: Transcribe audio
+#     transcription = model.transcribe(tmp_path, language="zh")
+
+#     # Step 2: Align whisper output to get word-level timestamps
+#     model_a, metadata = whisperx.load_align_model(language_code="zh", device=device)
+#     result_aligned = whisperx.align(transcription["segments"], model_a, metadata, tmp_path, device)
+
+#     # Clean up temp file
+#     os.remove(tmp_path)
+
+#     # Return the word segments
+#     return {"segments": result_aligned["word_segments"]}
+
+
 import os
 import subprocess
 import wave
@@ -194,7 +232,6 @@ async def transcribe_audio(file: UploadFile = File(...), current_phrase: str = F
 
     return JSONResponse(content=result)
 
-
 @app.post("/dtw_characters/")
 async def dtw_new(
     reference_pitch: str = Form(...),
@@ -264,6 +301,10 @@ async def dtw_new(
             else:
                 count += 1
                 user_phrase.append(user_alignment['frequency'][j])
+
+        user_phrase = user_phrase[::3]
+        reference_phrase = reference_phrase[::3]
+        ref_time = ref_time[::3]
         user_series = [(f,) for f in user_phrase]
         reference_series = [(f,) for f in reference_phrase]
         dist, path = fastdtw(reference_series, user_series, dist=euclidean)

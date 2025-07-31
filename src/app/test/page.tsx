@@ -71,7 +71,7 @@ const AlignedPitchChart = React.memo(({ data }: { data: AlignedPoint[] }) => {
       <Line
         type="monotone"
         dataKey="user"
-        stroke="#8884d8"
+        stroke="#82ca9d"
         dot={false}
         strokeWidth={4}
         name="User"
@@ -79,7 +79,7 @@ const AlignedPitchChart = React.memo(({ data }: { data: AlignedPoint[] }) => {
       <Line
         type="monotone"
         dataKey="reference"
-        stroke="#82ca9d"
+        stroke="#8884d8"
         dot={false}
         strokeWidth={4}
         name="Reference"
@@ -160,7 +160,7 @@ export default function TestPage() {
     formData.append("current_phrase", currentPhrase); // ✅ Send phrase to backend
 
     try {
-      const result = await fetch("http://localhost:8000/transcribe", {
+      const result = await fetch("http://localhost:8000/transcribe/", {
         method: "POST",
         body: formData,
       });
