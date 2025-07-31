@@ -1,6 +1,6 @@
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi import FastAPI, UploadFile, File, Request, Form
+from fastapi import FastAPI, HTTPException, UploadFile, File, Request, Form
 from pydub import AudioSegment
 import parselmouth
 import numpy as np
@@ -52,6 +52,20 @@ async def get_characters(request: Request):
             })
         
     return {'characters': character_list}
+
+@app.post('/check-password/')
+async def check_password(request: Request):
+    data = await request.json()
+    username = data.get('username')
+    password = data.get('password')
+    
+    lines = read_lines('backend/students.csv')
+    for line in lines:
+        items = line.strip().split(',')
+        if username == items[0] and password == items[1]:
+            return {'test': items[3], 'group': items[2]}
+    raise HTTPException(status_code=401, detail="Invalid username or password")
+
 
 
 @app.post("/analyze-audio-voiceless/")

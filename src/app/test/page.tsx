@@ -245,7 +245,7 @@ export default function TestPage() {
       setTimeLeft(remaining);
       if (remaining === 0) {
         localStorage.removeItem('timerEnd');
-        router.push('/test_over');
+        router.push('/');
       }
     };
 
