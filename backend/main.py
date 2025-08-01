@@ -278,6 +278,7 @@ async def dtw_new(
         user_phrase = []
         reference_phrase = []
         ref_time = []
+        user_time = []
         count = 0
         for j in range(counter, len(reference_alignment['character'])):
             
@@ -315,25 +316,52 @@ async def dtw_new(
             else:
                 count += 1
                 user_phrase.append(user_alignment['frequency'][j])
+                user_time.append(user_alignment['time'][j])
 
-        user_phrase = user_phrase[::3]
-        reference_phrase = reference_phrase[::3]
-        ref_time = ref_time[::3]
-        user_series = [(f,) for f in user_phrase]
-        reference_series = [(f,) for f in reference_phrase]
-        dist, path = fastdtw(reference_series, user_series, dist=euclidean)
-        # if dist < 50:
-        print(path)
-        print(dist)
-        for x, y in path:
-            if x < len(reference_phrase) and y < len(user_phrase) and x < len(ref_time):
-                alignment.append({
-                    "time": ref_time[x],
-                    "reference": reference_phrase[x],
-                    "user": user_phrase[y]
-                })
+        # user_phrase = user_phrase[::3]
+        # reference_phrase = reference_phrase[::3]
+        # ref_time = ref_time[::3]
+        # user_series = [(f,) for f in user_phrase]
+        # reference_series = [(f,) for f in reference_phrase]
+        # dist, path = fastdtw(reference_series, user_series, dist=euclidean)
+        # # if dist < 50:
+        # print(path)
+        # print(dist)
+        # for x, y in path:
+        #     if x < len(reference_phrase) and y < len(user_phrase) and x < len(ref_time):
+        #         alignment.append({
+        #             "time": ref_time[x],
+        #             "reference": reference_phrase[x],
+        #             "user": user_phrase[y]
+        #         })
+        stretched_user = stretch_user_pitch(np.array(user_time), np.array(user_phrase), np.array(ref_time))
+        for i in range(len(reference_phrase)):
+            alignment.append({
+                "time": ref_time[i],
+                "reference": reference_phrase[i],
+                "user": float(stretched_user[i])
+            })
 
     return {"alignment": alignment}
+
+
+import numpy as np
+from scipy.interpolate import interp1d
+
+def stretch_user_pitch(user_times, user_pitch, target_times):
+    # Normalize user times to [0, 1]
+    user_times_norm = (user_times - user_times[0]) / (user_times[-1] - user_times[0])
+
+    # Interpolator over normalized time
+    interpolator = interp1d(user_times_norm, user_pitch, kind='linear', fill_value="extrapolate")
+
+    # Normalize target times to [0, 1] for mapping
+    target_times_norm = (target_times - target_times[0]) / (target_times[-1] - target_times[0])
+
+    # Get stretched user pitch values at target times
+    stretched_user_pitch = interpolator(target_times_norm)
+
+    return stretched_user_pitch
 
 
 def align_pitch(pitch, characters):
