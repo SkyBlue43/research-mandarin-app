@@ -25,7 +25,7 @@ export default function Home() {
         throw new Error(errorData.detail || 'Login failed');
       }
       const data = await result.json();
-      router.push(`/test?test=${data.test}&group=${data.group}`)
+      router.push(`/test_real?test=${data.test}&group=${data.group}`)
     }
 
     catch (error: any) {

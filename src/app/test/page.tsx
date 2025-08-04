@@ -31,7 +31,7 @@ const PitchChart = React.memo(({ data }: { data: PitchPoint[] }) => {
       <Line
         type="monotone"
         dataKey="frequency"
-        stroke="#8884d8"
+        stroke="#FF69B4"
         dot={false}
         strokeWidth={5}
       />
@@ -70,19 +70,19 @@ const AlignedPitchChart = React.memo(({ data }: { data: AlignedPoint[] }) => {
       />
       <Line
         type="monotone"
-        dataKey="user"
-        stroke="#82ca9d"
+        dataKey="reference"
+        stroke="#FF69B4"
         dot={false}
-        strokeWidth={4}
-        name="User"
+        strokeWidth={5}
+        name="Reference"
       />
       <Line
         type="monotone"
-        dataKey="reference"
-        stroke="#8884d8"
+        dataKey="user"
+        stroke="#82ca9d"
         dot={false}
-        strokeWidth={4}
-        name="Reference"
+        strokeWidth={5}
+        name="User"
       />
     </LineChart>
   );
@@ -419,7 +419,7 @@ export default function TestPage() {
 
       <footer className="grid grid-cols-2 w-screen p-8">
         <div>
-          <button className="p-4 rounded-full bg-blue-500 text-white hover:bg-blue-600" onClick={handlePlay}>
+          <button className="p-4 rounded-full bg-pink-500 text-white hover:bg-pink-600" onClick={handlePlay}>
             <Play />
           </button>
         </div>
