@@ -5,6 +5,7 @@ import { useEffect, useState, useRef, useMemo } from 'react'
 import { Mic, Play, Square, ArrowRight, ArrowLeft } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis } from 'recharts';
 import React from 'react';
+import Swal from 'sweetalert2'
 
 // Type for pitch points
 type PitchPoint = {
@@ -309,10 +310,23 @@ export default function TestPageReal() {
         mediaRecorder.start();
     };
 
+
+    const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+
+    const referenceAlert = async () => {
+        await sleep(2000)  // wait 2 seconds
+        Swal.fire({
+          title: 'Heads up!',
+          text: 'This is a SweetAlert2 modal.',
+          icon: 'info',
+        })
+      }
+
     const stopRecording = () => {
         mediaRecorderRef.current?.stop();
         setRecording(false);
         setRecordReady(true);
+        referenceAlert();
     };
 
     useEffect(() => {
@@ -380,37 +394,41 @@ export default function TestPageReal() {
 
             <div className="grid grid-cols-3 w-screen h-100">
                 <div>
-                    <button className="p-4 rounded-full bg-pink-500 text-white hover:bg-pink-600" onClick={handlePlay}>
+                    {userPitch.length > 0 && <div>
+                        <button className="p-4 rounded-full bg-pink-500 text-white hover:bg-pink-600" onClick={handlePlay}>
+                            <Play />
+                        </button>
+                        <div className='mb-8'>Your Audio</div>
+                    </div>}
+                    {referencePitch.length > 0 && <div>
+                        <button className="p-4 rounded-full bg-pink-500 text-white hover:bg-pink-600" onClick={handlePlay}>
+                            <Play />
+                        </button>
+                        <div className='mb-8'>Correct Audio</div>
+                    </div>}
+                    {/* <button className="p-4 rounded-full bg-pink-500 text-white hover:bg-pink-600" onClick={handlePlay}>
                         <Play />
                     </button>
-                    <div className='mb-8'>Your Audio</div>
-                    <button className="p-4 rounded-full bg-pink-500 text-white hover:bg-pink-600" onClick={handlePlay}>
-                        <Play />
-                    </button>
-                    <div className='mb-8'>Correct Audio</div>
-                    <button className="p-4 rounded-full bg-pink-500 text-white hover:bg-pink-600" onClick={handlePlay}>
-                        <Play />
-                    </button>
-                    <div className='mb-8'>Your Corrected Audio</div>
+                    <div className='mb-8'>Your Corrected Audio</div> */}
                 </div>
 
                 {/* {group === "a" && (
                     <div className='w-120 flex items-center justify-center mr-4 ml-4 text-black'>
                         {playReady && referencePitch.length > 0 && <PitchChart data={memoizedPitch} />}
                     </div>
-                )}
+                )} */}
 
                 {group === "a" && (
                     <div className='w-120 flex items-center justify-center ml-4 mr-4 text-black'>
                         {recordReady && userPitch.length > 0 && <UserPitchChart data={memoizedUserPitch} />}
                     </div>
-                )} */}
+                )}
 
-                {group === "a" && (
+                {/* {group === "a" && (
                     <div className='flex items-center justify-center ml-4 mr-4 text-black'>
                         {alignedGraphData != undefined && alignedGraphData.length > 0 && <AlignedPitchChart data={memoizedAlignedPitch} />}
                     </div>
-                )}
+                )} */}
 
                 {group === "b" && (
                     <>
