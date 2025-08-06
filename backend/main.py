@@ -12,6 +12,15 @@ from fastdtw import fastdtw
 from scipy.spatial.distance import euclidean
 import textgrid
 from scipy.signal import savgol_filter
+import subprocess
+import wave
+from vosk import Model, KaldiRecognizer, SetLogLevel
+from fastapi.responses import JSONResponse
+import uvicorn
+import tempfile
+from scipy.interpolate import interp1d
+from typing import List
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -165,17 +174,6 @@ async def analyze_audio(file: UploadFile = File(...)):
 
 #     # Return the word segments
 #     return {"segments": result_aligned["word_segments"]}
-
-
-import os
-import subprocess
-import wave
-import json
-from vosk import Model, KaldiRecognizer, SetLogLevel
-from fastapi import FastAPI, File, Form, UploadFile
-from fastapi.responses import JSONResponse
-import uvicorn
-import tempfile
 
 SetLogLevel(-1)
 
@@ -345,9 +343,6 @@ async def dtw_new(
     return {"alignment": alignment}
 
 
-import numpy as np
-from scipy.interpolate import interp1d
-
 def stretch_user_pitch(user_times, user_pitch, target_times):
     # Normalize user times to [0, 1]
     user_times_norm = (user_times - user_times[0]) / (user_times[-1] - user_times[0])
@@ -441,3 +436,30 @@ def get_character_array(words_reference_data):
             end = words_reference_data[i]['end']
             characters.append({"char": words_reference_data[i]['word'], "start": start, "end": end})
     return characters
+
+
+def calculate_accuracy(aligned: List[dict]) -> float:
+    pitch_differences = []
+
+    for pitch in aligned:
+        user = pitch.get("user")
+        reference = pitch.get("reference")
+
+        if user is not None and reference is not None:
+            pitch_differences.append(abs(reference - user))
+
+    if not pitch_differences:
+        return 0.0        
+
+    average = sum(pitch_differences) / len(pitch_differences)
+    return round(max(0.0, 100.0 - average * 100.0), 2)  # assuming normalized scale
+
+
+@app.post('/accuracy/')
+async def accuracy(request: Request):
+    body = await request.json()
+    aligned = body.get("aligned", [])
+
+    print("Received aligned:", aligned)
+    score = calculate_accuracy(aligned)
+    return {"score": score}

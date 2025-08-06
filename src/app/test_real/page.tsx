@@ -7,6 +7,8 @@ import { LineChart, Line, XAxis, YAxis } from 'recharts';
 import React from 'react';
 import Swal from 'sweetalert2'
 
+import PitchChart from '../../features/ui/charts/PitchChart';
+
 // Type for pitch points
 type PitchPoint = {
     time: number;
@@ -20,46 +22,6 @@ type AlignedPoint = {
 };
 
 // Memoized Chart Components
-const PitchChart = React.memo(({ data }: { data: PitchPoint[] }) => {
-    return (
-        <LineChart width={600} height={400} data={data}>
-            <XAxis tick={false} dataKey="time" />
-            <YAxis
-                tick={false}
-                domain={['dataMin - 0.5', 'dataMax + 0.5']}
-                tickFormatter={(value) => value.toFixed(1)}
-            />
-            <Line
-                type="monotone"
-                dataKey="frequency"
-                stroke="#FF69B4"
-                dot={false}
-                strokeWidth={5}
-            />
-        </LineChart>
-    );
-});
-
-const UserPitchChart = React.memo(({ data }: { data: PitchPoint[] }) => {
-    return (
-        <LineChart width={600} height={400} data={data}>
-            <XAxis tick={false} dataKey="time" />
-            <YAxis
-                tick={false}
-                domain={['dataMin - 0.5', 'dataMax + 0.5']}
-                tickFormatter={(value) => value.toFixed(1)}
-            />
-            <Line
-                type="monotone"
-                dataKey="frequency"
-                stroke="#82ca9d"
-                dot={false}
-                strokeWidth={5}
-            />
-        </LineChart>
-    );
-});
-
 const AlignedPitchChart = React.memo(({ data }: { data: AlignedPoint[] }) => {
     return (
         <LineChart width={600} height={400} data={data}>
@@ -114,8 +76,11 @@ export default function TestPageReal() {
     const [recordReady, setRecordReady] = useState(false);
     const [userWordsArray, setUserWordsArray] = useState<any[]>([]);
     const [alignedGraphData, setAlignedGraphData] = useState<any[]>([]);
+    const [accuracy, setAccuracy] = useState(0.0);
+    const [graphState, setGraphState] = useState(0);
+    const [state, setState] = useState(0);
 
-    // Analyze reference and user audio
+    // Analyzes reference audio
     useEffect(() => {
         const analyzeReference = async () => {
             if (!referenceBlob) return;
@@ -127,7 +92,7 @@ export default function TestPageReal() {
         analyzeReference();
     }, [referenceBlob, chosenAudio]);
 
-
+    // Analyzes User audio
     useEffect(() => {
         const analyzeUser = async () => {
             const data = await analyzeAudio(userBlob, "recording" + chosenAudio);
@@ -148,6 +113,30 @@ export default function TestPageReal() {
             analyzeUser();
         }
     }, [userBlob, chosenAudio]);
+
+    // Calculates the accuracy on the backend
+    useEffect(() => {
+        const calculateAccuracy = async () => {
+            const data = await getAccuracy(alignedGraphData);
+            setAccuracy(data);
+
+        }
+        if (alignedGraphData) {
+            calculateAccuracy()
+        }
+    }, [alignedGraphData])
+
+    const getAccuracy = async (aligned: AlignedPoint[]) => {
+        const response = await fetch('http://localhost:8000/accuracy/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ aligned }),
+        });
+        const result = await response.json();
+        return result.score;
+    }
 
     const transcribeAudio = async (
         audio_blob: Blob | null,
@@ -201,20 +190,6 @@ export default function TestPageReal() {
         console.log("DTW result:", data);
         setAlignedGraphData(data.alignment);
     };
-    // useEffect(() => {
-    //   const analyzeUser = async () => {
-    //     const data = await analyzeAudio(userBlob, "recording" + chosenAudio);
-    //     if (data) {
-    //       setUserPitch(data.pitch);
-    //       if (referencePitch.length > 0) {
-    //       }
-    //     }
-    //   };
-
-    //   if (userBlob) {
-    //     analyzeUser();
-    //   }
-    // }, [userBlob, chosenAudio]);
 
     const analyzeAudio = async (audio_blob: Blob | null, audio_location: string) => {
         if (!audio_blob) return null;
@@ -276,14 +251,38 @@ export default function TestPageReal() {
 
     const handlePlay = async () => {
         setPlayReady(true);
+        setGraphState(1);
         const audio = new Audio(chosenAudio);
         audio.play();
-        const response = await fetch(chosenAudio);
-        const blob = await response.blob();
-        setReferenceBlob(blob);
+    };
+
+    const handlePlayUser = async () => {
+        setPlayReady(true);
+        if (userBlob) {
+            setGraphState(0);
+            console.log('userBlob:', userBlob);
+            const blobUrl = URL.createObjectURL(userBlob);
+            const audio = new Audio(blobUrl);
+            console.log(blobUrl);
+            audio.play();
+        }
+    };
+
+    const handlePlayCorrected = async () => {
+        setPlayReady(true);
+        if (userBlob) {
+            setGraphState(2);
+            setState(3)
+            const blobUrl = URL.createObjectURL(userBlob);
+            const audio = new Audio(blobUrl);
+            audio.play();
+        }
     };
 
     const startRecording = async () => {
+        const response = await fetch(chosenAudio);
+        const blob = await response.blob();
+        setReferenceBlob(blob);
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         const mediaRecorder = new MediaRecorder(stream);
         mediaRecorderRef.current = mediaRecorder;
@@ -314,13 +313,34 @@ export default function TestPageReal() {
     const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
     const referenceAlert = async () => {
-        await sleep(2000)  // wait 2 seconds
+        await sleep(3000);
         Swal.fire({
-          title: 'Heads up!',
-          text: 'This is a SweetAlert2 modal.',
-          icon: 'info',
-        })
-      }
+            title: 'Heads up!',
+            text: 'Click "OK" to hear and see the correct tone',
+            icon: 'info',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                handlePlay();
+                setState(1);
+                referenceAlert2();
+            }
+        });
+    }
+
+
+    const referenceAlert2 = async () => {
+        await sleep(4000);
+        Swal.fire({
+            title: 'Heads up!',
+            text: 'You can now hear your own corrected voice with the golden button and practice on your own.\nWhen you have clicked on the golden button, you can move on to the next phrase.',
+            icon: 'info',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                setState(2);
+                setGraphState(2);
+            }
+        });
+    }
 
     const stopRecording = () => {
         mediaRecorderRef.current?.stop();
@@ -395,7 +415,7 @@ export default function TestPageReal() {
             <div className="grid grid-cols-3 w-screen h-100">
                 <div>
                     {userPitch.length > 0 && <div>
-                        <button className="p-4 rounded-full bg-pink-500 text-white hover:bg-pink-600" onClick={handlePlay}>
+                        <button className="p-4 rounded-full bg-green-500 text-white hover:bg-green-600" onClick={handlePlayUser}>
                             <Play />
                         </button>
                         <div className='mb-8'>Your Audio</div>
@@ -406,29 +426,31 @@ export default function TestPageReal() {
                         </button>
                         <div className='mb-8'>Correct Audio</div>
                     </div>}
-                    {/* <button className="p-4 rounded-full bg-pink-500 text-white hover:bg-pink-600" onClick={handlePlay}>
-                        <Play />
-                    </button>
-                    <div className='mb-8'>Your Corrected Audio</div> */}
+                    {state >= 2 && <div>
+                        <button className="p-4 rounded-full bg-yellow-500 text-white hover:bg-yellow-600" onClick={handlePlayCorrected}>
+                            <Play />
+                        </button>
+                        <div className='mb-8'>Your Corrected Audio</div>
+                    </div>}
                 </div>
 
-                {/* {group === "a" && (
+                {group === "a" && graphState == 1 && (
                     <div className='w-120 flex items-center justify-center mr-4 ml-4 text-black'>
-                        {playReady && referencePitch.length > 0 && <PitchChart data={memoizedPitch} />}
-                    </div>
-                )} */}
-
-                {group === "a" && (
-                    <div className='w-120 flex items-center justify-center ml-4 mr-4 text-black'>
-                        {recordReady && userPitch.length > 0 && <UserPitchChart data={memoizedUserPitch} />}
+                        {playReady && referencePitch.length > 0 && <PitchChart data={memoizedPitch} color={'#FF69B4'} />}
                     </div>
                 )}
 
-                {/* {group === "a" && (
+                {group === "a" && graphState == 0 && (
+                    <div className='w-120 flex items-center justify-center ml-4 mr-4 text-black'>
+                        {recordReady && userPitch.length > 0 && <PitchChart data={memoizedUserPitch} color='#82ca9d' />}
+                    </div>
+                )}
+
+                {group === "a" && graphState == 2 && (
                     <div className='flex items-center justify-center ml-4 mr-4 text-black'>
                         {alignedGraphData != undefined && alignedGraphData.length > 0 && <AlignedPitchChart data={memoizedAlignedPitch} />}
                     </div>
-                )} */}
+                )}
 
                 {group === "b" && (
                     <>
@@ -436,16 +458,18 @@ export default function TestPageReal() {
                     </>
                 )}
 
-                <div>
-                    Accuracy will go here
+                <div className='flex justify-center items-center'>
+                    {accuracy != 0.0 && <div className="w-64 h-64 flex justify-center items-center rounded-lg border-4 border-green-500 text-green-600 font-bold text-xl">
+                        {accuracy}%
+                    </div>}
                 </div>
             </div>
 
             <footer className="grid grid-cols-3 w-screen p-8">
                 <div>
-                    <button className='p-4 rounded-full bg-purple-500 text-white hover:bg-purple-600' onClick={handleLeftClick}>
+                    {/* <button className='p-4 rounded-full bg-purple-500 text-white hover:bg-purple-600' onClick={handleLeftClick}>
                         Last Phrase
-                    </button>
+                    </button> */}
                 </div>
 
                 <div>
@@ -457,9 +481,9 @@ export default function TestPageReal() {
                 </div>
 
                 <div>
-                    <button className='text-md p-4 rounded-full bg-purple-500 text-white hover:bg-purple-600' onClick={handleRightClick}>
+                    {state == 3 && <button className='text-md p-4 rounded-full bg-purple-500 text-white hover:bg-purple-600' onClick={handleRightClick}>
                         Next Phrase
-                    </button>
+                    </button>}
                 </div>
             </footer>
         </div>
