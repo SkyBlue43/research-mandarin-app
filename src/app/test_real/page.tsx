@@ -9,13 +9,9 @@ import Swal from 'sweetalert2'
 import PitchChart from '@/features/ui/charts/PitchChart';
 import AlignedPitchChart from '@/features/ui/charts/AlignedPitchChart';
 import Timer from '@/features/ui/timer/Timer';
-import { DTW, getAccuracy, transcribeAudio, analyzeAudio } from '@/lib/api'
-
-// Type for pitch points
-type PitchPoint = {
-    time: number;
-    frequency: number;
-};
+import { getAccuracy } from '@/lib/api/api'
+import { useTimer } from '@/lib/hooks/useTimer'
+import { useAudioAnalysisReference, useAudioAnalysisUser } from '@/lib/hooks/useAudioAnalysis';
 
 export default function TestPageReal() {
     const [characters, setCharacters] = useState<any[]>([]);
@@ -23,8 +19,8 @@ export default function TestPageReal() {
     const test = searchParams.get('test');
     const group = searchParams.get('group');
     const router = useRouter();
+    const timeLeft = useTimer(900, '/');
 
-    const [timeLeft, setTimeLeft] = useState(900);
     const [arrayIndex, setArrayIndex] = useState(0);
     const [currentPhrase, setCurrentPhrase] = useState('');
     const [currentPinyin, setCurrentPinyin] = useState('');
@@ -36,50 +32,15 @@ export default function TestPageReal() {
     const audioChunks = useRef<Blob[]>([]);
     const [referenceBlob, setReferenceBlob] = useState<Blob | null>(null);
     const [userBlob, setUserBlob] = useState<Blob | null>(null);
-    const [referencePitch, setReferencePitch] = useState<PitchPoint[]>([]);
-    const [userPitch, setUserPitch] = useState<PitchPoint[]>([]);
     const [playReady, setPlayReady] = useState(false);
     const [recordReady, setRecordReady] = useState(false);
-    const [userWordsArray, setUserWordsArray] = useState<any[]>([]);
-    const [alignedGraphData, setAlignedGraphData] = useState<any[]>([]);
     const [accuracy, setAccuracy] = useState(0.0);
     const [graphState, setGraphState] = useState(0);
     const [state, setState] = useState(0);
 
-    // Analyzes reference audio
-    useEffect(() => {
-        const analyzeReference = async () => {
-            if (!referenceBlob) return;
-            const data = await analyzeAudio(referenceBlob, chosenAudio);
-            if (data && JSON.stringify(data.pitch) !== JSON.stringify(referencePitch)) {
-                setReferencePitch(data.pitch);
-            }
-        };
-        analyzeReference();
-    }, [referenceBlob, chosenAudio]);
+    const { referencePitch, clearReferencePitch }  = useAudioAnalysisReference(referenceBlob, chosenAudio);
+    const { userPitch, userWordsArray, alignedGraphData, clearPitch } = useAudioAnalysisUser(userBlob, chosenAudio, referencePitch, currentPhrase, test, currentIndex);
 
-    // Analyzes User audio
-    useEffect(() => {
-        const analyzeUser = async () => {
-            const data = await analyzeAudio(userBlob, "recording" + chosenAudio);
-            if (data) {
-                setUserPitch(data.pitch);
-
-                if (referencePitch.length > 0) {
-                    const user_chars_array = await transcribeAudio(userBlob, "recording" + chosenAudio, currentPhrase);
-                    setUserWordsArray(user_chars_array);
-
-                    console.log("✅ User Character Segments:", user_chars_array);
-                    const aligned_graph_data = await DTW(data.pitch, referencePitch, test, user_chars_array, currentIndex);
-                    setAlignedGraphData(aligned_graph_data);
-                }
-            }
-        };
-
-        if (userBlob) {
-            analyzeUser();
-        }
-    }, [userBlob, chosenAudio]);
 
     // Calculates the accuracy on the backend
     useEffect(() => {
@@ -92,32 +53,6 @@ export default function TestPageReal() {
             calculateAccuracy()
         }
     }, [alignedGraphData])
-
-    // Timer logic
-    useEffect(() => {
-        const storedEndTime = localStorage.getItem('timerEnd');
-        let endTime: number;
-
-        if (storedEndTime) {
-            endTime = parseInt(storedEndTime, 10);
-        } else {
-            endTime = Date.now() + 900 * 1000; // ms
-            localStorage.setItem('timerEnd', endTime.toString());
-        }
-
-        const updateTime = () => {
-            const remaining = Math.max(0, Math.floor((endTime - Date.now()) / 1000));
-            setTimeLeft(remaining);
-            if (remaining === 0) {
-                localStorage.removeItem('timerEnd');
-                router.push('/');
-            }
-        };
-
-        updateTime();
-        const interval = setInterval(updateTime, 1000);
-        return () => clearInterval(interval);
-    }, []);
 
     // Fetch characters
     useEffect(() => {
@@ -245,11 +180,10 @@ export default function TestPageReal() {
     const handleLeftClick = () => {
         setPlayReady(false);
         setRecordReady(false);
-        setReferencePitch([]);
-        setUserPitch([]);
+        clearReferencePitch();
+        clearPitch();
         setReferenceBlob(null);
         setUserBlob(null);
-        setAlignedGraphData([]);
 
         if (arrayIndex === 0) {
             setArrayIndex(9);
@@ -267,11 +201,10 @@ export default function TestPageReal() {
     const handleRightClick = () => {
         setPlayReady(false);
         setRecordReady(false);
-        setReferencePitch([]);
-        setUserPitch([]);
+        clearReferencePitch();
+        clearPitch();
         setReferenceBlob(null);
         setUserBlob(null);
-        setAlignedGraphData([])
 
         if (arrayIndex === 9) {
             setArrayIndex(0);
