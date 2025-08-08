@@ -12,13 +12,13 @@ import Timer from '@/features/ui/timer/Timer';
 import { getAccuracy } from '@/lib/api/api'
 import { useTimer } from '@/lib/hooks/useTimer'
 import { useAudioAnalysisReference, useAudioAnalysisUser } from '@/lib/hooks/useAudioAnalysis';
+import { useAudioRecorder } from '@/lib/hooks/useAudioRecorder';
 
 export default function TestPageReal() {
     const [characters, setCharacters] = useState<any[]>([]);
     const searchParams = useSearchParams();
     const test = searchParams.get('test');
     const group = searchParams.get('group');
-    const router = useRouter();
     const timeLeft = useTimer(900, '/');
 
     const [arrayIndex, setArrayIndex] = useState(0);
@@ -26,21 +26,17 @@ export default function TestPageReal() {
     const [currentPinyin, setCurrentPinyin] = useState('');
     const [currentIndex, setCurrentIndex] = useState("1");
     const [chosenAudio, setChosenAudio] = useState('');
-    const [recording, setRecording] = useState(false);
-    const [audioURL, setAudioURL] = useState<string | null>(null);
-    const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-    const audioChunks = useRef<Blob[]>([]);
-    const [referenceBlob, setReferenceBlob] = useState<Blob | null>(null);
-    const [userBlob, setUserBlob] = useState<Blob | null>(null);
+
+
     const [playReady, setPlayReady] = useState(false);
     const [recordReady, setRecordReady] = useState(false);
     const [accuracy, setAccuracy] = useState(0.0);
     const [graphState, setGraphState] = useState(0);
     const [state, setState] = useState(0);
 
+    const { startRecording, stopRecording, audioURL, recording, referenceBlob, userBlob, clearBlob } = useAudioRecorder();
     const { referencePitch, clearReferencePitch }  = useAudioAnalysisReference(referenceBlob, chosenAudio);
     const { userPitch, userWordsArray, alignedGraphData, clearPitch } = useAudioAnalysisUser(userBlob, chosenAudio, referencePitch, currentPhrase, test, currentIndex);
-
 
     // Calculates the accuracy on the backend
     useEffect(() => {
@@ -103,35 +99,7 @@ export default function TestPageReal() {
         }
     };
 
-    const startRecording = async () => {
-        const response = await fetch(chosenAudio);
-        const blob = await response.blob();
-        setReferenceBlob(blob);
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        const mediaRecorder = new MediaRecorder(stream);
-        mediaRecorderRef.current = mediaRecorder;
 
-        mediaRecorder.ondataavailable = (event) => {
-            audioChunks.current.push(event.data);
-        };
-
-        mediaRecorder.onstart = () => {
-            setTimeout(() => {
-                setRecording(true);
-            }, 250);
-        };
-
-
-        mediaRecorder.onstop = async () => {
-            const audioBlob = new Blob(audioChunks.current, { type: 'audio/wav' });
-            setAudioURL(URL.createObjectURL(audioBlob));
-            setUserBlob(audioBlob);
-            mediaRecorder.stream.getTracks().forEach(track => track.stop());
-        };
-
-        audioChunks.current = [];
-        mediaRecorder.start();
-    };
 
 
     const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
@@ -166,12 +134,7 @@ export default function TestPageReal() {
         });
     }
 
-    const stopRecording = () => {
-        mediaRecorderRef.current?.stop();
-        setRecording(false);
-        setRecordReady(true);
-        referenceAlert();
-    };
+    
 
     useEffect(() => {
         setChosenAudio(`http://localhost:8000/sounds/${test}/${currentIndex}.mp3`);
@@ -182,8 +145,7 @@ export default function TestPageReal() {
         setRecordReady(false);
         clearReferencePitch();
         clearPitch();
-        setReferenceBlob(null);
-        setUserBlob(null);
+        clearBlob();
 
         if (arrayIndex === 0) {
             setArrayIndex(9);
@@ -203,8 +165,7 @@ export default function TestPageReal() {
         setRecordReady(false);
         clearReferencePitch();
         clearPitch();
-        setReferenceBlob(null);
-        setUserBlob(null);
+        clearBlob();
 
         if (arrayIndex === 9) {
             setArrayIndex(0);
@@ -295,7 +256,7 @@ export default function TestPageReal() {
                 <div>
                     <button
                         className={`p-4 rounded-full text-white ${recording ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'}`}
-                        onClick={recording ? stopRecording : startRecording}>
+                        onClick={recording ? stopRecording : () => startRecording(chosenAudio)}>
                         {recording ? <Square /> : <Mic />}
                     </button>
                 </div>
