@@ -13,6 +13,7 @@ import { getAccuracy } from '@/lib/api/api'
 import { useTimer } from '@/lib/hooks/useTimer'
 import { useAudioAnalysisReference, useAudioAnalysisUser } from '@/lib/hooks/useAudioAnalysis';
 import { useAudioRecorder } from '@/lib/hooks/useAudioRecorder';
+import { useAlert } from '@/lib/hooks/useAlert';
 
 export default function TestPageReal() {
     const [characters, setCharacters] = useState<any[]>([]);
@@ -29,14 +30,15 @@ export default function TestPageReal() {
 
 
     const [playReady, setPlayReady] = useState(false);
-    const [recordReady, setRecordReady] = useState(false);
     const [accuracy, setAccuracy] = useState(0.0);
     const [graphState, setGraphState] = useState(0);
     const [state, setState] = useState(0);
 
     const { startRecording, stopRecording, audioURL, recording, referenceBlob, userBlob, clearBlob } = useAudioRecorder();
-    const { referencePitch, clearReferencePitch }  = useAudioAnalysisReference(referenceBlob, chosenAudio);
+    const { referencePitch, clearReferencePitch } = useAudioAnalysisReference(referenceBlob, chosenAudio);
     const { userPitch, userWordsArray, alignedGraphData, clearPitch } = useAudioAnalysisUser(userBlob, chosenAudio, referencePitch, currentPhrase, test, currentIndex);
+
+
 
     // Calculates the accuracy on the backend
     useEffect(() => {
@@ -76,16 +78,17 @@ export default function TestPageReal() {
         audio.play();
     };
 
+
+    const { referenceAlert } = useAlert(handlePlay, setState, setGraphState);
+
     const handlePlayUser = async () => {
         setPlayReady(true);
-        if (userBlob) {
-            setGraphState(0);
-            console.log('userBlob:', userBlob);
-            const blobUrl = URL.createObjectURL(userBlob);
-            const audio = new Audio(blobUrl);
-            console.log(blobUrl);
+        setGraphState(0);
+        if (audioURL) {
+            const audio = new Audio(audioURL);
             audio.play();
         }
+
     };
 
     const handlePlayCorrected = async () => {
@@ -99,42 +102,16 @@ export default function TestPageReal() {
         }
     };
 
+    const handleRecording = () => {
+        if (recording) {
+            stopRecording();
+            referenceAlert();
+        } else {
+            startRecording(chosenAudio);
+        }
+    };
 
 
-
-    const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
-
-    const referenceAlert = async () => {
-        await sleep(3000);
-        Swal.fire({
-            title: 'Heads up!',
-            text: 'Click "OK" to hear and see the correct tone',
-            icon: 'info',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                handlePlay();
-                setState(1);
-                referenceAlert2();
-            }
-        });
-    }
-
-
-    const referenceAlert2 = async () => {
-        await sleep(4000);
-        Swal.fire({
-            title: 'Heads up!',
-            text: 'You can now hear your own corrected voice with the golden button and practice on your own.\nWhen you have clicked on the golden button, you can move on to the next phrase.',
-            icon: 'info',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                setState(2);
-                setGraphState(2);
-            }
-        });
-    }
-
-    
 
     useEffect(() => {
         setChosenAudio(`http://localhost:8000/sounds/${test}/${currentIndex}.mp3`);
@@ -142,7 +119,6 @@ export default function TestPageReal() {
 
     const handleLeftClick = () => {
         setPlayReady(false);
-        setRecordReady(false);
         clearReferencePitch();
         clearPitch();
         clearBlob();
@@ -162,7 +138,6 @@ export default function TestPageReal() {
 
     const handleRightClick = () => {
         setPlayReady(false);
-        setRecordReady(false);
         clearReferencePitch();
         clearPitch();
         clearBlob();
@@ -223,7 +198,7 @@ export default function TestPageReal() {
 
                 {group === "a" && graphState == 0 && (
                     <div className='w-120 flex items-center justify-center ml-4 mr-4 text-black'>
-                        {recordReady && userPitch.length > 0 && <PitchChart data={memoizedUserPitch} color='#82ca9d' />}
+                        {userPitch.length > 0 && <PitchChart data={memoizedUserPitch} color='#82ca9d' />}
                     </div>
                 )}
 
@@ -256,7 +231,7 @@ export default function TestPageReal() {
                 <div>
                     <button
                         className={`p-4 rounded-full text-white ${recording ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'}`}
-                        onClick={recording ? stopRecording : () => startRecording(chosenAudio)}>
+                        onClick={handleRecording}>
                         {recording ? <Square /> : <Mic />}
                     </button>
                 </div>

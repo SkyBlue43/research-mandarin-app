@@ -15,7 +15,12 @@ export function useAudioRecorder() {
         setReferenceBlob(blob);
 
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        const mediaRecorder = new MediaRecorder(stream);
+        const mimeType = MediaRecorder.isTypeSupported('audio/webm')
+            ? 'audio/webm'
+            : 'audio/mp4';
+
+        const mediaRecorder = new MediaRecorder(stream, { mimeType });
+
         mediaRecorderRef.current = mediaRecorder;
 
         mediaRecorder.ondataavailable = (event) => {
@@ -27,7 +32,7 @@ export function useAudioRecorder() {
         };
 
         mediaRecorder.onstop = () => {
-            const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
+            const audioBlob = new Blob(audioChunksRef.current, { type: mimeType });
             setAudioURL(URL.createObjectURL(audioBlob));
             setUserBlob(audioBlob);
             mediaRecorder.stream.getTracks().forEach(track => track.stop());
