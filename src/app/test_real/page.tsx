@@ -5,10 +5,9 @@ import { useEffect, useState, useMemo } from 'react'
 import { Mic, Play, Square } from 'lucide-react';
 import React from 'react';
 
-import PitchChart from '@/features/ui/charts/PitchChart';
-import AlignedPitchChart from '@/features/ui/charts/AlignedPitchChart';
-import Timer from '@/features/ui/timer/Timer';
-import { getAccuracy } from '@/lib/api/api'
+import PitchChart from '@/ui/charts/PitchChart';
+import AlignedPitchChart from '@/ui/charts/AlignedPitchCharts';
+import Timer from '@/ui/Timer';
 import { useTimer } from '@/lib/hooks/useTimer'
 import { useAudioAnalysisReference, useAudioAnalysisUser } from '@/lib/hooks/useAudioAnalysis';
 import { useAudioRecorder } from '@/lib/hooks/useAudioRecorder';
@@ -162,7 +161,7 @@ export default function TestPageReal() {
                         </button>
                         <div className='mb-8'>Your Audio</div>
                     </div>}
-                    {referencePitch.length > 0 && <div>
+                    {referencePitch.length > 0 && state == 1 && <div>
                         <button className="p-4 rounded-full bg-pink-500 text-white hover:bg-pink-600" onClick={handlePlay}>
                             <Play />
                         </button>

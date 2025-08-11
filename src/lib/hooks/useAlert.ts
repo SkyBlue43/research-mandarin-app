@@ -8,7 +8,7 @@ export function useAlert(
     const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
     const referenceAlert = async () => {
-        await sleep(3000);
+        await sleep(2000);
         Swal.fire({
             title: 'Heads up!',
             text: 'Click "OK" to hear and see the correct tone',
@@ -23,7 +23,7 @@ export function useAlert(
     };
 
     const referenceAlert2 = async () => {
-        await sleep(4000);
+        await sleep(2000);
         Swal.fire({
             title: 'Heads up!',
             text: 'You can now hear your own corrected voice with the golden button and practice on your own.\nWhen you have clicked on the golden button, you can move on to the next phrase.',

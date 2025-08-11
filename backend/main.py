@@ -62,6 +62,7 @@ async def get_characters(request: Request):
         
     return {'characters': character_list}
 
+
 @app.post('/check-password/')
 async def check_password(request: Request):
     data = await request.json()
@@ -118,62 +119,6 @@ async def analyze_audio(file: UploadFile = File(...)):
     os.remove(output_path)
 
     return {"pitch": norm_pitch_values}
-
-# @app.post('/transcribe/')
-# async def transcribe(
-#     file: UploadFile= File(...),
-#     current_phrase: str = Form(...)
-# ):
-
-#     unique_filename = "temp.mp3"
-#     with open(unique_filename, "wb") as f:
-#         shutil.copyfileobj(file.file, f)
-
-#     # model = whisper.load_model("base")  # You can try "tiny", "base", "small", "medium", "large"
-#     # result = model.transcribe(unique_filename, language="zh", initial_prompt='你好！你今天怎么样？')
-
-#     model = WhisperModel("large", device="cpu", compute_type="int8")  # 'cuda' if on GPU
-#     segments, info = model.transcribe(unique_filename, language='zh', word_timestamps=True, initial_prompt=current_phrase, vad_filter=False)
-
-#     os.remove(unique_filename)
-
-#     return segments
-
-# from fastapi import FastAPI, UploadFile, File, Form
-# import shutil
-# import os
-# import tempfile
-# import torch
-# import whisperx
-
-# @app.post('/transcribe/')
-# async def transcribe(
-#     file: UploadFile = File(...),
-#     current_phrase: str = Form(...)
-# ):
-#     # Save the uploaded file to a temporary location
-#     with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as tmp:
-#         shutil.copyfileobj(file.file, tmp)
-#         tmp_path = tmp.name
-
-#     # Select device
-#     device = "cuda" if torch.cuda.is_available() else "cpu"
-
-#     # Load model
-#     model = whisperx.load_model("large-v2", device, compute_type="int8")
-
-#     # Step 1: Transcribe audio
-#     transcription = model.transcribe(tmp_path, language="zh")
-
-#     # Step 2: Align whisper output to get word-level timestamps
-#     model_a, metadata = whisperx.load_align_model(language_code="zh", device=device)
-#     result_aligned = whisperx.align(transcription["segments"], model_a, metadata, tmp_path, device)
-
-#     # Clean up temp file
-#     os.remove(tmp_path)
-
-#     # Return the word segments
-#     return {"segments": result_aligned["word_segments"]}
 
 SetLogLevel(-1)
 
