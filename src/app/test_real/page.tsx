@@ -1,10 +1,9 @@
 'use client'
 
-import { useSearchParams, useRouter } from 'next/navigation'
-import { useEffect, useState, useRef, useMemo } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { useEffect, useState, useMemo } from 'react'
 import { Mic, Play, Square } from 'lucide-react';
 import React from 'react';
-import Swal from 'sweetalert2'
 
 import PitchChart from '@/features/ui/charts/PitchChart';
 import AlignedPitchChart from '@/features/ui/charts/AlignedPitchChart';
@@ -14,6 +13,7 @@ import { useTimer } from '@/lib/hooks/useTimer'
 import { useAudioAnalysisReference, useAudioAnalysisUser } from '@/lib/hooks/useAudioAnalysis';
 import { useAudioRecorder } from '@/lib/hooks/useAudioRecorder';
 import { useAlert } from '@/lib/hooks/useAlert';
+import { useAccuracy } from '@/lib/hooks/useAccuracy';
 
 export default function TestPageReal() {
     const [characters, setCharacters] = useState<any[]>([]);
@@ -30,27 +30,13 @@ export default function TestPageReal() {
 
 
     const [playReady, setPlayReady] = useState(false);
-    const [accuracy, setAccuracy] = useState(0.0);
     const [graphState, setGraphState] = useState(0);
     const [state, setState] = useState(0);
 
     const { startRecording, stopRecording, audioURL, recording, referenceBlob, userBlob, clearBlob } = useAudioRecorder();
     const { referencePitch, clearReferencePitch } = useAudioAnalysisReference(referenceBlob, chosenAudio);
     const { userPitch, userWordsArray, alignedGraphData, clearPitch } = useAudioAnalysisUser(userBlob, chosenAudio, referencePitch, currentPhrase, test, currentIndex);
-
-
-
-    // Calculates the accuracy on the backend
-    useEffect(() => {
-        const calculateAccuracy = async () => {
-            const data = await getAccuracy(alignedGraphData);
-            setAccuracy(data);
-
-        }
-        if (alignedGraphData) {
-            calculateAccuracy()
-        }
-    }, [alignedGraphData])
+    const { accuracy } = useAccuracy(alignedGraphData);
 
     // Fetch characters
     useEffect(() => {
