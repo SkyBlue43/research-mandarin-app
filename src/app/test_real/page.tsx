@@ -88,9 +88,11 @@ export default function TestPageReal() {
     };
 
     const handleRecording = () => {
-        if (recording) {
+        if (recording && state == 0) {
             stopRecording();
             referenceAlert();
+        } else if (recording && state > 0) {
+            stopRecording();
         } else {
             startRecording(chosenAudio);
         }
@@ -161,7 +163,7 @@ export default function TestPageReal() {
                         </button>
                         <div className='mb-8'>Your Audio</div>
                     </div>}
-                    {referencePitch.length > 0 && state == 1 && <div>
+                    {referencePitch.length > 0 && state >= 1 && <div>
                         <button className="p-4 rounded-full bg-pink-500 text-white hover:bg-pink-600" onClick={handlePlay}>
                             <Play />
                         </button>

@@ -87,6 +87,11 @@ async def analyze_audio(file: UploadFile = File(...)):
         shutil.copyfileobj(file.file, buffer)
 
     audio = AudioSegment.from_file(input_path)
+
+    #clean audio
+    audio = audio.high_pass_filter(80)
+    audio = audio.low_pass_filter(300)
+
     audio.export(output_path, format="wav")
 
     sound = parselmouth.Sound(output_path)
