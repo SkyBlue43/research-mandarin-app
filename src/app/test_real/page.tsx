@@ -128,6 +128,8 @@ export default function TestPageReal() {
         clearReferencePitch();
         clearPitch();
         clearBlob();
+        setState(0);
+        setGraphState(0);
 
         if (arrayIndex === 9) {
             setArrayIndex(0);

@@ -15,7 +15,7 @@ def get_audio(lines, folder):
     for line in lines:
         things = line.strip().split(",")
         chinese = things[0]
-        if chinese == "Character" or chinese == "Phrase":
+        if chinese == "Character" or chinese == "Phrase" or chinese == "Sentence":
             continue
         pinyin = things[1]
         index = things[3]
