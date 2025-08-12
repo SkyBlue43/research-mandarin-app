@@ -1,0 +1,25 @@
+{
+  "filename": "6.mp3",
+  "alignment": [
+    {
+      "char": "我",
+      "start": 0.08,
+      "end": 0.29
+    },
+    {
+      "char": "叫",
+      "start": 0.29,
+      "end": 0.58
+    },
+    {
+      "char": "李",
+      "start": 0.58,
+      "end": 0.85
+    },
+    {
+      "char": "华",
+      "start": 0.85,
+      "end": 1.4
+    }
+  ]
+}

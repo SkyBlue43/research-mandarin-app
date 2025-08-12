@@ -1,0 +1,30 @@
+{
+  "filename": "8.mp3",
+  "alignment": [
+    {
+      "char": "我",
+      "start": 0.08,
+      "end": 0.29
+    },
+    {
+      "char": "来",
+      "start": 0.29,
+      "end": 0.54
+    },
+    {
+      "char": "自",
+      "start": 0.54,
+      "end": 0.79
+    },
+    {
+      "char": "美",
+      "start": 0.79,
+      "end": 1.1
+    },
+    {
+      "char": "国",
+      "start": 1.1,
+      "end": 1.61
+    }
+  ]
+}

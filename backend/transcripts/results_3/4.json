@@ -1,0 +1,20 @@
+{
+  "filename": "4.mp3",
+  "alignment": [
+    {
+      "char": "谢",
+      "start": 0.07,
+      "end": 0.41
+    },
+    {
+      "char": "谢",
+      "start": 0.41,
+      "end": 0.66
+    },
+    {
+      "char": "你",
+      "start": 0.66,
+      "end": 1.13
+    }
+  ]
+}
