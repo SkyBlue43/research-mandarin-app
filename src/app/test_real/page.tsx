@@ -64,7 +64,7 @@ export default function TestPageReal() {
     };
 
 
-    const { referenceAlert } = useAlert(handlePlay, setState, setGraphState);
+    const { referenceAlert } = useAlert(handlePlay, setState, setGraphState, group);
 
     const handlePlayUser = async () => {
         setPlayReady(true);
@@ -171,7 +171,7 @@ export default function TestPageReal() {
                         </button>
                         <div className='mb-8'>Correct Audio</div>
                     </div>}
-                    {state >= 2 && <div>
+                    {state >= 2 && group == "a" && <div>
                         <button className="p-4 rounded-full bg-yellow-500 text-white hover:bg-yellow-600" onClick={handlePlayCorrected}>
                             <Play />
                         </button>
@@ -226,7 +226,7 @@ export default function TestPageReal() {
                 </div>
 
                 <div>
-                    {state == 3 && <button className='text-md p-4 rounded-full bg-purple-500 text-white hover:bg-purple-600' onClick={handleRightClick}>
+                    {((group == 'b' && state == 1) || state == 3) && <button className='text-md p-4 rounded-full bg-purple-500 text-white hover:bg-purple-600' onClick={handleRightClick}>
                         Next Phrase
                     </button>}
                 </div>

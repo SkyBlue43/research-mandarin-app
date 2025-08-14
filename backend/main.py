@@ -21,6 +21,8 @@ import tempfile
 from scipy.interpolate import interp1d
 from typing import List
 from pydantic import BaseModel
+from Bio.Align import PairwiseAligner
+from Bio import Align
 
 app = FastAPI()
 
@@ -52,7 +54,7 @@ async def get_characters(request: Request):
     character_list = []
     for line in lines:
         split_line = line.strip().split(',')
-        if split_line[0] == "Character" or split_line[0] == "Phrase":
+        if split_line[0] == "Character" or split_line[0] == "Phrase" or split_line[0] == "Sentence":
             continue
         character_list.append({
             'chinese': split_line[0],
@@ -194,6 +196,28 @@ async def transcribe_audio(file: UploadFile = File(...), current_phrase: str = F
 
     return JSONResponse(content=result)
 
+
+def align_characters(user, ref):
+    user_string = ''
+    ref_string = ''
+    for item in user:
+        user_string += item['char']
+    for item in ref:
+        ref_string += item['char']
+    print(user_string)
+    print(ref_string)
+    aligner = PairwiseAligner()
+    alignments = aligner.align(user_string, ref_string)
+    alignment = alignments[0]
+
+    first = alignment[0]
+    second = alignment[1]
+
+    print(first)
+    print(second)
+
+
+
 @app.post("/dtw_characters/")
 async def dtw_new(
     reference_pitch: str = Form(...),
@@ -213,7 +237,7 @@ async def dtw_new(
     characters_user = words_user_data
     
     if len(characters_user) != len(characters):
-        return "Error"
+        align_characters(characters_user, characters)
 
     char_amount = len(characters)
     reference_alignment = align_pitch(reference_pitch, characters)
@@ -241,8 +265,9 @@ async def dtw_new(
                     "user": None
                     })
         count = 0
+        current_character = reference_alignment["character"][counter]
         for j in range(counter, len(reference_alignment['character'])):
-            if reference_alignment['character'][j] == None:
+            if reference_alignment['character'][j] == None or reference_alignment['character'][j] != current_character:
                 counter += count
                 break
             else:
@@ -257,8 +282,9 @@ async def dtw_new(
             else:
                 count += 1
         count = 0
+        current_character = user_alignment['character'][user_counter]
         for j in range(user_counter, len(user_alignment['character'])):
-            if user_alignment['character'][j] == None:
+            if user_alignment['character'][j] == None or user_alignment['character'][j] != current_character:
                 user_counter += count
                 break
             else:

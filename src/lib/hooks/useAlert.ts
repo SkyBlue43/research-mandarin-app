@@ -3,7 +3,8 @@ import Swal from 'sweetalert2'
 export function useAlert(
     handlePlay: () => void,
     setState: (state: number) => void,
-    setGraphState: (state: number) => void
+    setGraphState: (state: number) => void,
+    group: string | null
 ) { 
     const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -17,7 +18,9 @@ export function useAlert(
             if (result.isConfirmed) {
                 handlePlay();
                 setState(1);
-                referenceAlert2();
+                if (group == "a"){
+                    referenceAlert2();
+                }
             }
         });
     };
