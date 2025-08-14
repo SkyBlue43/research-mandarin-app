@@ -92,7 +92,7 @@ async def analyze_audio(file: UploadFile = File(...)):
 
     #clean audio
     audio = audio.high_pass_filter(80)
-    audio = audio.low_pass_filter(300)
+    audio = audio.low_pass_filter(8000)
 
     audio.export(output_path, format="wav")
 
@@ -105,6 +105,11 @@ async def analyze_audio(file: UploadFile = File(...)):
     for i in range(pitch.get_number_of_frames()):
         time = pitch.get_time_from_frame_number(i + 1)
         freq = pitch.get_value_in_frame(i + 1)
+
+        if freq is None or freq < 80 or freq > 400:
+            pitch_values.append({"time": time, "frequency": None})
+            continue
+
         if not np.isnan(freq) and freq > 0:
             log_pitch = np.log2(freq)
             pitch_values.append({"time": time, "frequency": log_pitch})
@@ -113,7 +118,7 @@ async def analyze_audio(file: UploadFile = File(...)):
             if log_pitch > max_freq:
                 max_freq = log_pitch
         else:
-            pitch_values.append({"time": time, "frequency": None})  # or null in JSON
+            pitch_values.append({"time": time, "frequency": None})
 
     norm_pitch_values = []
     for pitch in pitch_values:
