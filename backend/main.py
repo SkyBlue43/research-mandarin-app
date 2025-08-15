@@ -178,6 +178,7 @@ def transcribe_with_vosk(audio_path, phrase_list):
 
     return char_segments
 
+
 @app.post("/transcribe/")
 async def transcribe_audio(file: UploadFile = File(...), current_phrase: str = Form(...)):
     # Save MP3
@@ -212,6 +213,8 @@ def align_characters(user, ref):
     print(user_string)
     print(ref_string)
     aligner = PairwiseAligner()
+    aligner.open_gap_score = -10
+    aligner.extend_gap_score = -10
     alignments = aligner.align(user_string, ref_string)
     alignment = alignments[0]
 
@@ -220,6 +223,7 @@ def align_characters(user, ref):
 
     print(first)
     print(second)
+    return
 
 
 
