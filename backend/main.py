@@ -301,22 +301,35 @@ async def dtw_new(
                 user_phrase.append(user_alignment['frequency'][j])
                 user_time.append(user_alignment['time'][j])
 
-        # user_phrase = user_phrase[::3]
-        # reference_phrase = reference_phrase[::3]
-        # ref_time = ref_time[::3]
-        # user_series = [(f,) for f in user_phrase]
-        # reference_series = [(f,) for f in reference_phrase]
-        # dist, path = fastdtw(reference_series, user_series, dist=euclidean)
-        # # if dist < 50:
-        # print(path)
-        # print(dist)
-        # for x, y in path:
-        #     if x < len(reference_phrase) and y < len(user_phrase) and x < len(ref_time):
-        #         alignment.append({
-        #             "time": ref_time[x],
-        #             "reference": reference_phrase[x],
-        #             "user": user_phrase[y]
-        #         })
+
+        user_series = [(f,) for f in user_phrase]
+        reference_series = [(f,) for f in reference_phrase]
+        dist, path = fastdtw(reference_series, user_series, dist=euclidean)
+        # Simple normalization: divide by max possible difference
+        max_diff = len(reference_phrase) * (max(reference_phrase) - min(reference_phrase))
+        accuracy = 1 - (dist / max_diff)
+        accuracy = max(0, min(accuracy, 1))  # clamp between 0 and 1
+
+        print("Height-based accuracy:", accuracy)
+
+        user_slope = np.diff(user_phrase, prepend=user_phrase[0])
+        ref_slope  = np.diff(reference_phrase, prepend=reference_phrase[0])
+
+        user_s = [(f,) for f in user_slope]
+        ref_s = [(f,) for f in ref_slope]
+        
+        dist_slope, _ = fastdtw(user_s, ref_s, dist=euclidean)
+        max_slope_diff = sum(abs(max(ref_slope) - min(ref_slope)) for _ in ref_slope)
+        slope_score = 1 - (dist_slope / max_slope_diff)
+        slope_score = np.clip(slope_score, 0, 1)
+
+
+        print("Slope score:", slope_score)
+        combined_accuracy = 0.6 * accuracy + 0.4 * slope_score
+
+        print("Total score:",combined_accuracy)
+
+
         stretched_user = stretch_user_pitch(np.array(user_time), np.array(user_phrase), np.array(ref_time))
         for i in range(len(reference_phrase)):
             alignment.append({
@@ -445,6 +458,5 @@ async def accuracy(request: Request):
     body = await request.json()
     aligned = body.get("aligned", [])
 
-    print("Received aligned:", aligned)
     score = calculate_accuracy(aligned)
     return {"score": score}
