@@ -31,7 +31,7 @@ export const DTW = async (userPitch: PitchPoint[], referencePitch: PitchPoint[],
     });
     const data = await result.json();
     console.log("DTW result:", data);
-    return data.alignment;
+    return [data.alignment, data.accuracy];
 };
 
 

@@ -252,6 +252,7 @@ async def dtw_new(
     reference_alignment = align_pitch(reference_pitch, characters)
     user_alignment = align_pitch(user_pitch, characters_user)
 
+    total_accuracy = 0
     alignment = []
     counter = 0
     user_counter = 0
@@ -330,6 +331,7 @@ async def dtw_new(
         # --- Combined score ---
         combined_accuracy = 0.6 * accuracy + 0.4 * slope_score
         print("Total score:", combined_accuracy)
+        total_accuracy += combined_accuracy
 
 
 
@@ -342,7 +344,7 @@ async def dtw_new(
                 "accuracy": combined_accuracy
             })
 
-    return {"alignment": alignment}
+    return {"alignment": alignment, "accuracy": round((total_accuracy / char_amount) * 100, 2)}
 
 
 def stretch_user_pitch(user_times, user_pitch, target_times):
