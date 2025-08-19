@@ -8,6 +8,7 @@ type AlignedPoint = {
     time: number;
     refernce: number;
     user: number;
+    accuracy: number;
 };
 
 

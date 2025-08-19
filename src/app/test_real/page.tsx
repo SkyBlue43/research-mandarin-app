@@ -160,19 +160,19 @@ export default function TestPageReal() {
             <div className="grid grid-cols-3 w-screen h-100">
                 <div>
                     {userPitch.length > 0 && <div>
-                        <button className="p-4 rounded-full bg-green-500 text-white hover:bg-green-600" onClick={handlePlayUser}>
+                        <button className="p-4 rounded-full bg-blue-500 text-white hover:bg-blue-600" onClick={handlePlayUser}>
                             <Play />
                         </button>
                         <div className='mb-8'>Your Audio</div>
                     </div>}
                     {referencePitch.length > 0 && state >= 1 && <div>
-                        <button className="p-4 rounded-full bg-pink-500 text-white hover:bg-pink-600" onClick={handlePlay}>
+                        <button className="p-4 rounded-full bg-[#B0B0B0] text-white hover:bg-[#808080]" onClick={handlePlay}>
                             <Play />
                         </button>
                         <div className='mb-8'>Correct Audio</div>
                     </div>}
                     {state >= 2 && group == "a" && <div>
-                        <button className="p-4 rounded-full bg-yellow-500 text-white hover:bg-yellow-600" onClick={handlePlayCorrected}>
+                        <button className="p-4 rounded-full bg-purple-500 text-white hover:bg-purple-600" onClick={handlePlayCorrected}>
                             <Play />
                         </button>
                         <div className='mb-8'>Your Corrected Audio</div>
@@ -181,13 +181,13 @@ export default function TestPageReal() {
 
                 {group === "a" && graphState == 1 && (
                     <div className='w-120 flex items-center justify-center mr-4 ml-4 text-black'>
-                        {playReady && referencePitch.length > 0 && <PitchChart data={memoizedPitch} color={'#FF69B4'} />}
+                        {playReady && referencePitch.length > 0 && <PitchChart data={memoizedPitch} color={'#B0B0B0'} />}
                     </div>
                 )}
 
                 {group === "a" && graphState == 0 && (
                     <div className='w-120 flex items-center justify-center ml-4 mr-4 text-black'>
-                        {userPitch.length > 0 && <PitchChart data={memoizedUserPitch} color='#82ca9d' />}
+                        {userPitch.length > 0 && <PitchChart data={memoizedUserPitch} color='#4682B4' />}
                     </div>
                 )}
 
@@ -204,7 +204,7 @@ export default function TestPageReal() {
                 )}
 
                 <div className='flex justify-center items-center'>
-                    {accuracy != 0.0 && <div className="w-64 h-64 flex justify-center items-center rounded-lg border-4 border-green-500 text-green-600 font-bold text-xl">
+                    {accuracy != 0.0 && <div className="w-64 h-64 flex justify-center items-center rounded-lg border-4 border-[#4682B4] text-[#4682B4] font-bold text-xl">
                         {accuracy}%
                     </div>}
                 </div>
