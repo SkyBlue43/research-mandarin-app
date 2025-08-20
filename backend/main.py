@@ -79,6 +79,22 @@ async def check_password(request: Request):
     raise HTTPException(status_code=401, detail="Invalid username or password")
 
 
+def clean_audio(pitch):
+    on_pitch = False
+    pitch_list = []
+    for i in range(len(pitch)):
+        if pitch[i]['frequency'] is None and on_pitch is True:
+            on_pitch = False
+            if len(pitch_list) < 6:
+                for num in pitch_list:
+                    pitch[num]['frequency'] = None
+            else:
+                pitch_list = []
+        elif pitch[i]['frequency'] is not None:
+            on_pitch = True
+            pitch_list.append(i)
+    return pitch
+
 
 @app.post("/analyze-audio-voiceless/")
 async def analyze_audio(file: UploadFile = File(...)):
@@ -119,6 +135,8 @@ async def analyze_audio(file: UploadFile = File(...)):
                 max_freq = log_pitch
         else:
             pitch_values.append({"time": time, "frequency": None})
+
+    pitch_values = clean_audio(pitch_values)
 
     norm_pitch_values = []
     for pitch in pitch_values:
