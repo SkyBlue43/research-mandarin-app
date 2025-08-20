@@ -12,7 +12,6 @@ import { useTimer } from '@/lib/hooks/useTimer'
 import { useAudioAnalysisReference, useAudioAnalysisUser } from '@/lib/hooks/useAudioAnalysis';
 import { useAudioRecorder } from '@/lib/hooks/useAudioRecorder';
 import { useAlert } from '@/lib/hooks/useAlert';
-import { useAccuracy } from '@/lib/hooks/useAccuracy';
 
 export default function TestPageReal() {
     const [characters, setCharacters] = useState<any[]>([]);
