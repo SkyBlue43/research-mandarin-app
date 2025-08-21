@@ -12,47 +12,28 @@ import { useTimer } from '@/lib/hooks/useTimer'
 import { useAudioAnalysisReference, useAudioAnalysisUser } from '@/lib/hooks/useAudioAnalysis';
 import { useAudioRecorder } from '@/lib/hooks/useAudioRecorder';
 import { useAlert } from '@/lib/hooks/useAlert';
+import { useCharacters } from '@/lib/hooks/useCharacters';
+import { useAudio } from '@/lib/hooks/useAudio';
 
 export default function TestPageReal() {
-    const [characters, setCharacters] = useState<any[]>([]);
     const searchParams = useSearchParams();
     const test = searchParams.get('test');
     const group = searchParams.get('group');
     const timeLeft = useTimer(900, '/');
 
     const [arrayIndex, setArrayIndex] = useState(0);
-    const [currentPhrase, setCurrentPhrase] = useState('');
-    const [currentPinyin, setCurrentPinyin] = useState('');
-    const [currentIndex, setCurrentIndex] = useState("1");
-    const [chosenAudio, setChosenAudio] = useState('');
 
 
     const [playReady, setPlayReady] = useState(false);
     const [graphState, setGraphState] = useState(0);
     const [state, setState] = useState(0);
 
+    const { characters, currentIndex, currentPhrase, currentPinyin, changeWord} = useCharacters(test, arrayIndex)
+    const { chosenAudio } = useAudio(test, currentIndex);
     const { startRecording, stopRecording, audioURL, recording, referenceBlob, userBlob, clearBlob } = useAudioRecorder();
     const { referencePitch, clearReferencePitch } = useAudioAnalysisReference(referenceBlob, chosenAudio);
     const { userPitch, userWordsArray, alignedGraphData, clearPitch, accuracy } = useAudioAnalysisUser(userBlob, chosenAudio, referencePitch, currentPhrase, test, currentIndex);
-
     // Fetch characters
-    useEffect(() => {
-        const fetchCharacters = async () => {
-            const result = await fetch("http://localhost:8000/get-characters", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ test })
-            });
-            const data = await result.json();
-            setCharacters(data.characters);
-            setCurrentPhrase(data.characters[arrayIndex].chinese);
-            setCurrentPinyin(data.characters[arrayIndex].pinyin);
-            setCurrentIndex(data.characters[arrayIndex].index);
-        };
-        fetchCharacters();
-    }, [test]);
 
     const handlePlay = async () => {
         setPlayReady(true);
@@ -97,11 +78,6 @@ export default function TestPageReal() {
     };
 
 
-
-    useEffect(() => {
-        setChosenAudio(`http://localhost:8000/sounds/${test}/${currentIndex}.mp3`);
-    }, [currentIndex]);
-
     const handleLeftClick = () => {
         setPlayReady(false);
         clearReferencePitch();
@@ -110,14 +86,10 @@ export default function TestPageReal() {
 
         if (arrayIndex === 0) {
             setArrayIndex(9);
-            setCurrentIndex("10");
-            setCurrentPhrase(characters[9].chinese);
-            setCurrentPinyin(characters[9].pinyin);
+            changeWord('10', characters[9].chinese, characters[9].pinyin)
         } else {
             setArrayIndex(arrayIndex - 1);
-            setCurrentIndex(String(Number(currentIndex) - 1));
-            setCurrentPhrase(characters[arrayIndex - 1].chinese);
-            setCurrentPinyin(characters[arrayIndex - 1].pinyin);
+            changeWord(String(Number(currentIndex) - 1), characters[arrayIndex - 1].chinese, characters[arrayIndex - 1].pinyin)
         }
     };
 
@@ -131,14 +103,10 @@ export default function TestPageReal() {
 
         if (arrayIndex === 9) {
             setArrayIndex(0);
-            setCurrentIndex("1");
-            setCurrentPhrase(characters[0].chinese);
-            setCurrentPinyin(characters[0].pinyin);
+            changeWord('1', characters[0].chinese, characters[0].pinyin)
         } else {
             setArrayIndex(arrayIndex + 1);
-            setCurrentIndex(String(Number(currentIndex) + 1));
-            setCurrentPhrase(characters[arrayIndex + 1].chinese);
-            setCurrentPinyin(characters[arrayIndex + 1].pinyin);
+            changeWord(String(Number(currentIndex) + 1), characters[arrayIndex + 1].chinese, characters[arrayIndex + 1].pinyin)
         }
     };
 

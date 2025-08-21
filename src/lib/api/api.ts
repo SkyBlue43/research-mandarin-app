@@ -91,3 +91,15 @@ export const analyzeAudio = async (audio_blob: Blob | null, audio_location: stri
     console.log('Pitch data:', data);
     return data;
 };
+
+export const fetchCharacters = async (test: string | null) => {
+    const result = await fetch("http://localhost:8000/get-characters", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ test })
+    });
+    const data = await result.json();
+    return data
+};
