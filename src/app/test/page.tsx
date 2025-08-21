@@ -1,3 +1,5 @@
+'use client'
+
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useState, useMemo } from 'react'
 import { Mic, Square } from 'lucide-react';

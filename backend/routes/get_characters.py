@@ -12,7 +12,7 @@ async def get_characters(request: Request):
     test_number = data.get('test')
     
     try:
-        lines = read_lines(f'backend/{test_number}.csv')
+        lines = read_lines(f'backend/curriculum/{test_number}.csv')
     except FileNotFoundError:
         return {"error": f"File not found."}
     
