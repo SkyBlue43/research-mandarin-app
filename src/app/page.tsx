@@ -25,13 +25,15 @@ export default function Home() {
         throw new Error(errorData.detail || 'Login failed');
       }
       const data = await result.json();
-      if (data.test == "pre"){
+      if (data.test === "pre"){
         router.push(`test?test=${data.test}`)
       }
-      else if (data.test == "post"){
+      else if (data.test === "post"){
         router.push(`test?test=${data.test}`)
       }
-      router.push(`/practice_session?test=${data.test}&group=${data.group}`)
+      else {
+        router.push(`/practice_session?test=${data.test}&group=${data.group}`)
+      }
     }
 
     catch (error: any) {

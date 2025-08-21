@@ -37,17 +37,17 @@ export default function Test() {
                 <div className='text-[60px]'>({currentPinyin})</div>
             </header>
 
-            <footer className="w-screen p-8">
+            <main className="w-screen p-8">
 
                 <div>
                     <button
-                        className={`p-4 rounded-full text-white ${recording ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'}`}
+                        className={`p-8 rounded-full text-white ${recording ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'}`}
                         onClick={handleRecording}>
                         {recording ? <Square /> : <Mic />}
                     </button>
                 </div>
 
-            </footer>
+            </main>
         </div>
     );
 }
