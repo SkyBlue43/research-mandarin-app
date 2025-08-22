@@ -22,13 +22,14 @@ export default function TestPageReal() {
     const timeLeft = useTimer(900, '/');
 
     const [arrayIndex, setArrayIndex] = useState(0);
+    const [wordState, setWordState] = useState(0);
 
 
     const [playReady, setPlayReady] = useState(false);
     const [graphState, setGraphState] = useState(0);
     const [state, setState] = useState(0);
 
-    const { characters, currentIndex, currentSimplified, currentTraditional, currentPinyin, currentHint, changeWord} = useCharacters(test, arrayIndex)
+    const { characters, currentIndex, currentSimplified, currentTraditional, currentPinyin, currentHint, changeWord } = useCharacters(test, arrayIndex)
     const { chosenAudio } = useAudio(test, currentIndex);
     const { startRecording, stopRecording, audioURL, recording, referenceBlob, userBlob, clearBlob } = useAudioRecorder();
     const { referencePitch, clearReferencePitch } = useAudioAnalysisReference(referenceBlob, chosenAudio);
@@ -94,6 +95,15 @@ export default function TestPageReal() {
         }
     };
 
+    const handleWordState = () => {
+        if (wordState === 0) {
+            setWordState(1);
+        }
+        else {
+            setWordState(0);
+        }
+    }
+
     // Memoize Pitches for charts
     const memoizedPitch = useMemo(() => referencePitch, [referencePitch]);
     const memoizedUserPitch = useMemo(() => userPitch, [userPitch]);
@@ -103,8 +113,15 @@ export default function TestPageReal() {
         <div className='h-screen flex flex-col items-center text-center'>
             <header className='m-8 w-screen'>
                 <Timer timeLeft={timeLeft} />
-                <div className='font-bold text-[70px]'>{currentSimplified}</div>
-                <div className='text-[60px]'>({currentPinyin})</div>
+                <div>
+                    <button className='border bg-gray-500 p-1 rounded hover:bg-gray-600' onClick={handleWordState}>Change to: {wordState === 0 ? 'Traditional' : 'Simplified'}</button>
+                    <div className='font-bold text-[70px]'>{wordState === 1 ? currentTraditional : currentSimplified}</div>
+                </div>
+                <div className='flex flex-row justify-center items-center'>
+                    <div className='text-[60px]'>({currentPinyin})</div>
+                    <button className='border rounded-full w-6 h-6 ml-4' title={currentHint}>?</button>
+                </div>
+
             </header>
 
             <div className="grid grid-cols-3 w-screen h-100">
