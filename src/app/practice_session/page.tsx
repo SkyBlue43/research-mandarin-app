@@ -28,11 +28,11 @@ export default function TestPageReal() {
     const [graphState, setGraphState] = useState(0);
     const [state, setState] = useState(0);
 
-    const { characters, currentIndex, currentPhrase, currentPinyin, changeWord} = useCharacters(test, arrayIndex)
+    const { characters, currentIndex, currentSimplified, currentTraditional, currentPinyin, currentHint, changeWord} = useCharacters(test, arrayIndex)
     const { chosenAudio } = useAudio(test, currentIndex);
     const { startRecording, stopRecording, audioURL, recording, referenceBlob, userBlob, clearBlob } = useAudioRecorder();
     const { referencePitch, clearReferencePitch } = useAudioAnalysisReference(referenceBlob, chosenAudio);
-    const { userPitch, userWordsArray, alignedGraphData, clearPitch, accuracy } = useAudioAnalysisUser(userBlob, chosenAudio, referencePitch, currentPhrase, test, currentIndex);
+    const { userPitch, userWordsArray, alignedGraphData, clearPitch, accuracy } = useAudioAnalysisUser(userBlob, chosenAudio, referencePitch, currentSimplified, test, currentIndex);
     // Fetch characters
 
     const handlePlay = async () => {
@@ -77,22 +77,6 @@ export default function TestPageReal() {
         }
     };
 
-
-    const handleLeftClick = () => {
-        setPlayReady(false);
-        clearReferencePitch();
-        clearPitch();
-        clearBlob();
-
-        if (arrayIndex === 0) {
-            setArrayIndex(9);
-            changeWord('10', characters[9].chinese, characters[9].pinyin)
-        } else {
-            setArrayIndex(arrayIndex - 1);
-            changeWord(String(Number(currentIndex) - 1), characters[arrayIndex - 1].chinese, characters[arrayIndex - 1].pinyin)
-        }
-    };
-
     const handleRightClick = () => {
         setPlayReady(false);
         clearReferencePitch();
@@ -103,10 +87,10 @@ export default function TestPageReal() {
 
         if (arrayIndex === 9) {
             setArrayIndex(0);
-            changeWord('1', characters[0].chinese, characters[0].pinyin)
+            changeWord('1', characters[0].simplified, characters[0].traditional, characters[0].pinyin, characters[0].hint)
         } else {
             setArrayIndex(arrayIndex + 1);
-            changeWord(String(Number(currentIndex) + 1), characters[arrayIndex + 1].chinese, characters[arrayIndex + 1].pinyin)
+            changeWord(String(Number(currentIndex) + 1), characters[arrayIndex + 1].simplified, characters[arrayIndex + 1].traditional, characters[arrayIndex + 1].pinyin, characters[arrayIndex + 1].hint)
         }
     };
 
@@ -119,7 +103,7 @@ export default function TestPageReal() {
         <div className='h-screen flex flex-col items-center text-center'>
             <header className='m-8 w-screen'>
                 <Timer timeLeft={timeLeft} />
-                <div className='font-bold text-[70px]'>{currentPhrase}</div>
+                <div className='font-bold text-[70px]'>{currentSimplified}</div>
                 <div className='text-[60px]'>({currentPinyin})</div>
             </header>
 
@@ -178,9 +162,6 @@ export default function TestPageReal() {
 
             <footer className="grid grid-cols-3 w-screen p-8">
                 <div>
-                    {/* <button className='p-4 rounded-full bg-purple-500 text-white hover:bg-purple-600' onClick={handleLeftClick}>
-                        Last Phrase
-                    </button> */}
                 </div>
 
                 <div>

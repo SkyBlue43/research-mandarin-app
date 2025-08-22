@@ -15,11 +15,11 @@ export default function Test() {
     const test = searchParams.get('test');
     const [arrayIndex, setArrayIndex] = useState(0);
 
-    const { characters, currentIndex, currentPhrase, currentPinyin, changeWord} = useCharacters(test, arrayIndex)
+    const { characters, currentIndex, currentSimplified, currentTraditional, currentPinyin, currentHint, changeWord} = useCharacters(test, arrayIndex)
     const { chosenAudio } = useAudio(test, currentIndex);
     const { startRecording, stopRecording, audioURL, recording, referenceBlob, userBlob, clearBlob } = useAudioRecorder();
     const { referencePitch, clearReferencePitch } = useAudioAnalysisReference(referenceBlob, chosenAudio);
-    const { userPitch, userWordsArray, alignedGraphData, clearPitch, accuracy } = useAudioAnalysisUser(userBlob, chosenAudio, referencePitch, currentPhrase, test, currentIndex);
+    const { userPitch, userWordsArray, alignedGraphData, clearPitch, accuracy } = useAudioAnalysisUser(userBlob, chosenAudio, referencePitch, currentSimplified, test, currentIndex);
 
 
     const handleRecording = () => {
@@ -33,7 +33,7 @@ export default function Test() {
     return(
         <div className='h-screen flex flex-col items-center text-center'>
             <header className='m-8 w-screen'>
-                <div className='font-bold text-[70px]'>{currentPhrase}</div>
+                <div className='font-bold text-[70px]'>{currentSimplified}</div>
                 <div className='text-[60px]'>({currentPinyin})</div>
             </header>
 
