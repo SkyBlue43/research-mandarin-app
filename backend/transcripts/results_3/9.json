@@ -3,38 +3,43 @@
   "alignment": [
     {
       "char": "我",
-      "start": 0.06,
-      "end": 0.29
+      "start": 0.08,
+      "end": 0.28
     },
     {
-      "char": "会",
-      "start": 0.29,
-      "end": 0.54
+      "char": "听",
+      "start": 0.28,
+      "end": 0.59
+    },
+    {
+      "char": "不",
+      "start": 0.59,
+      "end": 0.75
+    },
+    {
+      "char": "懂",
+      "start": 0.75,
+      "end": 1.02
+    },
+    {
+      "char": "你",
+      "start": 1.02,
+      "end": 1.18
     },
     {
       "char": "说",
-      "start": 0.54,
-      "end": 0.87
+      "start": 1.18,
+      "end": 1.45
     },
     {
-      "char": "一",
-      "start": 0.87,
-      "end": 1.14
+      "char": "的",
+      "start": 1.45,
+      "end": 1.53
     },
     {
-      "char": "点",
-      "start": 1.14,
-      "end": 1.47
-    },
-    {
-      "char": "中",
-      "start": 1.47,
-      "end": 1.81
-    },
-    {
-      "char": "文",
-      "start": 1.81,
-      "end": 2.25
+      "char": "话",
+      "start": 1.53,
+      "end": 2.09
     }
   ]
 }

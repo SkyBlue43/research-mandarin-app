@@ -1,0 +1,15 @@
+{
+  "filename": "16.mp3",
+  "alignment": [
+    {
+      "char": "电",
+      "start": 0.09,
+      "end": 0.36
+    },
+    {
+      "char": "影",
+      "start": 0.36,
+      "end": 0.91
+    }
+  ]
+}

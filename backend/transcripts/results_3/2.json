@@ -2,19 +2,39 @@
   "filename": "2.mp3",
   "alignment": [
     {
-      "char": "你",
-      "start": 0.05,
-      "end": 0.28
+      "char": "今",
+      "start": 0.1,
+      "end": 0.31
     },
     {
-      "char": "好",
-      "start": 0.28,
+      "char": "天",
+      "start": 0.31,
       "end": 0.61
     },
     {
-      "char": "吗",
+      "char": "的",
       "start": 0.61,
-      "end": 0.95
+      "end": 0.68
+    },
+    {
+      "char": "天",
+      "start": 0.68,
+      "end": 1.1
+    },
+    {
+      "char": "气",
+      "start": 1.1,
+      "end": 1.33
+    },
+    {
+      "char": "很",
+      "start": 1.33,
+      "end": 1.69
+    },
+    {
+      "char": "好",
+      "start": 1.69,
+      "end": 2.14
     }
   ]
 }

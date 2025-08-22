@@ -2,29 +2,34 @@
   "filename": "8.mp3",
   "alignment": [
     {
-      "char": "我",
+      "char": "老",
       "start": 0.08,
-      "end": 0.29
+      "end": 0.34
     },
     {
-      "char": "来",
-      "start": 0.29,
-      "end": 0.54
+      "char": "师",
+      "start": 0.34,
+      "end": 0.78
     },
     {
-      "char": "自",
-      "start": 0.54,
-      "end": 0.79
+      "char": "正",
+      "start": 0.83,
+      "end": 1.06
     },
     {
-      "char": "美",
-      "start": 0.79,
-      "end": 1.1
+      "char": "在",
+      "start": 1.06,
+      "end": 1.26
     },
     {
-      "char": "国",
-      "start": 1.1,
-      "end": 1.61
+      "char": "上",
+      "start": 1.26,
+      "end": 1.6
+    },
+    {
+      "char": "课",
+      "start": 1.6,
+      "end": 2.06
     }
   ]
 }

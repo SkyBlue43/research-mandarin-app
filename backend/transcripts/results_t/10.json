@@ -1,0 +1,25 @@
+{
+  "filename": "10.mp3",
+  "alignment": [
+    {
+      "char": "今",
+      "start": 0.1,
+      "end": 0.32
+    },
+    {
+      "char": "天",
+      "start": 0.32,
+      "end": 0.68
+    },
+    {
+      "char": "很",
+      "start": 0.68,
+      "end": 0.98
+    },
+    {
+      "char": "冷",
+      "start": 0.98,
+      "end": 1.4
+    }
+  ]
+}

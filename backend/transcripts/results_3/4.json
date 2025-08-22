@@ -2,19 +2,29 @@
   "filename": "4.mp3",
   "alignment": [
     {
-      "char": "谢",
-      "start": 0.07,
-      "end": 0.41
+      "char": "我",
+      "start": 0.08,
+      "end": 0.27
     },
     {
-      "char": "谢",
-      "start": 0.41,
-      "end": 0.66
+      "char": "们",
+      "start": 0.27,
+      "end": 0.4
     },
     {
-      "char": "你",
-      "start": 0.66,
-      "end": 1.13
+      "char": "明",
+      "start": 0.4,
+      "end": 0.69
+    },
+    {
+      "char": "天",
+      "start": 0.69,
+      "end": 1.03
+    },
+    {
+      "char": "见",
+      "start": 1.03,
+      "end": 1.45
     }
   ]
 }

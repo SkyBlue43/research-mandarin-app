@@ -19,12 +19,15 @@ async def get_characters(request: Request):
     character_list = []
     for line in lines:
         split_line = line.strip().split(',')
-        if split_line[0] == "Character" or split_line[0] == "Phrase" or split_line[0] == "Sentence":
+        if split_line[0] == "Index":
             continue
         character_list.append({
-            'chinese': split_line[0],
-            'pinyin': split_line[1],
-            'index': split_line[3]
+            'index': split_line[0],
+            'simplified': split_line[1],
+            'traditional': split_line[2],
+            'pinyin': split_line[3],
+            'english': split_line[4],
+            'hint': split_line[5]
             })
         
     return {'characters': character_list}

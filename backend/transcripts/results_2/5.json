@@ -2,19 +2,14 @@
   "filename": "5.mp3",
   "alignment": [
     {
-      "char": "对",
-      "start": 0.09,
-      "end": 0.32
+      "char": "老",
+      "start": 0.06,
+      "end": 0.38
     },
     {
-      "char": "不",
-      "start": 0.32,
-      "end": 0.48
-    },
-    {
-      "char": "起",
-      "start": 0.48,
-      "end": 1.05
+      "char": "师",
+      "start": 0.38,
+      "end": 0.91
     }
   ]
 }

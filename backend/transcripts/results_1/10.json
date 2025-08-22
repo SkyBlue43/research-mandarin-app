@@ -2,14 +2,9 @@
   "filename": "10.mp3",
   "alignment": [
     {
-      "char": "我",
-      "start": 0.08,
-      "end": 0.3
-    },
-    {
-      "char": "们",
-      "start": 0.3,
-      "end": 0.7
+      "char": "田",
+      "start": 0.09,
+      "end": 0.67
     }
   ]
 }

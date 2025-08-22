@@ -1,6 +1,7 @@
 import sys
 from gtts import gTTS
 import os
+import subprocess
 
 def read_lines(infile):
     with open(infile) as file:
@@ -14,16 +15,17 @@ def get_audio(lines, folder):
 
     for line in lines:
         things = line.strip().split(",")
-        chinese = things[0]
-        if chinese == "Character" or chinese == "Phrase" or chinese == "Sentence":
+        if things[0] == 'Index':
             continue
-        pinyin = things[1]
-        index = things[3]
+        index = things[0]
+        chinese = things[1]
         tts = gTTS(text=chinese, lang="zh")
         tts.save(os.path.join(folder, f"{index}.mp3"))
         transcript_path = os.path.join(transcript_folder, f"{index}.txt")
         with open(transcript_path, "w", encoding="utf-8") as file:
             file.write(chinese)
+        
+    subprocess.run(["python", "mfa_test.py", folder, transcript_folder, f"transcripts/results_{folder[-1]}"])
 
 
 def main(infile, folder):

@@ -2,24 +2,34 @@
   "filename": "6.mp3",
   "alignment": [
     {
-      "char": "我",
-      "start": 0.08,
-      "end": 0.29
+      "char": "他",
+      "start": 0.1,
+      "end": 0.33
     },
     {
-      "char": "叫",
-      "start": 0.29,
-      "end": 0.58
+      "char": "跑",
+      "start": 0.33,
+      "end": 0.6
     },
     {
-      "char": "李",
-      "start": 0.58,
-      "end": 0.85
+      "char": "得",
+      "start": 0.6,
+      "end": 0.77
     },
     {
-      "char": "华",
-      "start": 0.85,
-      "end": 1.4
+      "char": "非",
+      "start": 0.77,
+      "end": 1.07
+    },
+    {
+      "char": "常",
+      "start": 1.07,
+      "end": 1.39
+    },
+    {
+      "char": "快",
+      "start": 1.39,
+      "end": 1.88
     }
   ]
 }

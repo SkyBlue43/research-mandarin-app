@@ -2,14 +2,14 @@
   "filename": "10.mp3",
   "alignment": [
     {
-      "char": "美",
-      "start": 0.05,
-      "end": 0.39
+      "char": "书",
+      "start": 0.1,
+      "end": 0.48
     },
     {
-      "char": "国",
-      "start": 0.39,
-      "end": 0.97
+      "char": "包",
+      "start": 0.48,
+      "end": 0.95
     }
   ]
 }

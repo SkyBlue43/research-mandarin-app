@@ -2,19 +2,34 @@
   "filename": "3.mp3",
   "alignment": [
     {
-      "char": "我",
-      "start": 0.08,
+      "char": "你",
+      "start": 0.07,
       "end": 0.3
     },
     {
-      "char": "很",
+      "char": "吃",
       "start": 0.3,
-      "end": 0.66
+      "end": 0.55
     },
     {
-      "char": "好",
-      "start": 0.66,
-      "end": 1.15
+      "char": "过",
+      "start": 0.55,
+      "end": 0.78
+    },
+    {
+      "char": "饭",
+      "start": 0.78,
+      "end": 1.14
+    },
+    {
+      "char": "了",
+      "start": 1.14,
+      "end": 1.24
+    },
+    {
+      "char": "吗",
+      "start": 1.24,
+      "end": 1.64
     }
   ]
 }

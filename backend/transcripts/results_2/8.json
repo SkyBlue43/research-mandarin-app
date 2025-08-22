@@ -2,14 +2,14 @@
   "filename": "8.mp3",
   "alignment": [
     {
-      "char": "学",
-      "start": 0.08,
-      "end": 0.33
+      "char": "美",
+      "start": 0.06,
+      "end": 0.39
     },
     {
-      "char": "生",
-      "start": 0.33,
-      "end": 0.98
+      "char": "国",
+      "start": 0.39,
+      "end": 0.97
     }
   ]
 }

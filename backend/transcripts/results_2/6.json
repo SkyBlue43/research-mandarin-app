@@ -2,19 +2,14 @@
   "filename": "6.mp3",
   "alignment": [
     {
-      "char": "没",
-      "start": 0.04,
-      "end": 0.34
+      "char": "学",
+      "start": 0.07,
+      "end": 0.31
     },
     {
-      "char": "关",
-      "start": 0.34,
-      "end": 0.68
-    },
-    {
-      "char": "系",
-      "start": 0.68,
-      "end": 1.13
+      "char": "生",
+      "start": 0.31,
+      "end": 1.0
     }
   ]
 }

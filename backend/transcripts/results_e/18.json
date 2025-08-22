@@ -1,0 +1,25 @@
+{
+  "filename": "18.mp3",
+  "alignment": [
+    {
+      "char": "天",
+      "start": 0.1,
+      "end": 0.42
+    },
+    {
+      "char": "气",
+      "start": 0.42,
+      "end": 0.68
+    },
+    {
+      "char": "很",
+      "start": 0.68,
+      "end": 1.03
+    },
+    {
+      "char": "好",
+      "start": 1.03,
+      "end": 1.51
+    }
+  ]
+}
