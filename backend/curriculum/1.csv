@@ -1,11 +1,21 @@
-Character,Pinyin,English,Index
-你,nǐ,you,1
-好,hǎo,good,2
-是,shì,is/are/am,3
-我,wǒ,I/me,4
-不,bù,no/not,5
-在,zài,at/in/on,6
-有,yǒu,to have,7
-他,tā,he/him,8
-她,tā,she/her,9
-我们,wǒmen,we/u,10
+Index,Simplified,Traditional,Pinyin,English,Hint
+1,妈,媽,mā,mother,First tone
+2,麻,麻,má,hemp,Second tone
+3,马,馬,mǎ,horse,Third tone
+4,骂,罵,mà,to scold,Fourth tone
+5,歌,歌,gē,song,First tone
+6,格,格,gé,pattern,Second tone
+7,葛,葛,gě,kudzu,Third tone
+8,个,個,gè,individual,Fourth tone
+9,天,天,tiān,sky,First tone
+10,田,田,tián,field,Second tone
+11,舔,舔,tiǎn,to lick,Third tone
+12,听,聽,tīng,to listen,First tone
+13,停,停,tíng,to stop,Second tone
+14,挺,挺,tǐng,quite,Third tone
+15,痛,痛,tòng,pain,Fourth tone
+16,书,書,shū,book,First tone
+17,熟,熟,shú,ripe,Second tone
+18,鼠,鼠,shǔ,mouse,Third tone
+19,树,樹,shù,tree,Fourth tone
+20,中,中,zhōng,middle,First tone

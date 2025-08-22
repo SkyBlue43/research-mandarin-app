@@ -1,11 +1,21 @@
-Character,Pinyin,English,Index
-你,nǐ,you,1
-好,hǎo,good,2
-是,shì,is/are/am,3
-我,wǒ,I/me,4
-不,bù,no/not,5
-在,zài,at/in/on,6
-有,yǒu,to have,7
-他,tā,he/him,8
-她,tā,she/her,9
-我们,wǒmen,we/u,10
+Index,Simplified,Traditional,Pinyin,English,Hint
+1,妈,媽,mā,Mother,First tone
+2,马,馬,mǎ,Horse,Third tone
+3,骂,罵,mà,Scold,Falling tone
+4,买东西,買東西,mǎi dōngxi,Buy things,Tone dip then flat
+5,中国,中國,zhōng guó,China,First then rising
+6,学习,學習,xuéxí,Study,Rising tones
+7,电视,電視,diànshì,Television,Falling then flat
+8,早上好,早上好,zǎoshang hǎo,Good morning,Third then third tone shift
+9,我喜欢你,我喜歡你,wǒ xǐhuān nǐ,I like you,Third–third tone change
+10,今天很冷,今天很冷,jīntiān hěn lěng,Today is very cold,Flat then low dip
+11,谢谢,謝謝,xièxie,Thank you,Falling then neutral
+12,飞机,飛機,fēijī,Airplane,High then flat
+13,水果,水果,shuǐguǒ,Fruit,Dipping then rising
+14,说话,說話,shuōhuà,Speak,Flat then falling
+15,我饿了,我餓了,wǒ è le,I'm hungry,Third then falling
+16,你叫什么名字,你叫什麼名字,nǐ jiào shénme míngzi,What’s your name?,Tone shift on 你 + dipping middle
+17,他不会来,他不會來,tā bù huì lái,He will not come,Fourth before fourth (bu → bú)
+18,天气很好,天氣很好,tiānqì hěn hǎo,The weather is nice,Flat then tone shift
+19,我想学中文,我想學中文,wǒ xiǎng xué zhōngwén,I want to learn Chinese,Third tone chain
+20,我们走吧,我們走吧,wǒmen zǒu ba,Let’s go,Third then soft particle

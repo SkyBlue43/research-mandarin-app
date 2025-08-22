@@ -46,7 +46,7 @@ export default function Home() {
     <div className='flex justify-center items-center text-center min-h-screen'>
       <form onSubmit={handleSubmit}>
         <div>
-          <input className='text-white p-2 border-green-500 border-2 m-4 focus:ring-pink-500 focus:border-pink-500'
+          <input className='text-white p-2 border-blue-500 border-2 m-4 focus:ring-gray-500 focus:border-gray-500'
             placeholder='Username'
             type='text'
             value={username}
@@ -55,7 +55,7 @@ export default function Home() {
         </div>
 
         <div>
-          <input className='text-white p-2 border-green-500 border-2 m-4 focus:ring-pink-500 focus:border-pink-500'
+          <input className='text-white p-2 border-blue-500 border-2 m-4 focus:ring-gray-500 focus:border-gray-500'
             placeholder='Password'
             type='text'
             value={password}
@@ -63,7 +63,7 @@ export default function Home() {
           </input>
         </div>
 
-        <button className='m-2 p-2 bg-green-500 text-lg text-black rounded hover:bg-pink-500'
+        <button className='m-2 p-2 bg-blue-500 text-lg text-black rounded hover:bg-gray-500'
           type='submit'>
           Submit
         </button>

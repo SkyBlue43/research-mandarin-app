@@ -1,11 +1,22 @@
-Sentence,Pinyin,English,Index
-你好,nǐ hǎo,Hello,1
-你好吗？,nǐ hǎo ma?,How are you?,2
-我很好,wǒ hěn hǎo,I'm very good,3
-谢谢你,xiè xiè nǐ,Thank you,4
-不用谢,bù yòng xiè,You're welcome,5
-我叫李华,wǒ jiào lǐ huá,My name is Li Hua,6
-你叫什么名字？,nǐ jiào shén me míng zi?,What is your name?,7
-我来自美国,wǒ lái zì měi guó,I come from the USA,8
-我会说一点中文,wǒ huì shuō yī diǎn zhōng wén,I can speak a little Chinese,9
-再见,zài jiàn,Goodbye,10
+Index,Simplified,Traditional,Pinyin,English,Hint
+1,我喜欢学习中文,我喜歡學習中文,wǒ xǐhuān xuéxí zhōngwén,I like studying Chinese,3–3 tone change (xǐhuān)
+2,今天的天气很好,今天的天氣很好,jīntiān de tiānqì hěn hǎo,Today's weather is very good,4th tone emphasis (tiānqì)
+3,你吃过饭了吗,你吃過飯了嗎,nǐ chī guò fàn le ma,Have you eaten yet?,neutral ending tone
+4,我们明天见,我們明天見,wǒmen míngtiān jiàn,See you tomorrow,2nd tone rising (míng)
+5,这本书很有意思,這本書很有意思,zhè běn shū hěn yǒuyìsi,This book is very interesting,4–3 tone shift
+6,他跑得非常快,他跑得非常快,tā pǎo de fēicháng kuài,He runs very fast,1st tone emphasis (fēi)
+7,请给我一杯水,請給我一杯水,qǐng gěi wǒ yī bēi shuǐ,Please give me a glass of water,3–3 tone change (gěi wǒ)
+8,老师正在上课,老師正在上課,lǎoshī zhèngzài shàngkè,The teacher is teaching class,falling tone (shàng)
+9,我听不懂你说的话,我聽不懂你說的話,wǒ tīng bù dǒng nǐ shuō de huà,I don't understand what you’re saying,4th tone negation (bù)
+10,他们一起去旅行,他們一起去旅行,tāmen yīqǐ qù lǚxíng,They are traveling together,3–3 tone change (yīqǐ)
+11,这个问题很难,這個問題很難,zhège wèntí hěn nán,This problem is very difficult,4th tone falling (nán)
+12,我会说一点点中文,我會說一點點中文,wǒ huì shuō yī diǎndiǎn zhōngwén,I can speak a little Chinese,neutral tone (diǎndiǎn)
+13,你昨天为什么没来,你昨天為什麼沒來,nǐ zuótiān wèishénme méi lái,Why didn’t you come yesterday?,2nd–2nd rising shift
+14,这个地方太远了,這個地方太遠了,zhège dìfāng tài yuǎn le,This place is too far,4th tone emphasis (tài)
+15,我正在看电视,我正在看電視,wǒ zhèngzài kàn diànshì,I’m watching TV,falling tone (kàn)
+16,你能帮我一下吗,你能幫我一下嗎,nǐ néng bāng wǒ yíxià ma,Can you help me a little?,neutral polite particle (ma)
+17,他昨天买了一辆车,他昨天買了一輛車,tā zuótiān mǎi le yī liàng chē,He bought a car yesterday,falling–rising (mǎi le)
+18,我有很多朋友,我有很多朋友,wǒ yǒu hěn duō péngyǒu,I have many friends,3rd tone change (hěn duō)
+19,你常常去图书馆吗,你常常去圖書館嗎,nǐ chángcháng qù túshūguǎn ma,Do you often go to the library?,2–2 repetition (chángcháng)
+20,这件衣服很漂亮,這件衣服很漂亮,zhè jiàn yīfu hěn piàoliang,This piece of clothing is very pretty,neutral tone (yīfu)
+
