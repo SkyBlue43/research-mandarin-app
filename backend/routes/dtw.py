@@ -140,9 +140,17 @@ async def dtw_new(
     currentIndex = json.loads(currentIndex)
     words_user_data = json.loads(words_user)
 
+    copy_words_user = []
+    for thing in words_user_data:
+        copy_words_user.append(thing)
+
     with open(f'backend/transcripts/results_{test}/{currentIndex}.json') as file:
         characters = json.load(file)['alignment']
     characters_user = words_user_data
+
+    copy_words_ref = []
+    for thing in characters:
+        copy_words_ref.append(thing)
     
     if len(characters_user) != len(characters):
         return "error"
@@ -157,13 +165,14 @@ async def dtw_new(
     counter = 0
     user_counter = 0
     for i in range(char_amount):
+        word_we_are_on_user = copy_words_user[i]
+        word_we_are_on_ref = copy_words_ref[i]
         user_phrase = []
         reference_phrase = []
         ref_time = []
         user_time = []
         count = 0
         for j in range(counter, len(reference_alignment['character'])):
-            
             if reference_alignment['character'][j] != None:
                 counter += count
                 break
@@ -177,7 +186,7 @@ async def dtw_new(
         count = 0
         current_character = reference_alignment["character"][counter]
         for j in range(counter, len(reference_alignment['character'])):
-            if reference_alignment['character'][j] == None or reference_alignment['character'][j] != current_character:
+            if reference_alignment['character'][j] == None or reference_alignment['character'][j] != current_character or reference_alignment['time'][j] > word_we_are_on_ref['end']:
                 counter += count
                 break
             else:
@@ -194,7 +203,7 @@ async def dtw_new(
         count = 0
         current_character = user_alignment['character'][user_counter]
         for j in range(user_counter, len(user_alignment['character'])):
-            if user_alignment['character'][j] == None or user_alignment['character'][j] != current_character:
+            if user_alignment['character'][j] == None or user_alignment['character'][j] != current_character or user_alignment['time'][j] > word_we_are_on_user['end']:
                 user_counter += count
                 break
             else:
