@@ -145,6 +145,7 @@ async def dtw_new(
     characters_user = words_user_data
     
     if len(characters_user) != len(characters):
+        return "error"
         align_characters(characters_user, characters)
 
     char_amount = len(characters)

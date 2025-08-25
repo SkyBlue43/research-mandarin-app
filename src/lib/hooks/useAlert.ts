@@ -14,23 +14,29 @@ export function useAlert(
             title: 'Heads up!',
             text: 'Click "OK" to hear and see the correct tone',
             icon: 'info',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            confirmButtonText: 'OK',
         }).then((result) => {
             if (result.isConfirmed) {
                 handlePlay();
                 setState(1);
-                if (group == "a"){
+                if (group == "a") {
                     referenceAlert2();
                 }
             }
         });
     };
-
+    
     const referenceAlert2 = async () => {
         await sleep(2000);
         Swal.fire({
             title: 'Heads up!',
             text: 'You can now hear your own corrected voice with the golden button and practice on your own.\nWhen you have clicked on the golden button, you can move on to the next phrase.',
             icon: 'info',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            confirmButtonText: 'OK',
         }).then((result) => {
             if (result.isConfirmed) {
                 setState(2);
@@ -38,6 +44,7 @@ export function useAlert(
             }
         });
     };
+    
 
     return { referenceAlert };
 }

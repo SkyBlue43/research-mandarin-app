@@ -34,7 +34,7 @@ export default function TestPageReal() {
     const { startRecording, stopRecording, audioURL, recording, referenceBlob, userBlob, clearBlob } = useAudioRecorder();
     const { referencePitch, clearReferencePitch } = useAudioAnalysisReference(referenceBlob, chosenAudio);
     const { userPitch, userWordsArray, alignedGraphData, clearPitch, accuracy } = useAudioAnalysisUser(userBlob, chosenAudio, referencePitch, currentSimplified, test, currentIndex);
-    // Fetch characters
+
 
     const handlePlay = async () => {
         setPlayReady(true);
