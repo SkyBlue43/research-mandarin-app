@@ -103,3 +103,19 @@ export const fetchCharacters = async (test: string | null) => {
     const data = await result.json();
     return data
 };
+
+export const shiftAudio = async (referenceBlob: Blob, userBlob: Blob) => {
+    const formData = new FormData();
+    formData.append("file", referenceBlob, "reference.wav");
+    formData.append('file', userBlob, 'user.wav');
+
+    const result = await fetch("http://localhost:8000/shifted_audio", {
+        method: "POST",
+        body: formData,
+    });
+    const blob = await result.blob();
+    const correctedAudioUrl = URL.createObjectURL(new Blob([blob], { type: "audio/mp4" }));
+
+
+    return correctedAudioUrl;
+}

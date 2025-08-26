@@ -14,6 +14,7 @@ import { useAudioRecorder } from '@/lib/hooks/useAudioRecorder';
 import { useAlert } from '@/lib/hooks/useAlert';
 import { useCharacters } from '@/lib/hooks/useCharacters';
 import { useAudio } from '@/lib/hooks/useAudio';
+import { useShiftedAudio } from '@/lib/hooks/useShiftedAudio';
 
 export default function TestPageReal() {
     const searchParams = useSearchParams();
@@ -34,7 +35,7 @@ export default function TestPageReal() {
     const { startRecording, stopRecording, audioURL, recording, referenceBlob, userBlob, clearBlob } = useAudioRecorder();
     const { referencePitch, clearReferencePitch } = useAudioAnalysisReference(referenceBlob, chosenAudio);
     const { userPitch, userWordsArray, alignedGraphData, clearPitch, accuracy } = useAudioAnalysisUser(userBlob, chosenAudio, referencePitch, currentSimplified, test, currentIndex);
-
+    const { correctedAudio } = useShiftedAudio(referenceBlob, userBlob)
 
     const handlePlay = async () => {
         setPlayReady(true);
@@ -58,12 +59,15 @@ export default function TestPageReal() {
 
     const handlePlayCorrected = async () => {
         setPlayReady(true);
-        if (userBlob) {
+        if (correctedAudio) {
             setGraphState(2);
             setState(3)
-            const blobUrl = URL.createObjectURL(userBlob);
-            const audio = new Audio(blobUrl);
-            audio.play();
+            const audio = new Audio(correctedAudio);
+            audio.addEventListener("error", (e) => {
+                console.error("Audio error:", e, audio.error);
+            });
+            audio.play().catch(err => console.error("Play failed:", err));
+
         }
     };
 
