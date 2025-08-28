@@ -7,22 +7,28 @@ from parselmouth.praat import call
 from scipy.signal import savgol_filter
 from fastapi import APIRouter, File, UploadFile
 import os
+import soundfile as sf
 
 router = APIRouter()
 
 def _hz_to_st(f0_hz):
     f0_hz = np.asarray(f0_hz, dtype=float)
-    with np.errstate(divide='ignore', invalid='ignore'):
-        st = 12.0 * np.log2(f0_hz)
-    st[~np.isfinite(st)] = np.nan
+    with np.errstate(divide="ignore", invalid="ignore"):
+        st = 12.0 * np.log2(f0_hz / 440.0) + 69  # MIDI scale reference
+    st = np.where(np.isfinite(st), st, np.nan)
+    if st.shape == ():  # scalar
+        return float(st)
     return st
 
 def _st_to_hz(st):
     st = np.asarray(st, dtype=float)
-    with np.errstate(over='ignore', invalid='ignore'):
-        hz = 2.0 ** (st / 12.0)
-    hz[~np.isfinite(hz)] = np.nan
+    with np.errstate(over="ignore", invalid="ignore"):
+        hz = 440.0 * (2.0 ** ((st - 69) / 12.0))  # invert MIDI scale
+    hz = np.where(np.isfinite(hz), hz, np.nan)
+    if hz.shape == ():  # scalar
+        return float(hz)
     return hz
+
 
 def _extract_pitch(sound, time_step=0.01, fmin=75, fmax=600):
     pitch = sound.to_pitch(time_step=time_step, pitch_floor=fmin, pitch_ceiling=fmax)
@@ -129,28 +135,33 @@ def correct_pitch_to_reference(
     out.save(output_wav, "WAV")
 
 
+from pydub import AudioSegment
+import tempfile, shutil, os
+
 @router.post("/shift_audio/")
 async def shift_audio(reference: UploadFile = File(...), user: UploadFile = File(...)):
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as ref_tmp, \
-         tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as user_tmp:
-
+    # Save reference
+    with tempfile.NamedTemporaryFile(delete=False) as ref_tmp:
+        shutil.copyfileobj(reference.file, ref_tmp)
         ref_path = ref_tmp.name
+
+    # Save user
+    with tempfile.NamedTemporaryFile(delete=False) as user_tmp:
+        shutil.copyfileobj(user.file, user_tmp)
         user_path = user_tmp.name
 
-        shutil.copyfileobj(reference.file, ref_tmp)
-        shutil.copyfileobj(user.file, user_tmp)
+    # --- Convert both to real WAV (PCM 16-bit) ---
+    ref_wav = ref_path + ".wav"
+    user_wav = user_path + ".wav"
+
+    AudioSegment.from_file(ref_path).export(ref_wav, format="wav")
+    AudioSegment.from_file(user_path).export(user_wav, format="wav")
+
+    # Now safe to call soundfile
+    print("REF:", sf.info(ref_wav))
+    print("USER:", sf.info(user_wav))
 
     corrected_path = tempfile.NamedTemporaryFile(delete=False, suffix=".wav").name
+    correct_pitch_to_reference(user_wav, ref_wav, corrected_path, blend=1.0)
 
-    correct_pitch_to_reference(user_path, ref_path, corrected_path, blend=1.0)
-
-    # (Optional) Run softer correction to another temp file
-    corrected_soft_path = tempfile.NamedTemporaryFile(delete=False, suffix=".wav").name
-    correct_pitch_to_reference(user_path, ref_path, corrected_soft_path, blend=0.7)
-
-    os.remove(ref_path)
-    os.remove(user_path)
-
-    # Return one of the processed audios
-    # You could also return both in a zip if you want
     return FileResponse(corrected_path, media_type="audio/wav", filename="user_corrected.wav")

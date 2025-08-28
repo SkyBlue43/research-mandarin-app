@@ -20,7 +20,7 @@ export default function TestPageReal() {
     const searchParams = useSearchParams();
     const test = searchParams.get('test');
     const group = searchParams.get('group');
-    const timeLeft = useTimer(900, '/');
+    const timeLeft = useTimer(9000, '/');
 
     const [arrayIndex, setArrayIndex] = useState(0);
     const [wordState, setWordState] = useState(0);

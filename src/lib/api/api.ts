@@ -106,10 +106,9 @@ export const fetchCharacters = async (test: string | null) => {
 
 export const shiftAudio = async (referenceBlob: Blob, userBlob: Blob) => {
     const formData = new FormData();
-    formData.append("file", referenceBlob, "reference.wav");
-    formData.append('file', userBlob, 'user.wav');
-
-    const result = await fetch("http://localhost:8000/shifted_audio", {
+    formData.append("reference", referenceBlob);
+    formData.append("user", userBlob);
+    const result = await fetch("http://localhost:8000/shift_audio", {
         method: "POST",
         body: formData,
     });

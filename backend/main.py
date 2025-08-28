@@ -7,6 +7,7 @@ from backend.routes.check_password import router as check_password_router
 from backend.routes.analyze_audio import router as analyze_audio_router
 from backend.routes.transcribe import router as transcribe_router
 from backend.routes.dtw import router as dtw_router
+from backend.routes.shift_audio import router as shift_audio_router
 
 
 app = FastAPI()
@@ -24,6 +25,7 @@ app.include_router(check_password_router)
 app.include_router(analyze_audio_router)
 app.include_router(transcribe_router)
 app.include_router(dtw_router)
+app.include_router(shift_audio_router)
 
 
 app.mount("/sounds", StaticFiles(directory="backend/sounds"), name="sounds")
