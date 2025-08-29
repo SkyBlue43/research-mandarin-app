@@ -238,7 +238,7 @@ async def dtw_new(
         print("Slope score:", slope_score)
 
         # --- Combined score ---
-        combined_accuracy = 0.6 * accuracy + 0.4 * slope_score
+        combined_accuracy = 0.2 * accuracy + 0.8 * slope_score
         print("Total score:", combined_accuracy)
         total_accuracy += combined_accuracy
 
@@ -253,4 +253,4 @@ async def dtw_new(
                 "accuracy": combined_accuracy
             })
 
-    return {"alignment": alignment, "accuracy": round((total_accuracy / char_amount) * 100, 2)}
+    return {"alignment": alignment, "accuracy": round((total_accuracy / char_amount) * 100, 2), 'ref_characters': copy_words_ref}

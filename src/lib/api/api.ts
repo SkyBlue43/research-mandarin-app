@@ -31,21 +31,8 @@ export const DTW = async (userPitch: PitchPoint[], referencePitch: PitchPoint[],
     });
     const data = await result.json();
     console.log("DTW result:", data);
-    return [data.alignment, data.accuracy];
+    return [data.alignment, data.accuracy, data.ref_characters];
 };
-
-
-export const getAccuracy = async (aligned: AlignedPoint[]) => {
-    const response = await fetch('http://localhost:8000/accuracy/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ aligned }),
-    });
-    const result = await response.json();
-    return result.score;
-}
 
 
 export const transcribeAudio = async (

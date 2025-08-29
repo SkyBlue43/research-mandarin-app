@@ -32,6 +32,7 @@ export function useAudioAnalysisUser(userBlob: Blob | null, chosenAudio: string,
     const [userWordsArray, setUserWordsArray] = useState<any[]>([]);
     const [alignedGraphData, setAlignedGraphData] = useState<any[]>([]);
     const [accuracy, setAccuracy] = useState(0);
+    const [refWordsArray, setRefWordsArray] = useState<any[]>([]);
 
     useEffect(() => {
         const analyzeUser = async () => {
@@ -44,9 +45,10 @@ export function useAudioAnalysisUser(userBlob: Blob | null, chosenAudio: string,
                     setUserWordsArray(user_chars_array);
 
                     console.log("✅ User Character Segments:", user_chars_array);
-                    const [aligned_graph_data, total_accuracy] = await DTW(data.pitch, referencePitch, test, user_chars_array, currentIndex);
+                    const [aligned_graph_data, total_accuracy, ref_characters] = await DTW(data.pitch, referencePitch, test, user_chars_array, currentIndex);
                     setAlignedGraphData(aligned_graph_data);
                     setAccuracy(total_accuracy);
+                    setRefWordsArray(ref_characters);
                 }
             }
         };
@@ -61,5 +63,5 @@ export function useAudioAnalysisUser(userBlob: Blob | null, chosenAudio: string,
         setAlignedGraphData([]);
     }
 
-    return { userPitch, userWordsArray, alignedGraphData, clearPitch, accuracy }
+    return { userPitch, userWordsArray, refWordsArray, alignedGraphData, clearPitch, accuracy }
 }

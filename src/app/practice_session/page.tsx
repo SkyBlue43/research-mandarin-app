@@ -20,7 +20,7 @@ export default function TestPageReal() {
     const searchParams = useSearchParams();
     const test = searchParams.get('test');
     const group = searchParams.get('group');
-    const timeLeft = useTimer(9000, '/');
+    const timeLeft = useTimer(900, '/');
 
     const [arrayIndex, setArrayIndex] = useState(0);
     const [wordState, setWordState] = useState(0);
@@ -34,7 +34,7 @@ export default function TestPageReal() {
     const { chosenAudio } = useAudio(test, currentIndex);
     const { startRecording, stopRecording, audioURL, recording, referenceBlob, userBlob, clearBlob } = useAudioRecorder();
     const { referencePitch, clearReferencePitch } = useAudioAnalysisReference(referenceBlob, chosenAudio);
-    const { userPitch, userWordsArray, alignedGraphData, clearPitch, accuracy } = useAudioAnalysisUser(userBlob, chosenAudio, referencePitch, currentSimplified, test, currentIndex);
+    const { userPitch, userWordsArray, refWordsArray, alignedGraphData, clearPitch, accuracy } = useAudioAnalysisUser(userBlob, chosenAudio, referencePitch, currentSimplified, test, currentIndex);
     const { correctedAudio } = useShiftedAudio(referenceBlob, userBlob)
 
     const handlePlay = async () => {
@@ -151,21 +151,62 @@ export default function TestPageReal() {
                 </div>
 
                 {group === "a" && graphState == 1 && (
-                    <div className='w-120 flex items-center justify-center mr-4 ml-4 text-black'>
+                    <div className='flex items-center justify-center mr-4 ml-4 text-black'>
                         {playReady && referencePitch.length > 0 && <PitchChart data={memoizedPitch} color={'#B0B0B0'} />}
                     </div>
                 )}
 
                 {group === "a" && graphState == 0 && (
-                    <div className='w-120 flex items-center justify-center ml-4 mr-4 text-black'>
+                    <div className='flex flex-col items-center justify-center ml-4 mr-4 text-white'>
                         {userPitch.length > 0 && <PitchChart data={memoizedUserPitch} color='#4682B4' />}
                     </div>
                 )}
 
                 {group === "a" && graphState == 2 && (
-                    <div className='flex items-center justify-center ml-4 mr-4 text-black'>
-                        {alignedGraphData != undefined && alignedGraphData.length > 0 && <AlignedPitchChart data={memoizedAlignedPitch} />}
+                    <div className='flex flex-col items-center justify-center ml-4 mr-4 text-white'>
+                        {alignedGraphData != undefined && alignedGraphData.length > 0 && (
+                            <>
+                                <AlignedPitchChart data={memoizedAlignedPitch} />
+                                <div
+                                    style={{
+                                        position: "relative",
+                                        width: "100%",        
+                                        height: "2rem",       
+                                        marginTop: "1rem",    
+                                    }}
+                                >
+                                    {refWordsArray.map((word, i) => {
+                                        const firstStart = refWordsArray[0].start; // normalize start point
+                                        const totalDuration = refWordsArray[refWordsArray.length - 1].end - firstStart;
+                                        const chartLeftPadding = 8; // tweak until it lines up
+                                        const chartRightPadding = 38; 
+                                        const usableWidth = 150 - chartLeftPadding - chartRightPadding;
+                                        
+                                        const left =
+                                          chartLeftPadding + ((word.start - firstStart) / totalDuration) * usableWidth;
+                                        const width =
+                                          ((word.end - word.start) / totalDuration) * usableWidth;
+
+                                        return (
+                                            <span
+                                                key={i}
+                                                style={{
+                                                    position: "absolute",
+                                                    left: `${left}%`,
+                                                    width: `${width}%`,
+                                                    textAlign: "center",
+                                                }}
+                                            >
+                                                {word.char}
+                                            </span>
+                                        );
+                                    })}
+                                </div>
+
+                            </>
+                        )}
                     </div>
+
                 )}
 
                 {group === "b" && (
@@ -181,7 +222,7 @@ export default function TestPageReal() {
                 </div>
             </div>
 
-            <footer className="grid grid-cols-3 w-screen p-8">
+            <footer className="grid grid-cols-3 w-screen p-8 pt-20">
                 <div>
                 </div>
 
