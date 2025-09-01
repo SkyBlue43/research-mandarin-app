@@ -32,7 +32,7 @@ export default function Home() {
         router.push(`test?test=${data.test}`)
       }
       else {
-        router.push(`/practice_session?test=${data.test}&group=${data.group}`)
+        router.push(`/practice_session?test=${data.test}&group=${data.group}&name=${data.name}`)
       }
     }
 

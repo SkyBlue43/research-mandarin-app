@@ -15,6 +15,6 @@ async def check_password(request: Request):
     lines = read_lines('backend/students.csv')
     for line in lines:
         items = line.strip().split(',')
-        if username == items[0] and password == items[1]:
-            return {'test': items[3], 'group': items[2]}
+        if username == items[1] and password == items[2]:
+            return {'test': items[4], 'group': items[3], 'name': items[0]}
     raise HTTPException(status_code=401, detail="Invalid username or password")

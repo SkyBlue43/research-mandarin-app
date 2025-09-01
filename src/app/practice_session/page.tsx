@@ -1,7 +1,7 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import { useEffect, useState, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import { Mic, Play, Square } from 'lucide-react';
 import React from 'react';
 
@@ -15,11 +15,13 @@ import { useAlert } from '@/lib/hooks/useAlert';
 import { useCharacters } from '@/lib/hooks/useCharacters';
 import { useAudio } from '@/lib/hooks/useAudio';
 import { useShiftedAudio } from '@/lib/hooks/useShiftedAudio';
+import { useAccuracy } from '@/lib/hooks/useAccuracy';
 
 export default function TestPageReal() {
     const searchParams = useSearchParams();
     const test = searchParams.get('test');
     const group = searchParams.get('group');
+    const name = searchParams.get('name');
     const timeLeft = useTimer(900, '/');
 
     const [arrayIndex, setArrayIndex] = useState(0);
@@ -36,6 +38,9 @@ export default function TestPageReal() {
     const { referencePitch, clearReferencePitch } = useAudioAnalysisReference(referenceBlob, chosenAudio);
     const { userPitch, userWordsArray, refWordsArray, alignedGraphData, clearPitch, accuracy } = useAudioAnalysisUser(userBlob, chosenAudio, referencePitch, currentSimplified, test, currentIndex);
     const { correctedAudio } = useShiftedAudio(referenceBlob, userBlob)
+    if (test && name && group) {
+        useAccuracy(accuracy, name, test, group, currentSimplified, currentIndex);
+    }
 
     const handlePlay = async () => {
         setPlayReady(true);

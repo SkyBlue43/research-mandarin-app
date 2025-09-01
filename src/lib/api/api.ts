@@ -105,3 +105,21 @@ export const shiftAudio = async (referenceBlob: Blob, userBlob: Blob) => {
 
     return correctedAudioUrl;
 }
+
+export const saveAccuracyData = async (accuracy: number, name: string, test: string, group: string, phrase: string, array_index: string) => {
+    const payload = {
+        name,
+        test,
+        accuracy,
+        group,
+        phrase,
+        array_index,
+    };
+    await fetch("http://localhost:8000/save_accuracy", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+    });
+};
