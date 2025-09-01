@@ -21,19 +21,27 @@ async def save_accuracy(request: Request):
     array_number = data.get('array_number')
     accuracy = data.get("accuracy")
 
-    os.makedirs(os.path.dirname(f'/backend/data/{test}', exist_ok=True))
+    base_dir = os.path.join(os.getcwd(), "backend", "data")  # project-local "backend/data"
+    os.makedirs(os.path.join(base_dir, f'Test_{test}'), exist_ok=True)
 
-    filename = f'/backend/data/{test}/{name}_{group}.csv'
+    filename = os.path.join(base_dir, f"Test_{test}", f"{name}_{group}.csv")
 
     if os.path.isfile(filename):
         lines = read_lines(filename)
+        new_lines = []
+        found = False
         for line in lines:
             items = line.strip().split(',')
             if items[0] == phrase:
                 line = line.strip()
                 line += f',{accuracy}\n'
-        lines.append(f"{phrase},{array_number},{accuracy}")
-        write_lines(filename,lines)
+                found = True
+            new_lines.append(line)
+        if not found:
+            lines.append(f"{phrase},{array_number},{accuracy}")
+            write_lines(filename,lines)
+        else:
+            write_lines(filename, new_lines)
     else:
         new_list = []
         first_line = 'Chinese,Array_number,Attempts\n'
