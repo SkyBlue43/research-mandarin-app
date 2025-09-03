@@ -1,6 +1,6 @@
 'use client'
 
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { useState, useMemo } from 'react'
 import { Mic, Play, Square } from 'lucide-react';
 import React from 'react';
@@ -8,7 +8,6 @@ import React from 'react';
 import PitchChart from '@/ui/charts/PitchChart';
 import AlignedPitchChart from '@/ui/charts/AlignedPitchCharts';
 import Timer from '@/ui/Timer';
-import { useTimer } from '@/lib/hooks/useTimer'
 import { useAudioAnalysisReference, useAudioAnalysisUser } from '@/lib/hooks/useAudioAnalysis';
 import { useAudioRecorder } from '@/lib/hooks/useAudioRecorder';
 import { useAlert } from '@/lib/hooks/useAlert';
@@ -18,11 +17,11 @@ import { useShiftedAudio } from '@/lib/hooks/useShiftedAudio';
 import { useAccuracy } from '@/lib/hooks/useAccuracy';
 
 export default function TestPageReal() {
+    const router = useRouter();
     const searchParams = useSearchParams();
     const test = searchParams.get('test');
     const group = searchParams.get('group');
     const name = searchParams.get('name');
-    const timeLeft = useTimer(900, '/');
 
     const [arrayIndex, setArrayIndex] = useState(0);
     const [wordState, setWordState] = useState(0);
@@ -95,7 +94,8 @@ export default function TestPageReal() {
         setState(0);
         setGraphState(0);
 
-        if (arrayIndex === 9) {
+        if (arrayIndex === 1) {
+            router.push('/finished');
             setArrayIndex(0);
             changeWord('1', characters[0].simplified, characters[0].traditional, characters[0].pinyin, characters[0].hint)
         } else {
@@ -121,7 +121,7 @@ export default function TestPageReal() {
     return (
         <div className='h-screen flex flex-col items-center text-center'>
             <header className='m-8 w-screen'>
-                <Timer timeLeft={timeLeft} />
+                <Timer />
                 <div>
                     <button className='border bg-gray-500 p-1 rounded hover:bg-gray-600' onClick={handleWordState}>Change to: {wordState === 0 ? 'Traditional' : 'Simplified'}</button>
                     <div className='font-bold text-[70px]'>{wordState === 1 ? currentTraditional : currentSimplified}</div>

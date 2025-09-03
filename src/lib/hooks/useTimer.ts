@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-export function useTimer(durationInSeconds: number = 900, redirectPath?: string) {
+export function useTimer(durationInSeconds: number, redirectPath?: string) {
     const [timeLeft, setTimeLeft] = useState(0);
     const router = useRouter();
 
@@ -13,7 +13,7 @@ export function useTimer(durationInSeconds: number = 900, redirectPath?: string)
         if (storedEndTime) {
             endTime = parseInt(storedEndTime, 10);
         } else {
-            endTime = Date.now() + 900 * 1000; // ms
+            endTime = Date.now() + durationInSeconds * 1000; // ms
             localStorage.setItem('timerEnd', endTime.toString());
         }
 
