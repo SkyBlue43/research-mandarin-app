@@ -18,7 +18,7 @@ async def save_accuracy(request: Request):
     test = data.get("test")
     group = data.get('group')
     phrase = data.get('phrase')
-    array_number = data.get('array_number')
+    array_number = data.get('array_index')
     accuracy = data.get("accuracy")
 
     base_dir = os.path.join(os.getcwd(), "backend", "data")
@@ -26,7 +26,7 @@ async def save_accuracy(request: Request):
 
     filename = os.path.join(base_dir, f"Test_{test}", f"{name}_{group}.csv")
 
-    if accuracy == 0:
+    if accuracy == 0 or accuracy is None:
         return
 
     if os.path.isfile(filename):
