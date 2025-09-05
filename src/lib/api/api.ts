@@ -123,3 +123,21 @@ export const saveAccuracyData = async (accuracy: number, name: string, test: str
         body: JSON.stringify(payload),
     });
 };
+
+
+export const getHighestAccuracies = async (name: string, group: string, test: string) => {
+    const result = await fetch('http://localhost:8000/get_highest_accuracies', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+          },
+        body: JSON.stringify({
+            test: test,
+            name: name,
+            group: group,
+        }),
+    });
+    const data = await result.json()
+    return data.accuracies
+
+}

@@ -94,10 +94,10 @@ export default function TestPageReal() {
         setState(0);
         setGraphState(0);
 
-        if (arrayIndex === 1) {
-            router.push('/finished');
+        if (arrayIndex === 0) {
             setArrayIndex(0);
             changeWord('1', characters[0].simplified, characters[0].traditional, characters[0].pinyin, characters[0].hint)
+            router.push(`finished?name=${name}&test=${test}&group=${group}`);
         } else {
             setArrayIndex(arrayIndex + 1);
             changeWord(String(Number(currentIndex) + 1), characters[arrayIndex + 1].simplified, characters[arrayIndex + 1].traditional, characters[arrayIndex + 1].pinyin, characters[arrayIndex + 1].hint)

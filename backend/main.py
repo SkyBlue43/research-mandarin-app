@@ -9,6 +9,7 @@ from backend.routes.transcribe import router as transcribe_router
 from backend.routes.dtw import router as dtw_router
 from backend.routes.shift_audio import router as shift_audio_router
 from backend.routes.save_accuracy import router as save_accuracy_router
+from backend.routes.get_highest_accuracies import router as get_highest_accuracies_router
 
 
 app = FastAPI()
@@ -28,6 +29,7 @@ app.include_router(transcribe_router)
 app.include_router(dtw_router)
 app.include_router(shift_audio_router)
 app.include_router(save_accuracy_router)
+app.include_router(get_highest_accuracies_router)
 
 
 app.mount("/sounds", StaticFiles(directory="backend/sounds"), name="sounds")
