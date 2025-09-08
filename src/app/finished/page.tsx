@@ -6,6 +6,7 @@ import { useState } from 'react'
 import Timer from '@/ui/Timer';
 import { useCharacters } from '@/lib/hooks/useCharacters';
 import { getHighestAccuracies } from '@/lib/api/api';
+import { useChartLayout } from 'recharts/types/context/chartLayoutContext';
 
 // need user, group, test
 // with those things you can get the array of characters and their accuracy
@@ -20,6 +21,7 @@ export default function Finished() {
     const name = searchParams.get('name')
     const group = searchParams.get('group')
     const test = searchParams.get('test')
+    const router = useRouter();
 
     const [arrayIndex, setArrayIndex] = useState(0);
     const [accuracyArray, setAccuracyArray] = useState<AccuracyResult[]>([]);
@@ -32,7 +34,6 @@ export default function Finished() {
             setAccuracyArray(data);
         })
     }
-    console.log(accuracyArray);
 
     return (
         <div className='h-screen flex flex-col items-center text-center'>
@@ -54,7 +55,7 @@ export default function Finished() {
                             <td className='p-2'>{char.simplified}</td>
                             <td>{accuracyArray[0].accuracy}</td>
                             <td>
-                                <button className='border rounded bg-blue-500 text-white p-1'>
+                                <button className='border rounded bg-blue-500 text-white p-1' onClick={() => router.push(`/redo?name=${name}&group=${group}&test=${test}&word_index=${char.index - 1}`)}>
                                     here
                                 </button>
                             </td>

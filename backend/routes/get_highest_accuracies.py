@@ -28,10 +28,10 @@ async def get_highest_accuracies(request: Request):
         if len(items) > 3:
             highest = 0
             for i in range(2, len(items)):
-                if items[i] > highest:
-                    highest = items[i]
+                if float(items[i]) > highest:
+                    highest = float(items[i])
         else:
-            highest = items[2]
+            highest = float(items[2])
         accuracies.append({
             'chinese': items[0],
             'accuracy': highest
