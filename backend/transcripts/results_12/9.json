@@ -1,0 +1,20 @@
+{
+  "filename": "9.mp3",
+  "alignment": [
+    {
+      "char": "中",
+      "start": 0.1,
+      "end": 0.38
+    },
+    {
+      "char": "国",
+      "start": 0.38,
+      "end": 0.64
+    },
+    {
+      "char": "人",
+      "start": 0.64,
+      "end": 1.15
+    }
+  ]
+}

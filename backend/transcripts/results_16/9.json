@@ -1,0 +1,25 @@
+{
+  "filename": "9.mp3",
+  "alignment": [
+    {
+      "char": "多",
+      "start": 0.1,
+      "end": 0.35
+    },
+    {
+      "char": "读",
+      "start": 0.35,
+      "end": 0.57
+    },
+    {
+      "char": "几",
+      "start": 0.57,
+      "end": 0.86
+    },
+    {
+      "char": "遍",
+      "start": 0.86,
+      "end": 1.33
+    }
+  ]
+}

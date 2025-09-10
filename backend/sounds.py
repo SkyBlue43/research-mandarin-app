@@ -7,6 +7,10 @@ def read_lines(infile):
     with open(infile) as file:
         return file.readlines()
 
+""" 
+    parameters: sounds.py curriculum/(filenumber).csv sounds/(filenumber)
+"""
+
 
 def get_audio(lines, folder):
     os.makedirs(folder, exist_ok=True)
@@ -24,8 +28,12 @@ def get_audio(lines, folder):
         transcript_path = os.path.join(transcript_folder, f"{index}.txt")
         with open(transcript_path, "w", encoding="utf-8") as file:
             file.write(chinese)
-        
-    subprocess.run(["python", "mfa_test.py", folder, transcript_folder, f"transcripts/results_{folder[-1]}"])
+    
+    if folder[-2] == "/":
+        subprocess.run(["python", "mfa_test.py", folder, transcript_folder, f"transcripts/results_{folder[-1]}"])
+    else:
+        subprocess.run(["python", "mfa_test.py", folder, transcript_folder, f"transcripts/results_{folder[-2]}{folder[-1]}"])
+
 
 
 def main(infile, folder):

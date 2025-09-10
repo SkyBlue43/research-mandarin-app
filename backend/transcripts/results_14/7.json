@@ -1,0 +1,15 @@
+{
+  "filename": "7.mp3",
+  "alignment": [
+    {
+      "char": "电",
+      "start": 0.1,
+      "end": 0.48
+    },
+    {
+      "char": "脑",
+      "start": 0.48,
+      "end": 0.97
+    }
+  ]
+}

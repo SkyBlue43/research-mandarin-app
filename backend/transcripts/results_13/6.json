@@ -1,0 +1,15 @@
+{
+  "filename": "6.mp3",
+  "alignment": [
+    {
+      "char": "关",
+      "start": 0.1,
+      "end": 0.43
+    },
+    {
+      "char": "门",
+      "start": 0.43,
+      "end": 0.96
+    }
+  ]
+}

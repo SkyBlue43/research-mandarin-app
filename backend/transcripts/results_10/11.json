@@ -1,0 +1,20 @@
+{
+  "filename": "11.mp3",
+  "alignment": [
+    {
+      "char": "忙",
+      "start": 0.07,
+      "end": 0.38
+    },
+    {
+      "char": "不",
+      "start": 0.38,
+      "end": 0.58
+    },
+    {
+      "char": "忙",
+      "start": 0.58,
+      "end": 1.06
+    }
+  ]
+}

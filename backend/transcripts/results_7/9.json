@@ -1,0 +1,15 @@
+{
+  "filename": "9.mp3",
+  "alignment": [
+    {
+      "char": "春",
+      "start": 0.11,
+      "end": 0.35
+    },
+    {
+      "char": "天",
+      "start": 0.35,
+      "end": 0.98
+    }
+  ]
+}

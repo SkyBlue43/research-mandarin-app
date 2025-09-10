@@ -1,0 +1,15 @@
+{
+  "filename": "4.mp3",
+  "alignment": [
+    {
+      "char": "请",
+      "start": 0.09,
+      "end": 0.54
+    },
+    {
+      "char": "坐",
+      "start": 0.54,
+      "end": 1.02
+    }
+  ]
+}

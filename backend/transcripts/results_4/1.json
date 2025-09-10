@@ -1,0 +1,15 @@
+{
+  "filename": "1.mp3",
+  "alignment": [
+    {
+      "char": "男",
+      "start": 0.06,
+      "end": 0.4
+    },
+    {
+      "char": "生",
+      "start": 0.4,
+      "end": 0.91
+    }
+  ]
+}

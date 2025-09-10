@@ -1,0 +1,25 @@
+{
+  "filename": "12.mp3",
+  "alignment": [
+    {
+      "char": "没",
+      "start": 0.07,
+      "end": 0.32
+    },
+    {
+      "char": "有",
+      "start": 0.32,
+      "end": 0.48
+    },
+    {
+      "char": "问",
+      "start": 0.48,
+      "end": 0.81
+    },
+    {
+      "char": "题",
+      "start": 0.81,
+      "end": 1.29
+    }
+  ]
+}

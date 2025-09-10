@@ -1,0 +1,15 @@
+{
+  "filename": "5.mp3",
+  "alignment": [
+    {
+      "char": "年",
+      "start": 0.03,
+      "end": 0.45
+    },
+    {
+      "char": "纪",
+      "start": 0.45,
+      "end": 0.89
+    }
+  ]
+}

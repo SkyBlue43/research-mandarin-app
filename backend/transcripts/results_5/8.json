@@ -1,0 +1,15 @@
+{
+  "filename": "8.mp3",
+  "alignment": [
+    {
+      "char": "是",
+      "start": 0.07,
+      "end": 0.47
+    },
+    {
+      "char": "的",
+      "start": 0.47,
+      "end": 0.58
+    }
+  ]
+}

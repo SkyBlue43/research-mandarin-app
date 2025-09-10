@@ -1,0 +1,25 @@
+{
+  "filename": "11.mp3",
+  "alignment": [
+    {
+      "char": "公",
+      "start": 0.1,
+      "end": 0.37
+    },
+    {
+      "char": "共",
+      "start": 0.37,
+      "end": 0.64
+    },
+    {
+      "char": "汽",
+      "start": 0.64,
+      "end": 0.93
+    },
+    {
+      "char": "车",
+      "start": 0.93,
+      "end": 1.43
+    }
+  ]
+}

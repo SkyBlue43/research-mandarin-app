@@ -1,0 +1,15 @@
+{
+  "filename": "9.mp3",
+  "alignment": [
+    {
+      "char": "台",
+      "start": 0.09,
+      "end": 0.42
+    },
+    {
+      "char": "湾",
+      "start": 0.42,
+      "end": 0.83
+    }
+  ]
+}

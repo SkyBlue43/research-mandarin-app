@@ -1,0 +1,20 @@
+{
+  "filename": "9.mp3",
+  "alignment": [
+    {
+      "char": "有",
+      "start": 0.07,
+      "end": 0.34
+    },
+    {
+      "char": "点",
+      "start": 0.34,
+      "end": 0.64
+    },
+    {
+      "char": "儿",
+      "start": 0.64,
+      "end": 0.95
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "filename": "10.mp3",
+  "alignment": [
+    {
+      "char": "排",
+      "start": 0.09,
+      "end": 0.43
+    },
+    {
+      "char": "球",
+      "start": 0.43,
+      "end": 1.0
+    }
+  ]
+}

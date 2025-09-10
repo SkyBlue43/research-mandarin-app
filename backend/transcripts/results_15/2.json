@@ -1,0 +1,15 @@
+{
+  "filename": "2.mp3",
+  "alignment": [
+    {
+      "char": "租",
+      "start": 0.1,
+      "end": 0.41
+    },
+    {
+      "char": "房",
+      "start": 0.41,
+      "end": 0.95
+    }
+  ]
+}

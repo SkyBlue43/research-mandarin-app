@@ -1,0 +1,15 @@
+{
+  "filename": "2.mp3",
+  "alignment": [
+    {
+      "char": "学",
+      "start": 0.07,
+      "end": 0.45
+    },
+    {
+      "char": "习",
+      "start": 0.45,
+      "end": 0.99
+    }
+  ]
+}

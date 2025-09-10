@@ -1,0 +1,30 @@
+{
+  "filename": "16.mp3",
+  "alignment": [
+    {
+      "char": "我",
+      "start": 0.06,
+      "end": 0.25
+    },
+    {
+      "char": "也",
+      "start": 0.25,
+      "end": 0.48
+    },
+    {
+      "char": "挺",
+      "start": 0.48,
+      "end": 0.8
+    },
+    {
+      "char": "好",
+      "start": 0.8,
+      "end": 1.13
+    },
+    {
+      "char": "的",
+      "start": 1.13,
+      "end": 1.24
+    }
+  ]
+}

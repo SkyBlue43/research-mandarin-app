@@ -1,0 +1,15 @@
+{
+  "filename": "5.mp3",
+  "alignment": [
+    {
+      "char": "北",
+      "start": 0.09,
+      "end": 0.2
+    },
+    {
+      "char": "京",
+      "start": 0.2,
+      "end": 0.88
+    }
+  ]
+}

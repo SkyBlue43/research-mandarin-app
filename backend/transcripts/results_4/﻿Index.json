@@ -1,0 +1,55 @@
+{
+  "filename": "﻿Index.mp3",
+  "alignment": [
+    {
+      "char": "s",
+      "start": 0.11,
+      "end": 0.38
+    },
+    {
+      "char": "i",
+      "start": 0.38,
+      "end": 0.41
+    },
+    {
+      "char": "m",
+      "start": 0.41,
+      "end": 0.45
+    },
+    {
+      "char": "p",
+      "start": 0.45,
+      "end": 0.48
+    },
+    {
+      "char": "l",
+      "start": 0.48,
+      "end": 0.51
+    },
+    {
+      "char": "i",
+      "start": 0.51,
+      "end": 0.75
+    },
+    {
+      "char": "f",
+      "start": 0.75,
+      "end": 0.84
+    },
+    {
+      "char": "i",
+      "start": 0.84,
+      "end": 1.14
+    },
+    {
+      "char": "e",
+      "start": 1.14,
+      "end": 1.19
+    },
+    {
+      "char": "d",
+      "start": 1.19,
+      "end": 1.23
+    }
+  ]
+}

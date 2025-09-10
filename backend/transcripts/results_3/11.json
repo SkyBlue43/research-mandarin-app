@@ -1,0 +1,15 @@
+{
+  "filename": "11.mp3",
+  "alignment": [
+    {
+      "char": "香",
+      "start": 0.1,
+      "end": 0.53
+    },
+    {
+      "char": "港",
+      "start": 0.53,
+      "end": 1.03
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "filename": "11.mp3",
+  "alignment": [
+    {
+      "char": "羽",
+      "start": 0.06,
+      "end": 0.29
+    },
+    {
+      "char": "毛",
+      "start": 0.29,
+      "end": 0.59
+    },
+    {
+      "char": "球",
+      "start": 0.59,
+      "end": 1.14
+    }
+  ]
+}

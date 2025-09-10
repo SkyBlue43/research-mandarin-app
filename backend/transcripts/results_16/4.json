@@ -1,0 +1,15 @@
+{
+  "filename": "4.mp3",
+  "alignment": [
+    {
+      "char": "宿",
+      "start": 0.09,
+      "end": 0.48
+    },
+    {
+      "char": "舍",
+      "start": 0.48,
+      "end": 0.93
+    }
+  ]
+}

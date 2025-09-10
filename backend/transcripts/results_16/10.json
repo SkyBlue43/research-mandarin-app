@@ -1,0 +1,25 @@
+{
+  "filename": "10.mp3",
+  "alignment": [
+    {
+      "char": "生",
+      "start": 0.1,
+      "end": 0.41
+    },
+    {
+      "char": "日",
+      "start": 0.41,
+      "end": 0.69
+    },
+    {
+      "char": "快",
+      "start": 0.69,
+      "end": 1.07
+    },
+    {
+      "char": "乐",
+      "start": 1.07,
+      "end": 1.44
+    }
+  ]
+}

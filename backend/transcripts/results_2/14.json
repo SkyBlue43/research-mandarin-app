@@ -1,0 +1,35 @@
+{
+  "filename": "14.mp3",
+  "alignment": [
+    {
+      "char": "我",
+      "start": 0.08,
+      "end": 0.28
+    },
+    {
+      "char": "是",
+      "start": 0.28,
+      "end": 0.54
+    },
+    {
+      "char": "学",
+      "start": 0.54,
+      "end": 0.8
+    },
+    {
+      "char": "生",
+      "start": 0.8,
+      "end": 1.28
+    },
+    {
+      "char": "你",
+      "start": 1.5,
+      "end": 1.77
+    },
+    {
+      "char": "呢",
+      "start": 1.77,
+      "end": 1.86
+    }
+  ]
+}

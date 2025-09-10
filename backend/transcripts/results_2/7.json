@@ -1,0 +1,15 @@
+{
+  "filename": "7.mp3",
+  "alignment": [
+    {
+      "char": "你",
+      "start": 0.04,
+      "end": 0.35
+    },
+    {
+      "char": "好",
+      "start": 0.35,
+      "end": 0.94
+    }
+  ]
+}

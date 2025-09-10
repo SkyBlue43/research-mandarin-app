@@ -1,0 +1,15 @@
+{
+  "filename": "2.mp3",
+  "alignment": [
+    {
+      "char": "问",
+      "start": 0.06,
+      "end": 0.41
+    },
+    {
+      "char": "题",
+      "start": 0.41,
+      "end": 0.94
+    }
+  ]
+}

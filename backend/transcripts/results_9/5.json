@@ -1,0 +1,15 @@
+{
+  "filename": "5.mp3",
+  "alignment": [
+    {
+      "char": "医",
+      "start": 0.08,
+      "end": 0.73
+    },
+    {
+      "char": "生",
+      "start": 0.73,
+      "end": 0.91
+    }
+  ]
+}

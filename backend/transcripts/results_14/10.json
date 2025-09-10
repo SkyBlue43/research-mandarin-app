@@ -1,0 +1,20 @@
+{
+  "filename": "10.mp3",
+  "alignment": [
+    {
+      "char": "动",
+      "start": 0.09,
+      "end": 0.41
+    },
+    {
+      "char": "物",
+      "start": 0.41,
+      "end": 0.59
+    },
+    {
+      "char": "园",
+      "start": 0.59,
+      "end": 1.13
+    }
+  ]
+}

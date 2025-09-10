@@ -1,0 +1,15 @@
+{
+  "filename": "11.mp3",
+  "alignment": [
+    {
+      "char": "右",
+      "start": 0.09,
+      "end": 0.38
+    },
+    {
+      "char": "手",
+      "start": 0.38,
+      "end": 0.95
+    }
+  ]
+}

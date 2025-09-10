@@ -1,0 +1,15 @@
+{
+  "filename": "12.mp3",
+  "alignment": [
+    {
+      "char": "再",
+      "start": 0.08,
+      "end": 0.41
+    },
+    {
+      "char": "见",
+      "start": 0.41,
+      "end": 0.93
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "filename": "12.mp3",
+  "alignment": [
+    {
+      "char": "考",
+      "start": 0.09,
+      "end": 0.44
+    },
+    {
+      "char": "试",
+      "start": 0.44,
+      "end": 0.93
+    }
+  ]
+}

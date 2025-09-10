@@ -1,0 +1,15 @@
+{
+  "filename": "5.mp3",
+  "alignment": [
+    {
+      "char": "大",
+      "start": 0.09,
+      "end": 0.35
+    },
+    {
+      "char": "声",
+      "start": 0.35,
+      "end": 0.91
+    }
+  ]
+}

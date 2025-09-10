@@ -1,0 +1,20 @@
+{
+  "filename": "5.mp3",
+  "alignment": [
+    {
+      "char": "中",
+      "start": 0.1,
+      "end": 0.7
+    },
+    {
+      "char": "学",
+      "start": 0.7,
+      "end": 0.99
+    },
+    {
+      "char": "生",
+      "start": 0.99,
+      "end": 1.14
+    }
+  ]
+}
