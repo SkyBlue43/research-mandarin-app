@@ -94,7 +94,7 @@ export default function TestPageReal() {
         setState(0);
         setGraphState(0);
 
-        if (arrayIndex === 0) {
+        if (arrayIndex === characters.length - 1) {
             setArrayIndex(0);
             changeWord('1', characters[0].simplified, characters[0].traditional, characters[0].pinyin, characters[0].hint)
             router.push(`finished?name=${name}&test=${test}&group=${group}`);

@@ -1,21 +1,17 @@
-Index,Simplified,Traditional,Pinyin,English,Hint
-1,妈,媽,mā,mother,First tone
-2,麻,麻,má,hemp,Second tone
-3,马,馬,mǎ,horse,Third tone
-4,骂,罵,mà,to scold,Fourth tone
-5,歌,歌,gē,song,First tone
-6,格,格,gé,pattern,Second tone
-7,葛,葛,gě,kudzu,Third tone
-8,个,個,gè,individual,Fourth tone
-9,天,天,tiān,sky,First tone
-10,田,田,tián,field,Second tone
-11,舔,舔,tiǎn,to lick,Third tone
-12,听,聽,tīng,to listen,First tone
-13,停,停,tíng,to stop,Second tone
-14,挺,挺,tǐng,quite,Third tone
-15,痛,痛,tòng,pain,Fourth tone
-16,书,書,shū,book,First tone
-17,熟,熟,shú,ripe,Second tone
-18,鼠,鼠,shǔ,mouse,Third tone
-19,树,樹,shù,tree,Fourth tone
-20,中,中,zhōng,middle,First tone
+﻿Index,Simplified,Traditional,Pinyin,English,Hint
+1,八,八,bā,eight,First tone
+2,男,男,nán,male,Second tone
+3,女,女,nǚ,female,Third tone
+4,二,二,èr,two,Fourth tone
+5,妈妈,媽媽,mā ma,mom,First tone Neural tone
+6,什么,什麼,shén me,what,Second tone Neural tone
+7,我们,我們,wǒ men,we,Third tone Neural tone
+8,妹妹,妹妹,mèi mei,younger sister,Fourth tone Neural tone
+9,背包,背包,bēi bāo,backpack,First tone First tone 
+10,中文,中文,zhōng wén,Chinese(language),First tone Second tone
+11,铅笔,鉛筆,qiān bǐ,pencil,First tone Third tone
+12,功课,功課,gōng kè,homework,First tone Fourth tone
+13,李华，你好啊！,李華，你好啊！,"Lǐ Huá, nǐ hǎo a!","Li Hua, hello!",Sentences
+14,你好！好久不见。你怎么样？,你好！好久不見。你怎麼樣？,Nǐ hǎo! Hǎo jiǔ bú jiàn. Nǐ zěn me yàng?,Hello! Long time no see. How are you?,Sentences
+15,我还不错。你呢？,我還不錯。你呢？,Wǒ hái bú cuò. Nǐ ne?,I’m doing pretty well. And you?,Sentences
+16,我也挺好的。,我也挺好的。,Wǒ yě tǐng hǎo de.,I’m also quite good.,Sentences

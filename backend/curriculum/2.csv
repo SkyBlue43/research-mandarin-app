@@ -1,21 +1,17 @@
-Index,Simplified,Traditional,Pinyin,English,Hint
-1,中国,中國,zhōng guó,China,First tone then second
-2,朋友,朋友,péng yǒu,Friend,Second tone then third
-3,谢谢,謝謝,xiè xie,Thank you,Fourth tone then neutral
-4,再见,再見,zài jiàn,Goodbye,Fourth tone then fourth
-5,老师,老師,lǎo shī,Teacher,Third tone then first
-6,学生,學生,xué shēng,Student,Second tone then first
-7,你好,你好,nǐ hǎo,Hello,Third tone then third
-8,美国,美國,měi guó,America,Third tone then second
-9,咖啡,咖啡,kā fēi,Coffee,First tone then first
-10,书包,書包,shū bāo,Schoolbag,First tone then first
-11,电脑,電腦,diàn nǎo,Computer,Fourth tone then third
-12,手机,手機,shǒu jī,Cell phone,Third tone then first
-13,飞机,飛機,fēi jī,Airplane,First tone then first
-14,图书馆,圖書館,tú shū guǎn,Library,Second tone; first tone; third tone
-15,天气,天氣,tiān qì,Weather,First tone then fourth
-16,电影,電影,diàn yǐng,Movie,Fourth tone then third
-17,火车,火車,huǒ chē,Train,Third tone then first
-18,超市,超市,chāo shì,Supermarket,First tone then fourth
-19,商店,商店,shāng diàn,Store,First tone then fourth
-20,冰箱,冰箱,bīng xiāng,Refrigerator,First tone then first
+﻿Index,Simplified,Traditional,Pinyin,English,Hint
+1,房间,房間,fáng jiān,room,Second tone First tone 
+2,学习,學習,xué xí,study,Second tone Second tone
+3,毛笔,毛筆,máo bǐ,writing brush,Second tone Third tone 
+4,学会,學會,xué huì,master,Second tone Fourth tone 
+5,北京,北京,Běi jīng,Beijing,Third tone First tone 
+6,美国,美國,Měi guó,United States,Third tone Second tone
+7,你好,你好,nǐ hǎo,hello,Third tone Third tone 
+8,请问,請問,qǐng wèn,excuse me,Third tone Fourth tone 
+9,看书,看書,kàn shū,read a book,Fourth tone First tone 
+10,地图,地圖,dì tú,map,Fourth tone Second tone
+11,上海,上海,Shàng hǎi,Shanghai,Fourth tone Third tone
+12,再见,再見,zài jiàn,goodbye,Fourth tone Fourth tone 
+13,请问，你是学生吗？,請問，你是學生嗎？,"Qǐng wèn, nǐ shì xué shēng ma?","May I ask, are you a student?",Sentences
+14,我是学生。你呢？,我是學生。你呢？,Wǒ shì xué shēng. Nǐ ne?,I am a student. How about you?,Sentences
+15,我也是学生。她呢？,我也是學生。她呢？,Wǒ yě shì xué shēng. Tā ne?,I am also a student. How about her?,Sentences
+16,不，她不是学生，她是老师。,不，她不是學生，她是老師。,"Bù, tā bú shì xué shēng, tā shì lǎo shī.","No, she is not a student, she is a teacher.",Sentences

@@ -1,0 +1,17 @@
+﻿Index,Simplified,Traditional,Pinyin,English,Hint
+1,屋子,屋子,wū zi,house,First tone Neural tone
+2,谁的,誰的,shéi de,whose,Second tone Neural tone
+3,好的,好的,hǎo de,okay,Third tone Neural tone
+4,四个,四個,sì gè,four (of something),Fourth tone Neural tone
+5,餐厅,餐廳,cān tīng,restaurant,First tone First tone 
+6,关门,關門,guān mén,to close (the door/store),First tone Second tone
+7,中美,中美,Zhōng Měi,China and America,First tone Third tone
+8,都要,都要,dōu yào,all want ,First tone Fourth tone
+9,台湾,台灣,Tái wān,Taiwan,Second tone First tone 
+10,排球,排球,pái qiú,volleyball,Second tone Second tone
+11,还好,還好,hái hǎo,so-so,Second tone Third tone 
+12,不过,不過,bú guò,however,Second tone Fourth tone 
+13,请问，这家商店几点开门，几点关门？,請問，這家商店幾點開門，幾點關門？,"Qǐng wèn, zhè jiā shāng diàn jǐ diǎn kāi mén, jǐ diǎn guān mén?","Excuse me, what time does this store open and close?",Sentences
+14,早上八点开门，晚上十点半关门。,早上八點開門，晚上十點半關門。,"Zǎo shàng bā diǎn kāi mén, wǎn shàng shí diǎn bàn guān mén.",It opens at 8 a.m. and closes at 10:30 p.m.,Sentences
+15,周六周天开不开？,週六週天開不開？,Zhōu liù zhōu tiān kāi bù kāi?,Is it open on Saturday and Sunday?,Sentences
+16,周六开门，周天休息。,週六開門，週天休息。,"Zhōu liù kāi mén, zhōu tiān xiū xi.",It opens on Saturday but is closed on Sunday.,Sentences
