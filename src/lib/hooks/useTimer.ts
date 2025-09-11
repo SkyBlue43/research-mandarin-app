@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { updateTest } from '../api/api'
 
-export function useTimer(durationInSeconds: number, redirectPath?: string) {
+export function useTimer(durationInSeconds: number,  userName: string | null, redirectPath?: string,) {
     const [timeLeft, setTimeLeft] = useState(0);
     const router = useRouter();
 
@@ -23,6 +24,7 @@ export function useTimer(durationInSeconds: number, redirectPath?: string) {
             if (remaining === 0) {
                 localStorage.removeItem('timerEnd');
                 if (redirectPath) {
+                    updateTest(userName);
                     router.push(redirectPath);
                 }
             }

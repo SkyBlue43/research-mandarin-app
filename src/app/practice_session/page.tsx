@@ -121,7 +121,7 @@ export default function TestPageReal() {
     return (
         <div className='h-screen flex flex-col items-center text-center'>
             <header className='m-8 w-screen'>
-                <Timer />
+                <Timer username={name}/>
                 <div>
                     <button className='border bg-gray-500 p-1 rounded hover:bg-gray-600' onClick={handleWordState}>Change to: {wordState === 0 ? 'Traditional' : 'Simplified'}</button>
                     <div className='font-bold text-[70px]'>{wordState === 1 ? currentTraditional : currentSimplified}</div>

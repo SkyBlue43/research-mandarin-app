@@ -141,3 +141,15 @@ export const getHighestAccuracies = async (name: string, group: string, test: st
     return data.accuracies
 
 }
+
+export const updateTest = async (username: string | null) => {
+    await fetch('http://localhost:8000/update_test', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            username: username,
+        }),
+    });
+}

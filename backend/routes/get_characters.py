@@ -19,7 +19,7 @@ async def get_characters(request: Request):
     character_list = []
     for line in lines:
         split_line = line.strip().split(',')
-        if split_line[0] == "Index":
+        if "Index" in split_line[0]:
             continue
         character_list.append({
             'index': split_line[0],

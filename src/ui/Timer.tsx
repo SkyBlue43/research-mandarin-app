@@ -1,7 +1,11 @@
 import { useTimer } from '@/lib/hooks/useTimer'
 
-const Timer = (() => {
-    const timeLeft = useTimer(900, '/');
+interface username{
+
+}
+
+const Timer = (({ username }: {username: string | null}) => {
+    const timeLeft = useTimer(900, username, '/');
 
     return (
         <div className='text-3xl font-bold bg-purple-500 p-3 rounded-xl border border-[#ffffff] mb-5'>
