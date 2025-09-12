@@ -26,10 +26,10 @@ export default function Home() {
       }
       const data = await result.json();
       if (data.test === "pre"){
-        router.push(`test?test=${data.test}`)
+        router.push(`test?test=${data.test}&group=${data.group}&name=${data.name}`)
       }
       else if (data.test === "post"){
-        router.push(`test?test=${data.test}`)
+        router.push(`test?test=${data.test}&group=${data.group}&name=${data.name}`)
       }
       else {
         router.push(`/practice_session?test=${data.test}&group=${data.group}&name=${data.name}`)
