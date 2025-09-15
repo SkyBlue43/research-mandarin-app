@@ -1,7 +1,8 @@
 import Swal from 'sweetalert2'
 
 export function useAlert(
-    handlePlay: () => void,
+    handlePlayAudio: (audio: string | null, graphStateValue: number, extraStateValue?: number) => void,
+    chosenAudio: string | null,
     setState: (state: number) => void,
     setGraphState: (state: number) => void,
     group: string | null
@@ -19,7 +20,7 @@ export function useAlert(
             confirmButtonText: 'OK',
         }).then((result) => {
             if (result.isConfirmed) {
-                handlePlay();
+                handlePlayAudio(chosenAudio, 1);
                 setState(1);
                 if (group == "a") {
                     referenceAlert2();

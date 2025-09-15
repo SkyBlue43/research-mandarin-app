@@ -46,44 +46,39 @@ export default function RedoWord() {
         useAccuracy(accuracy, name, test, group, currentSimplified, currentIndex);
     }
 
-    const handlePlay = async () => {
-        setPlayReady(true);
-        setGraphState(1);
-        const audio = new Audio(chosenAudio);
-        audio.play();
-    };
-
-
-    const { referenceAlert } = useAlert(handlePlay, setState, setGraphState, group);
-
-    const handlePlayUser = async () => {
-        setPlayReady(true);
-        setGraphState(0);
-        if (audioURL) {
-            const audio = new Audio(audioURL);
-            audio.play();
-        }
-
-    };
-
-    const handlePlayCorrected = async () => {
-        setPlayReady(true);
-        if (correctedAudio) {
-            setGraphState(2);
-            setState(3)
-            const audio = new Audio(correctedAudio);
-            audio.addEventListener("error", (e) => {
-                console.error("Audio error:", e, audio.error);
-            });
-            audio.play().catch(err => console.error("Play failed:", err));
-
-        }
-    };
+    const handlePlayAudio = async (
+            audioSrc: string | null,
+            graphStateValue: number,
+            extraStateValue?: number
+        ) => {
+            setPlayReady(true);
+        
+            if (audioSrc) {
+                setGraphState(graphStateValue);
+        
+                if (extraStateValue !== undefined) {
+                    setState(extraStateValue);
+                }
+        
+                const audio = new Audio(audioSrc);
+        
+                audio.addEventListener("error", (e) => {
+                    console.error("Audio error:", e, audio.error);
+                });
+        
+                try {
+                    await audio.play();
+                } catch (err) {
+                    console.error("Play failed:", err);
+                }
+            }
+        };
+        
 
     const handleRecording = () => {
         if (recording && state == 0) {
             stopRecording();
-            referenceAlert();
+            //referenceAlert();
         } else if (recording && state > 0) {
             stopRecording();
         } else {
@@ -137,19 +132,19 @@ export default function RedoWord() {
             <div className="grid grid-cols-3 w-screen h-100">
                 <div>
                     {userPitch.length > 0 && <div>
-                        <button className="p-4 rounded-full bg-blue-500 text-white hover:bg-blue-600" onClick={handlePlayUser}>
+                        <button className="p-4 rounded-full bg-blue-500 text-white hover:bg-blue-600" onClick={() => handlePlayAudio(audioURL, 0)}>
                             <Play />
                         </button>
                         <div className='mb-8'>Your Audio</div>
                     </div>}
                     {referencePitch.length > 0 && state >= 1 && <div>
-                        <button className="p-4 rounded-full bg-[#B0B0B0] text-white hover:bg-[#808080]" onClick={handlePlay}>
+                        <button className="p-4 rounded-full bg-[#B0B0B0] text-white hover:bg-[#808080]" onClick={() => handlePlayAudio(chosenAudio, 1)}>
                             <Play />
                         </button>
                         <div className='mb-8'>Correct Audio</div>
                     </div>}
                     {state >= 2 && group == "a" && <div>
-                        <button className="p-4 rounded-full bg-purple-500 text-white hover:bg-purple-600" onClick={handlePlayCorrected}>
+                        <button className="p-4 rounded-full bg-purple-500 text-white hover:bg-purple-600" onClick={() => handlePlayAudio(correctedAudio, 2, 3)}>
                             <Play />
                         </button>
                         <div className='mb-8'>Your Corrected Audio</div>
