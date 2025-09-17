@@ -10,6 +10,7 @@ import { useAudioRecorder } from '@/lib/hooks/useAudioRecorder';
 import { useCharacters } from '@/lib/hooks/useCharacters';
 import { useAudio } from '@/lib/hooks/useAudio';
 import { useAccuracy } from '@/lib/hooks/useAccuracy';
+import { updateTest } from '@/lib/api/api';
 
 export default function Test() {
     const router = useRouter();
@@ -58,6 +59,7 @@ export default function Test() {
         if (arrayIndex === characters.length - 1) {
             setArrayIndex(0);
             changeWord('1', characters[0].simplified, characters[0].traditional, characters[0].pinyin, characters[0].hint)
+            updateTest(name);
             router.push('/');
         } else {
             setArrayIndex(arrayIndex + 1);
