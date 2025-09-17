@@ -25,7 +25,7 @@ async def get_characters(request: Request):
         split_line = line.strip().split(',')
         if "student_name" in split_line[0]:
             new_lines.append(line)
-        else:
+        elif split_line[0] == username:
             if split_line[4] == 'pre':
                 new_test = '1'
             elif split_line[4] == '16':

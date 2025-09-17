@@ -17,8 +17,8 @@ def align_characters(user, ref):
         user_string += item['char']
     for item in ref:
         ref_string += item['char']
-    print(user_string)
-    print(ref_string)
+    print("Length spoken: ",len(user_string))
+    print("Length recorded: ", len(ref_string))
     aligner = PairwiseAligner()
     aligner.open_gap_score = -10
     aligner.extend_gap_score = -10
