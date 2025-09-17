@@ -1,0 +1,15 @@
+{
+  "filename": "19.mp3",
+  "alignment": [
+    {
+      "char": "课",
+      "start": 0.09,
+      "end": 0.43
+    },
+    {
+      "char": "本",
+      "start": 0.43,
+      "end": 0.95
+    }
+  ]
+}

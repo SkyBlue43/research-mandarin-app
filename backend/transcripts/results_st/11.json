@@ -1,0 +1,15 @@
+{
+  "filename": "11.mp3",
+  "alignment": [
+    {
+      "char": "游",
+      "start": 0.07,
+      "end": 0.4
+    },
+    {
+      "char": "泳",
+      "start": 0.4,
+      "end": 0.9
+    }
+  ]
+}

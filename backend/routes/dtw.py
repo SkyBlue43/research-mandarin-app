@@ -28,8 +28,8 @@ def align_characters(user, ref):
     first = alignment[0]
     second = alignment[1]
 
-    print(first)
-    print(second)
+    print("Detected: ", first)
+    print('Reference: ', second)
     return
 
 def stretch_user_pitch(user_times, user_pitch, target_times):
@@ -153,7 +153,6 @@ async def dtw_new(
         copy_words_ref.append(thing)
     
     if len(characters_user) != len(characters):
-        return "error"
         align_characters(characters_user, characters)
 
     char_amount = len(characters)

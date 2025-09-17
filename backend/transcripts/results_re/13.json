@@ -1,0 +1,15 @@
+{
+  "filename": "13.mp3",
+  "alignment": [
+    {
+      "char": "女",
+      "start": 0.04,
+      "end": 0.35
+    },
+    {
+      "char": "生",
+      "start": 0.35,
+      "end": 0.92
+    }
+  ]
+}
