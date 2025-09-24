@@ -1,8 +1,5 @@
 import { useTimer } from '@/lib/hooks/useTimer'
 
-interface username{
-
-}
 
 const Timer = (({ username }: {username: string | null}) => {
     const timeLeft = useTimer(900, username, '/');

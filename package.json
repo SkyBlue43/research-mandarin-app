@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "next jest"
+    "test": "jest"
   },
   "dependencies": {
     "charts": "^0.0.3",
