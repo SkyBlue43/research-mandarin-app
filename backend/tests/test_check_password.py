@@ -1,7 +1,10 @@
 import pytest
+from fastapi.testclient import TestClient
+from main import app  # or wherever you define your FastAPI app
 
-from routes.check_password import check_password
-
+client = TestClient(app)
 
 def test_check_password():
-    assert check_password(None) == None
+    response = client.post("/check-password/", json={"password": None})
+    assert response.status_code == 200
+    assert response.json() is None
