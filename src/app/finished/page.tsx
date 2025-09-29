@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
 import Timer from "@/ui/Timer";
-import { useCharacters } from "@/lib/hooks/useCharacters";
+import { useCharacters } from "@/app/hooks/useCharacters";
 import { getHighestAccuracies } from "@/lib/api/api";
 
 interface AccuracyResult {

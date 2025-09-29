@@ -11,13 +11,13 @@ import Timer from "@/ui/Timer";
 import {
   useAudioAnalysisReference,
   useAudioAnalysisUser,
-} from "@/lib/hooks/useAudioAnalysis";
-import { useAudioRecorder } from "@/lib/hooks/useAudioRecorder";
-import { useAlert } from "@/lib/hooks/useAlert";
-import { useCharacters } from "@/lib/hooks/useCharacters";
-import { useAudio } from "@/lib/hooks/useAudio";
-import { useShiftedAudio } from "@/lib/hooks/useShiftedAudio";
-import { useAccuracy } from "@/lib/hooks/useAccuracy";
+} from "@/app/hooks/useAudioAnalysis";
+import { useAudioRecorder } from "@/app/hooks/useAudioRecorder";
+import { useAlert } from "@/app/hooks/useAlert";
+import { useCharacters } from "@/app/hooks/useCharacters";
+import { useAudio } from "@/app/hooks/useAudio";
+import { useShiftedAudio } from "@/app/hooks/useShiftedAudio";
+import { useAccuracy } from "@/app/hooks/useAccuracy";
 
 export default function TestPageReal() {
   const router = useRouter();

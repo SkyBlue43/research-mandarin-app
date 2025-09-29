@@ -8,11 +8,11 @@ import React from "react";
 import {
   useAudioAnalysisReference,
   useAudioAnalysisUser,
-} from "@/lib/hooks/useAudioAnalysis";
-import { useAudioRecorder } from "@/lib/hooks/useAudioRecorder";
-import { useCharacters } from "@/lib/hooks/useCharacters";
-import { useAudio } from "@/lib/hooks/useAudio";
-import { useAccuracy } from "@/lib/hooks/useAccuracy";
+} from "@/app/hooks/useAudioAnalysis";
+import { useAudioRecorder } from "@/app/hooks/useAudioRecorder";
+import { useCharacters } from "@/app/hooks/useCharacters";
+import { useAudio } from "@/app/hooks/useAudio";
+import { useAccuracy } from "@/app/hooks/useAccuracy";
 import { updateTest } from "@/lib/api/api";
 
 export default function Test() {
