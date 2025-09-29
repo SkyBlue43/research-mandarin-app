@@ -3,9 +3,9 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
-import Timer from "@/app/components/Timer";
+import Timer from "@/components/Timer";
 import { useCharacters } from "@/app/hooks/useCharacters";
-import { getHighestAccuracies } from "@/app/services/api";
+import { getHighestAccuracies } from "@/services/api";
 
 interface AccuracyResult {
   chinese: string;

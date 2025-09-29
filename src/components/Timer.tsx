@@ -1,4 +1,4 @@
-import { useTimer } from "@/app/hooks/useTimer";
+import { useTimer } from "@/hooks/useTimer";
 
 const Timer = ({ username }: { username: string | null }) => {
   const timeLeft = useTimer(900, username, "/");

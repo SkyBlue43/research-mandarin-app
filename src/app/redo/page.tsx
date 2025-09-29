@@ -5,9 +5,9 @@ import { useState, useMemo, useEffect } from "react";
 import { Mic, Play, Square } from "lucide-react";
 import React from "react";
 
-import PitchChart from "@/app/components/charts/PitchChart";
-import AlignedPitchChart from "@/app/components/charts/AlignedPitchCharts";
-import Timer from "@/app/components/Timer";
+import PitchChart from "@/components/charts/PitchChart";
+import AlignedPitchChart from "@/components/charts/AlignedPitchCharts";
+import Timer from "@/components/Timer";
 import {
   useAudioAnalysisReference,
   useAudioAnalysisUser,

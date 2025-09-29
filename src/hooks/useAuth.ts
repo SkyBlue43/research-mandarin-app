@@ -1,4 +1,4 @@
-import { loginUser } from "@/app/services/authService";
+import { loginUser } from "@/services/authService";
 
 export function useAuth() {
   async function login(username: string, password: string) {
