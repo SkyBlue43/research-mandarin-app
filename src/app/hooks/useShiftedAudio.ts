@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { shiftAudio } from "../../lib/api/api";
+import { shiftAudio } from "../services/api";
 
 export function useShiftedAudio(
   referenceBlob: Blob | null,

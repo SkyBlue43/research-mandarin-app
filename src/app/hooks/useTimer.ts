@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { updateTest } from "../../lib/api/api";
+import { updateTest } from "../services/api";
 
 export function useTimer(
   durationInSeconds: number,

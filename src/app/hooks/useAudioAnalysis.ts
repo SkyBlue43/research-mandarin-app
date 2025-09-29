@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { analyzeAudio, DTW, transcribeAudio } from "../../lib/api/api";
+import { analyzeAudio, DTW, transcribeAudio } from "../services/api";
 
 type PitchPoint = {
   time: number;

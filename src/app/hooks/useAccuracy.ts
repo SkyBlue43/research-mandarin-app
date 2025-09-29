@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { saveAccuracyData } from "../../lib/api/api";
+import { saveAccuracyData } from "../services/api";
 
 export function useAccuracy(
   accuracy: number,

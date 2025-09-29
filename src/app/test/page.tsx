@@ -13,7 +13,7 @@ import { useAudioRecorder } from "@/app/hooks/useAudioRecorder";
 import { useCharacters } from "@/app/hooks/useCharacters";
 import { useAudio } from "@/app/hooks/useAudio";
 import { useAccuracy } from "@/app/hooks/useAccuracy";
-import { updateTest } from "@/lib/api/api";
+import { updateTest } from "@/app/services/api";
 
 export default function Test() {
   const router = useRouter();
