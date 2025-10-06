@@ -1,28 +1,35 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { Mic, Square } from "lucide-react";
 import React from "react";
 
 import {
   useAudioAnalysisReference,
   useAudioAnalysisUser,
-} from "@/app/hooks/useAudioAnalysis";
-import { useAudioRecorder } from "@/app/hooks/useAudioRecorder";
-import { useCharacters } from "@/app/hooks/useCharacters";
-import { useAudio } from "@/app/hooks/useAudio";
-import { useAccuracy } from "@/app/hooks/useAccuracy";
+} from "@/hooks/useAudioAnalysis";
+import { useAudioRecorder } from "@/hooks/useAudioRecorder";
+import { useCharacters } from "@/hooks/useCharacters";
+import { useAudio } from "@/hooks/useAudio";
+import { useAccuracy } from "@/hooks/useAccuracy";
 import { updateTest } from "@/services/api";
 
-export default function Test() {
+export default function TestBranch() {
+  return (
+    <Suspense fallback={<div>Loading page...</div>}>
+      <TestBranchInner />
+    </Suspense>
+  );
+}
+
+function TestBranchInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const test = searchParams.get("test");
   const name = searchParams.get("name");
   const group = searchParams.get("group");
   const [arrayIndex, setArrayIndex] = useState(0);
-
   const [state, setState] = useState(0);
 
   const {
@@ -34,7 +41,9 @@ export default function Test() {
     currentHint,
     changeWord,
   } = useCharacters(test, arrayIndex);
+
   const { chosenAudio } = useAudio(test, currentIndex);
+
   const {
     startRecording,
     stopRecording,
@@ -44,10 +53,12 @@ export default function Test() {
     userBlob,
     clearBlob,
   } = useAudioRecorder();
+
   const { referencePitch, clearReferencePitch } = useAudioAnalysisReference(
     referenceBlob,
     chosenAudio
   );
+
   const { userPitch, userWordsArray, alignedGraphData, clearPitch, accuracy } =
     useAudioAnalysisUser(
       userBlob,
@@ -57,6 +68,7 @@ export default function Test() {
       test,
       currentIndex
     );
+
   if (test && name && group) {
     useAccuracy(accuracy, name, test, group, currentSimplified, currentIndex);
   }

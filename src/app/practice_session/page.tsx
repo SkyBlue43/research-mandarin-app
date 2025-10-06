@@ -1,9 +1,8 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, Suspense } from "react";
 import { Mic, Play, Square } from "lucide-react";
-import React from "react";
 
 import PitchChart from "@/components/charts/PitchChart";
 import AlignedPitchChart from "@/components/charts/AlignedPitchCharts";
@@ -11,15 +10,15 @@ import Timer from "@/components/Timer";
 import {
   useAudioAnalysisReference,
   useAudioAnalysisUser,
-} from "@/app/hooks/useAudioAnalysis";
-import { useAudioRecorder } from "@/app/hooks/useAudioRecorder";
-import { useAlert } from "@/app/hooks/useAlert";
-import { useCharacters } from "@/app/hooks/useCharacters";
-import { useAudio } from "@/app/hooks/useAudio";
-import { useShiftedAudio } from "@/app/hooks/useShiftedAudio";
-import { useAccuracy } from "@/app/hooks/useAccuracy";
+} from "@/hooks/useAudioAnalysis";
+import { useAudioRecorder } from "@/hooks/useAudioRecorder";
+import { useCharacters } from "@/hooks/useCharacters";
+import { useAudio } from "@/hooks/useAudio";
+import { useShiftedAudio } from "@/hooks/useShiftedAudio";
+import { useAccuracy } from "@/hooks/useAccuracy";
+import { useAlert } from "@/hooks/useAlert";
 
-export default function TestPageReal() {
+function TestPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const test = searchParams.get("test");
@@ -28,7 +27,6 @@ export default function TestPageReal() {
 
   const [arrayIndex, setArrayIndex] = useState(0);
   const [wordState, setWordState] = useState(0);
-
   const [playReady, setPlayReady] = useState(false);
   const [graphState, setGraphState] = useState(0);
   const [state, setState] = useState(0);
@@ -42,7 +40,9 @@ export default function TestPageReal() {
     currentHint,
     changeWord,
   } = useCharacters(test, arrayIndex);
+
   const { chosenAudio } = useAudio(test, currentIndex);
+
   const {
     startRecording,
     stopRecording,
@@ -52,26 +52,24 @@ export default function TestPageReal() {
     userBlob,
     clearBlob,
   } = useAudioRecorder();
+
   const { referencePitch, clearReferencePitch } = useAudioAnalysisReference(
     referenceBlob,
     chosenAudio
   );
-  const {
-    userPitch,
-    userWordsArray,
-    refWordsArray,
-    alignedGraphData,
-    clearPitch,
-    accuracy,
-  } = useAudioAnalysisUser(
-    userBlob,
-    chosenAudio,
-    referencePitch,
-    currentSimplified,
-    test,
-    currentIndex
-  );
+
+  const { userPitch, alignedGraphData, refWordsArray, clearPitch, accuracy } =
+    useAudioAnalysisUser(
+      userBlob,
+      chosenAudio,
+      referencePitch,
+      currentSimplified,
+      test,
+      currentIndex
+    );
+
   const { correctedAudio } = useShiftedAudio(referenceBlob, userBlob);
+
   if (test && name && group) {
     useAccuracy(accuracy, name, test, group, currentSimplified, currentIndex);
   }
@@ -82,25 +80,16 @@ export default function TestPageReal() {
     extraStateValue?: number
   ) => {
     setPlayReady(true);
+    if (!audioSrc) return;
 
-    if (audioSrc) {
-      setGraphState(graphStateValue);
+    setGraphState(graphStateValue);
+    if (extraStateValue !== undefined) setState(extraStateValue);
 
-      if (extraStateValue !== undefined) {
-        setState(extraStateValue);
-      }
-
-      const audio = new Audio(audioSrc);
-
-      audio.addEventListener("error", (e) => {
-        console.error("Audio error:", e, audio.error);
-      });
-
-      try {
-        await audio.play();
-      } catch (err) {
-        console.error("Play failed:", err);
-      }
+    const audio = new Audio(audioSrc);
+    try {
+      await audio.play();
+    } catch (err) {
+      console.error("Audio play failed:", err);
     }
   };
 
@@ -113,10 +102,10 @@ export default function TestPageReal() {
   );
 
   const handleRecording = () => {
-    if (recording && state == 0) {
+    if (recording && state === 0) {
       stopRecording();
       referenceAlert();
-    } else if (recording && state > 0) {
+    } else if (recording) {
       stopRecording();
     } else {
       startRecording(chosenAudio);
@@ -154,14 +143,9 @@ export default function TestPageReal() {
   };
 
   const handleWordState = () => {
-    if (wordState === 0) {
-      setWordState(1);
-    } else {
-      setWordState(0);
-    }
+    setWordState(wordState === 0 ? 1 : 0);
   };
 
-  // Memoize Pitches for charts
   const memoizedPitch = useMemo(() => referencePitch, [referencePitch]);
   const memoizedUserPitch = useMemo(() => userPitch, [userPitch]);
   const memoizedAlignedPitch = useMemo(
@@ -219,7 +203,7 @@ export default function TestPageReal() {
               <div className="mb-8">Correct Audio</div>
             </div>
           )}
-          {state >= 2 && group == "a" && (
+          {state >= 2 && group === "a" && (
             <div>
               <button
                 className="p-4 rounded-full bg-purple-500 text-white hover:bg-purple-600"
@@ -232,15 +216,15 @@ export default function TestPageReal() {
           )}
         </div>
 
-        {group === "a" && graphState == 1 && (
+        {group === "a" && graphState === 1 && (
           <div className="flex items-center justify-center mr-4 ml-4 text-black">
             {playReady && referencePitch.length > 0 && (
-              <PitchChart data={memoizedPitch} color={"#B0B0B0"} />
+              <PitchChart data={memoizedPitch} color="#B0B0B0" />
             )}
           </div>
         )}
 
-        {group === "a" && graphState == 0 && (
+        {group === "a" && graphState === 0 && (
           <div className="flex flex-col items-center justify-center ml-4 mr-4 text-white">
             {userPitch.length > 0 && (
               <PitchChart data={memoizedUserPitch} color="#4682B4" />
@@ -248,9 +232,9 @@ export default function TestPageReal() {
           </div>
         )}
 
-        {group === "a" && graphState == 2 && (
+        {group === "a" && graphState === 2 && (
           <div className="flex flex-col items-center justify-center ml-4 mr-4 text-white">
-            {alignedGraphData != undefined && alignedGraphData.length > 0 && (
+            {alignedGraphData.length > 0 && (
               <>
                 <AlignedPitchChart data={memoizedAlignedPitch} />
                 <div
@@ -262,10 +246,10 @@ export default function TestPageReal() {
                   }}
                 >
                   {refWordsArray.map((word, i) => {
-                    const firstStart = refWordsArray[0].start; // normalize start point
+                    const firstStart = refWordsArray[0].start;
                     const totalDuration =
                       refWordsArray[refWordsArray.length - 1].end - firstStart;
-                    const chartLeftPadding = 8; // tweak until it lines up
+                    const chartLeftPadding = 8;
                     const chartRightPadding = 38;
                     const usableWidth =
                       150 - chartLeftPadding - chartRightPadding;
@@ -296,14 +280,8 @@ export default function TestPageReal() {
           </div>
         )}
 
-        {group === "b" && (
-          <>
-            <div className="flex items-center justify-center mr-4 ml-4"></div>
-          </>
-        )}
-
         <div className="flex justify-center items-center">
-          {accuracy != 0.0 && (
+          {accuracy !== 0.0 && (
             <div className="w-64 h-64 flex justify-center items-center rounded-lg border-4 border-[#4682B4] text-[#4682B4] font-bold text-xl">
               {accuracy}%
             </div>
@@ -313,7 +291,6 @@ export default function TestPageReal() {
 
       <footer className="grid grid-cols-3 w-screen p-8 pt-20">
         <div></div>
-
         <div>
           <button
             className={`p-4 rounded-full text-white ${
@@ -326,9 +303,8 @@ export default function TestPageReal() {
             {recording ? <Square /> : <Mic />}
           </button>
         </div>
-
         <div>
-          {((group == "b" && state == 1) || state == 3) && (
+          {((group === "b" && state === 1) || state === 3) && (
             <button
               className="text-md p-4 rounded-full bg-purple-500 text-white hover:bg-purple-600"
               onClick={handleRightClick}
@@ -339,5 +315,13 @@ export default function TestPageReal() {
         </div>
       </footer>
     </div>
+  );
+}
+
+export default function TestPageReal() {
+  return (
+    <Suspense fallback={<div>Loading page...</div>}>
+      <TestPageContent />
+    </Suspense>
   );
 }

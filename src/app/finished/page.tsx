@@ -1,10 +1,9 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
-
+import { useState, useEffect, Suspense } from "react";
 import Timer from "@/components/Timer";
-import { useCharacters } from "@/app/hooks/useCharacters";
+import { useCharacters } from "@/hooks/useCharacters";
 import { getHighestAccuracies } from "@/services/api";
 
 interface AccuracyResult {
@@ -12,7 +11,7 @@ interface AccuracyResult {
   accuracy: number;
 }
 
-export default function Finished() {
+function FinishedContent() {
   const searchParams = useSearchParams();
   const name = searchParams.get("name");
   const group = searchParams.get("group");
@@ -27,12 +26,8 @@ export default function Finished() {
   useEffect(() => {
     if (name && group && test) {
       getHighestAccuracies(name, group, test)
-        .then((data) => {
-          setAccuracyArray(data);
-        })
-        .catch((err) => {
-          console.error("Failed to fetch accuracies:", err);
-        });
+        .then((data) => setAccuracyArray(data))
+        .catch((err) => console.error("Failed to fetch accuracies:", err));
     }
   }, [name, group, test]);
 
@@ -87,5 +82,13 @@ export default function Finished() {
         </tbody>
       </table>
     </div>
+  );
+}
+
+export default function Finished() {
+  return (
+    <Suspense fallback={<div>Loading results...</div>}>
+      <FinishedContent />
+    </Suspense>
   );
 }
