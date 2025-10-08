@@ -1,11 +1,13 @@
 from fastapi import Request, APIRouter
 import os
+import csv
 
 router = APIRouter()
 
 def read_lines(infile):
-    with open(infile) as file:
-        return file.readlines()
+    with open(infile, newline='', encoding='utf-8') as file:
+        reader = csv.reader(file)
+        return list(reader)
 
 @router.post("/get_highest_accuracies/")
 async def get_highest_accuracies(request: Request):
@@ -21,8 +23,7 @@ async def get_highest_accuracies(request: Request):
 
     lines = read_lines(filename)
     accuracies = []
-    for line in lines:
-        items = line.strip().split(',')
+    for items in lines:
         if items[0] == 'Chinese':
             continue
         if len(items) > 3:

@@ -77,8 +77,10 @@ function RedoWordContent() {
   }
 
   const handleRecording = () => {
-    if (recording) stopRecording();
-    else startRecording(chosenAudio);
+    if (recording) {
+      stopRecording();
+      setState(3);
+    } else startRecording(chosenAudio);
   };
 
   const handleRightClick = () => {

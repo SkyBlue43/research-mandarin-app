@@ -120,7 +120,8 @@ function TestPageContent() {
     setState(0);
     setGraphState(0);
 
-    if (arrayIndex === characters.length - 1) {
+    if (arrayIndex === 0) {
+      //characters.length - 1) {
       setArrayIndex(0);
       changeWord(
         "1",
