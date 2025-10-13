@@ -1,12 +1,7 @@
-from fastapi import Request, APIRouter
 import csv
 
-router = APIRouter()
 
-@router.post('/get-characters/')
-async def get_characters(request: Request):
-    data = await request.json()
-    test_number = data.get('test')
+def get_characters_again(test_number):
 
     file_path = f'backend/curriculum/{test_number}.csv'
 
