@@ -9,8 +9,7 @@
     "lint": "next lint",
     "test": "playwright test",
     "test:ui": "playwright test --ui",
-    "test:debug": "playwright test --debug",
-    "pytest": "cd backend && pytest"
+    "test:debug": "playwright test --debug"
   },
   "dependencies": {
     "lucide-react": "^0.525.0",

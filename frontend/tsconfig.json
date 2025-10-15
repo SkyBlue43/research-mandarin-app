@@ -13,19 +13,25 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "plugins": [{ "name": "next" }],
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "types": ["react", "react-dom"],
+    "baseUrl": ".",
     "paths": {
       "@/*": ["frontend/src/*"]
     }
   },
   "include": [
-    "frontend/next-env.d.ts",
+    "**/*.test.ts",
+    "**/*.test.tsx",
     "**/*.ts",
     "**/*.tsx",
-    "frontend/.next/types/**/*.ts",
-    "**/*.test.ts", // ✅ ensure tests are picked up
-    "**/*.test.tsx"
+    "frontend/.next/types/**/*.ts", // ✅ ensure tests are picked up
+    "frontend/next-env.d.ts",
+    ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }
