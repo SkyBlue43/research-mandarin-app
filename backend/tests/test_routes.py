@@ -6,7 +6,7 @@ client = TestClient(app)
 
 def test_get_characters():
     # Step 3a: Prepare the data to send
-    payload = {"test": "example input"}
+    payload = {"test": "1"}
 
     # Step 3b: Send a POST request to /get-characters
     response = client.post("/get-characters", json=payload)
@@ -16,4 +16,5 @@ def test_get_characters():
 
     # Step 3d: Check the returned JSON
     # Currently your route returns nothing, so it will be null
-    assert response.json() is None
+    print(response.json())
+    assert response.json() is not None

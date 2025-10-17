@@ -29,8 +29,8 @@ class Test(BaseModel):
 
 @app.post("/get-characters")
 async def get_characters(test: Test):
-    return
     result = get_characters_again(test)
+    return result
 
 
 # app.include_router(check_password_router)
