@@ -1,6 +1,6 @@
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 # from backend.routes.check_password import router as check_password_router
@@ -13,7 +13,7 @@ from pydantic import BaseModel
 # from routes.get_highest_accuracies import router as get_highest_accuracies_router
 # from routes.updateTest import router as update_test_router
 
-from backend.routes.get_characters import get_characters_again
+from backend.routes.get_characters import get_characters_from_curriculum
 
 app = FastAPI()
 
@@ -25,11 +25,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 class Test(BaseModel):
-    test: str
+    test_number: str
 
 @app.post("/get-characters")
-async def get_characters(test: Test):
-    result = get_characters_again(test)
+async def get_characters(data: Test):
+    result = get_characters_from_curriculum(data.test_number)
+    if "error" in result:
+        raise HTTPException(status_code=404, detail=result["error"])
     return result
 
 

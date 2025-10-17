@@ -1,18 +1,17 @@
 import csv
 
 
-def get_characters_again(test_number):
+def get_characters_from_curriculum(test_number):
 
-    file_path = f'backend/curriculum/{test_number}.csv'
+    file_path = f'curriculum/{test_number}.csv'
 
     try:
         character_list = []
         with open(file_path, newline='', encoding="utf-8") as csvfile:
             reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            # skips the header row
+            next(reader)
             for row in reader:
-                # Skip header row
-                if "Index" in row[0]:
-                    continue
                 character_list.append({
                     'index': row[0],
                     'simplified': row[1],
