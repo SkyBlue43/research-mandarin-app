@@ -12,7 +12,7 @@ async def check_password(request: Request):
     username = data.get('username')
     password = data.get('password')
     
-    lines = read_lines('backend/students.csv')
+    lines = read_lines('students.csv')
     for line in lines:
         items = line.strip().split(',')
         if username == items[1] and password == items[2]:
