@@ -1,20 +1,14 @@
-from fastapi import Request, APIRouter, HTTPException
-
-router = APIRouter()
-
 def read_lines(infile):
     with open(infile) as file:
         return file.readlines()
 
-@router.post('/check-password/')
-async def check_password(request: Request):
-    data = await request.json()
-    username = data.get('username')
-    password = data.get('password')
-    
-    lines = read_lines('students.csv')
+def authenticate_user(username, password):
+    try: 
+        lines = read_lines('students.csv')
+    except FileNotFoundError:
+        return {"error": "File not found.", "code": 404}
     for line in lines:
         items = line.strip().split(',')
         if username == items[1] and password == items[2]:
-            return {'test': items[4], 'group': items[3], 'name': items[0]}
-    raise HTTPException(status_code=401, detail="Invalid username or password")
+            return {'name': items[0], 'group': items[3], 'test': items[4]}
+    return{"error": "Invalid username or password", "code": 401}

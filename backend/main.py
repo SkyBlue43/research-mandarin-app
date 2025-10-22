@@ -3,7 +3,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
-# from routes.check_password import router as check_password_router
+
 # from routes.analyze_audio import router as analyze_audio_router
 # from routes.transcribe import router as transcribe_router
 # from routes.dtw import router as dtw_router
@@ -12,6 +12,7 @@ from pydantic import BaseModel
 # from routes.get_highest_accuracies import router as get_highest_accuracies_router
 # from routes.updateTest import router as update_test_router
 
+from backend.routes.check_password import authenticate_user
 from backend.routes.get_characters import get_characters_from_curriculum
 
 app = FastAPI()
@@ -33,8 +34,18 @@ async def get_characters(data: Test):
         raise HTTPException(status_code=404, detail=result["error"])
     return result
 
+class Auth(BaseModel):
+    username: str
+    password: str
 
-# app.include_router(check_password_router)
+@app.post("/check-password")
+async def check_password(data: Auth):
+    result = authenticate_user(data.username, data.password)
+    if 'error' in result:
+        raise HTTPException(status_code=result['code'], detail=result["error"])
+    return result
+
+
 # app.include_router(analyze_audio_router)
 # app.include_router(transcribe_router)
 # app.include_router(dtw_router)
