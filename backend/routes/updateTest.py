@@ -16,7 +16,7 @@ async def get_characters(request: Request):
     username = data.get('username')
     
     try:
-        lines = read_lines('backend/students.csv')
+        lines = read_lines('students.csv')
     except FileNotFoundError:
         return {"error": f"File not found."}
     
@@ -34,6 +34,6 @@ async def get_characters(request: Request):
                 new_test = str(int(split_line[4]) + 1)
             new_lines.append(f'{split_line[0]},{split_line[1]},{split_line[2]},{split_line[3]},{new_test}')
 
-    write_lines('backend/students.csv', new_lines)   
+    write_lines('students.csv', new_lines)   
         
     return 

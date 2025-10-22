@@ -90,7 +90,7 @@ export const fetchCharacters = async (test: string | null) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ test }),
+    body: JSON.stringify({ test_number: test }),
   });
   const data = await result.json();
   return data;
