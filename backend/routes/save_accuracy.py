@@ -21,7 +21,7 @@ async def save_accuracy(request: Request):
     array_number = data.get('array_index')
     accuracy = data.get("accuracy")
 
-    base_dir = os.path.join(os.getcwd(), "backend", "data")
+    base_dir = os.path.join(os.getcwd(), "data")
     os.makedirs(os.path.join(base_dir, f'Test_{test}'), exist_ok=True)
 
     filename = os.path.join(base_dir, f"Test_{test}", f"{name}_{group}.csv")

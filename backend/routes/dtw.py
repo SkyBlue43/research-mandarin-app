@@ -144,7 +144,7 @@ async def dtw_new(
     for thing in words_user_data:
         copy_words_user.append(thing)
 
-    with open(f'backend/transcripts/results_{test}/{currentIndex}.json') as file:
+    with open(f'transcripts/results_{test}/{currentIndex}.json') as file:
         characters = json.load(file)['alignment']
     characters_user = words_user_data
 

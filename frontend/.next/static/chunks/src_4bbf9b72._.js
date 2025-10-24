@@ -265,7 +265,7 @@ const fetchCharacters = async (test)=>{
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            test
+            test_number: test
         })
     });
     const data = await result.json();

@@ -16,7 +16,7 @@ async def get_highest_accuracies(request: Request):
     test = data.get("test")
     group = data.get('group')
 
-    base_dir = os.path.join(os.getcwd(), "backend", "data")
+    base_dir = os.path.join(os.getcwd(), "data")
     base_dir = os.path.join(base_dir, f'Test_{test}')
 
     filename = os.path.join(base_dir, f"{name}_{group}.csv")

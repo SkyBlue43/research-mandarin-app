@@ -1,3 +1,52 @@
 {
-  "pages": {}
+  "pages": {
+    "/finished/page": [
+      "static/chunks/bee99_next_dist_e4435fca._.js",
+      "static/chunks/src_app_favicon_ico_mjs_88bb9533._.js",
+      "static/chunks/[root-of-the-server]__8ebb6d4b._.css",
+      "static/chunks/src_app_layout_tsx_413e7aad._.js",
+      "static/chunks/_5e19bc80._.js",
+      "static/chunks/src_app_finished_page_tsx_a8916c01._.js",
+      "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_67db3eb9._.js",
+      "static/chunks/bee99_next_dist_compiled_2f610d13._.js",
+      "static/chunks/bee99_next_dist_client_ffaca814._.js",
+      "static/chunks/bee99_next_dist_451e347f._.js",
+      "static/chunks/61dca_@swc_helpers_cjs_e27e0aca._.js",
+      "static/chunks/_e69f0d32._.js",
+      "static/chunks/_91849dc6._.js"
+    ],
+    "/page": [
+      "static/chunks/bee99_next_dist_e4435fca._.js",
+      "static/chunks/src_app_favicon_ico_mjs_88bb9533._.js",
+      "static/chunks/[root-of-the-server]__8ebb6d4b._.css",
+      "static/chunks/src_app_layout_tsx_413e7aad._.js",
+      "static/chunks/_b4603b0b._.js",
+      "static/chunks/src_app_page_tsx_a8916c01._.js",
+      "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_67db3eb9._.js",
+      "static/chunks/bee99_next_dist_compiled_2f610d13._.js",
+      "static/chunks/bee99_next_dist_client_ffaca814._.js",
+      "static/chunks/bee99_next_dist_451e347f._.js",
+      "static/chunks/61dca_@swc_helpers_cjs_e27e0aca._.js",
+      "static/chunks/_e69f0d32._.js",
+      "static/chunks/_91849dc6._.js"
+    ],
+    "/practice_session/page": [
+      "static/chunks/bee99_next_dist_e4435fca._.js",
+      "static/chunks/src_app_favicon_ico_mjs_88bb9533._.js",
+      "static/chunks/[root-of-the-server]__8ebb6d4b._.css",
+      "static/chunks/src_app_layout_tsx_413e7aad._.js",
+      "static/chunks/src_4bbf9b72._.js",
+      "static/chunks/7259f_recharts_es6_36434d1a._.js",
+      "static/chunks/3b641_sweetalert2_dist_sweetalert2_all_84d4044f.js",
+      "static/chunks/node_modules__pnpm_7804b484._.js",
+      "static/chunks/src_app_practice_session_page_tsx_a8916c01._.js",
+      "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_67db3eb9._.js",
+      "static/chunks/bee99_next_dist_compiled_2f610d13._.js",
+      "static/chunks/bee99_next_dist_client_ffaca814._.js",
+      "static/chunks/bee99_next_dist_451e347f._.js",
+      "static/chunks/61dca_@swc_helpers_cjs_e27e0aca._.js",
+      "static/chunks/_e69f0d32._.js",
+      "static/chunks/_91849dc6._.js"
+    ]
+  }
 }
