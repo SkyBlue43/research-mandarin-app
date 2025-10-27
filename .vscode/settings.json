@@ -1,8 +1,7 @@
 {
-  "python.testing.pytestArgs": ["backend"],
-  "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true,
-  "terminal.integrated.env.osx": {
-    "PYTHONPATH": "${workspaceFolder}/backend"
-  }
+  "python.testing.unittestEnabled": false,
+  "python.testing.cwd": "backend",
+  "python.testing.pytestArgs": ["."],
+  "python.envFile": "${workspaceFolder}/backend/.env"
 }
