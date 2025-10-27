@@ -179,7 +179,7 @@ function TestPageContent() {
         </div>
       </header>
 
-      <div className="grid grid-cols-3 w-screen h-100">
+      <div className="grid [grid-template-columns:1fr_4fr_1fr] w-screen h-100">
         <div>
           {userPitch.length > 0 && (
             <div>
