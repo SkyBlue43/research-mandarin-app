@@ -54,4 +54,4 @@ async def check_password(data: Auth):
 # app.include_router(get_highest_accuracies_router)
 # app.include_router(update_test_router)
 
-app.mount("/sounds", StaticFiles(directory="sounds"), name="sounds")
+#app.mount("/sounds", StaticFiles(directory="sounds"), name="sounds")
