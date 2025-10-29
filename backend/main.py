@@ -24,6 +24,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
 class Test(BaseModel):
     test_number: str
 
@@ -33,6 +35,7 @@ async def get_characters(data: Test):
     if "error" in result:
         raise HTTPException(status_code=404, detail=result["error"])
     return result
+
 
 class Auth(BaseModel):
     username: str
