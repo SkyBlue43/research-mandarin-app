@@ -1,4 +1,3 @@
-from fastapi import APIRouter, Form
 import numpy as np
 import json
 from zhon.hanzi import punctuation
@@ -8,7 +7,6 @@ from scipy.interpolate import interp1d
 
 from Bio.Align import PairwiseAligner
 
-router = APIRouter()
 
 def align_characters(user, ref):
     user_string = ''
@@ -49,7 +47,7 @@ def stretch_user_pitch(user_times, user_pitch, target_times):
 
 def align_pitch(pitch, characters):
     alignment = {'frequency': [], 'time': [], 'character': []}
-    if pitch['frequency'][0] is None:
+    if pitch.frequency[0] is None:
         is_none = True
         char = False
     else:
@@ -57,8 +55,8 @@ def align_pitch(pitch, characters):
         char = True
     blocked_end = False
     blocked_first = False
-    for i, (frequency, time) in enumerate(zip(pitch['frequency'], pitch['time'])):
-        if i == len(pitch['frequency']) - 1:
+    for i, (frequency, time) in enumerate(zip(pitch.frequency, pitch.time)):
+        if i == len(pitch.frequency) - 1:
             alignment["frequency"].append(None)
             alignment["time"].append(time)
             alignment["character"].append(None)
@@ -68,10 +66,10 @@ def align_pitch(pitch, characters):
             alignment["frequency"].append(None)
             alignment["time"].append(time)
             alignment["character"].append(None)
-            if pitch['frequency'][i + 1] is not None:
+            if pitch.frequency[i + 1] is not None:
                 char = True
                 is_none = False
-            if pitch['frequency'][i + 1] is None:
+            if pitch.frequency[i + 1] is None:
                 blocked_first = False
                 is_none = True 
 
@@ -79,20 +77,20 @@ def align_pitch(pitch, characters):
             alignment["frequency"].append(frequency)
             alignment["time"].append(time)
             alignment["character"].append(characters[0]['char'])
-            if pitch['frequency'][i + 1] is None:
+            if pitch.frequency[i + 1] is None:
                 blocked_end = True
                 char = False
                 is_none = True
             
-        if pitch['time'][i + 1] > characters[0]['end'] and len(characters) > 1:
+        if pitch.time[i + 1] > characters[0]['end'] and len(characters) > 1:
                 k = i + 1
                 first_word = []
                 second_word = []
                 first = True
                 second = False
-                while pitch['time'][k] < characters[1]['end']:
+                while pitch.time[k] < characters[1]['end']:
                     k += 1
-                    if pitch['frequency'][k] is None:
+                    if pitch.frequency[k] is None:
                         first = False
                         second = True
                     elif first:
@@ -126,37 +124,39 @@ def get_character_array(words_reference_data):
     return characters
 
 
-@router.post("/dtw_characters/")
-async def dtw_new(
-    reference_pitch: str = Form(...),
-    user_pitch: str = Form(...),
-    test: str = Form(...),
-    currentIndex: str = Form(...),
-    words_user: str = Form(...)
+def dtw(
+    reference_pitch,
+    user_pitch,
+    test,
+    current_index,
+    words_user_data
 ):
-    reference_pitch = json.loads(reference_pitch)
-    user_pitch = json.loads(user_pitch)
-    test = json.loads(test)
-    currentIndex = json.loads(currentIndex)
-    words_user_data = json.loads(words_user)
+    # reference_pitch = json.loads(reference_pitch)
+    # user_pitch = json.loads(user_pitch)
+    # test = json.loads(test)
+    # current_index = json.loads(current_index)
+    # words_user_data = json.loads(words_user)
 
-    copy_words_user = []
-    for thing in words_user_data:
-        copy_words_user.append(thing)
+    characters_user = []
+    for word in words_user_data:
+        characters_user.append({
+            "char": word.char,
+            "start": word.start,
+            "end": word.end
+        })
 
-    with open(f'transcripts/results_{test}/{currentIndex}.json') as file:
-        characters = json.load(file)['alignment']
-    characters_user = words_user_data
-
-    copy_words_ref = []
-    for thing in characters:
-        copy_words_ref.append(thing)
     
-    if len(characters_user) != len(characters):
-        align_characters(characters_user, characters)
 
-    char_amount = len(characters)
-    reference_alignment = align_pitch(reference_pitch, characters)
+    with open(f'transcripts/results_{test}/{current_index}.json') as file:
+        characters_ref = json.load(file)['alignment']
+
+    copy_words_user, copy_words_ref = get_copy_of_character_lists(characters_user, characters_ref)
+    
+    if len(characters_user) != len(characters_ref):
+        align_characters(characters_user, characters_ref)
+
+    char_amount = len(characters_ref)
+    reference_alignment = align_pitch(reference_pitch, characters_ref)
     user_alignment = align_pitch(user_pitch, characters_user)
 
     total_accuracy = 0
@@ -253,3 +253,15 @@ async def dtw_new(
             })
 
     return {"alignment": alignment, "accuracy": round((total_accuracy / char_amount) * 100, 2), 'ref_characters': copy_words_ref}
+
+
+def get_copy_of_character_lists(characters_user, characters):
+    copy_words_user = []
+    for thing in characters_user:
+        copy_words_user.append(thing)
+
+    copy_words_ref = []
+    for thing in characters:
+        copy_words_ref.append(thing)
+
+    return copy_words_user, copy_words_ref
