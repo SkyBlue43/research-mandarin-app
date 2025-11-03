@@ -21,6 +21,6 @@ def get_characters_from_curriculum(test_number):
                     'hint': row[5]
                 })
     except FileNotFoundError:
-        return {"error": "File not found."}
+        raise FileNotFoundError("File not found")
 
     return {'characters': character_list}

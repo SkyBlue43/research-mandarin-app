@@ -6,9 +6,9 @@ def authenticate_user(username, password):
     try: 
         lines = read_lines('students.csv')
     except FileNotFoundError:
-        return {"error": "File not found.", "code": 404}
+        raise FileNotFoundError("File not found")
     for line in lines:
         items = line.strip().split(',')
         if username == items[1] and password == items[2]:
             return {'name': items[0], 'group': items[3], 'test': items[4]}
-    return{"error": "Invalid username or password", "code": 401}
+    raise PermissionError("Invalid username or password")

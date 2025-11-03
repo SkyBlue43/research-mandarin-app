@@ -145,10 +145,7 @@ def dtw(
             "end": word.end
         })
 
-    
-
-    with open(f'transcripts/results_{test}/{current_index}.json') as file:
-        characters_ref = json.load(file)['alignment']
+    characters_ref = get_characters_from_csv(test, current_index)
 
     copy_words_user, copy_words_ref = get_copy_of_character_lists(characters_user, characters_ref)
     
@@ -253,6 +250,14 @@ def dtw(
             })
 
     return {"alignment": alignment, "accuracy": round((total_accuracy / char_amount) * 100, 2), 'ref_characters': copy_words_ref}
+
+def get_characters_from_csv(test, current_index):
+    try:
+        with open(f'transcripts/results_{test}/{current_index}.json') as file:
+            characters_ref = json.load(file)['alignment']
+    except FileNotFoundError:
+        raise FileNotFoundError("File not found")
+    return characters_ref
 
 
 def get_copy_of_character_lists(characters_user, characters):

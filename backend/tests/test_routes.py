@@ -23,7 +23,7 @@ def test_file_not_found_get_characters():
     response = client.post("/get-characters", json=payload)
 
     assert response.status_code == 404
-    assert response.json()['detail'] == 'File not found.'
+    assert response.json()['detail'] == 'File not found'
 
 
 def test_check_password_works():
