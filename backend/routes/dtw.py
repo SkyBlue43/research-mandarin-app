@@ -214,13 +214,13 @@ def calculate_alignment(characters_user, characters_ref, char_amount, alignment_
                 # --- Height-based accuracy ---
 
         # Normalize pitch values before DTW
-        # if len(reference_phrase) > 0 and len(user_phrase) > 0:
-        #     ref_min, ref_max = min(reference_phrase), max(reference_phrase)
-        #     user_min, user_max = min(user_phrase), max(user_phrase)
-        #     if ref_max != ref_min:
-        #         reference_phrase = [(f - ref_min) / (ref_max - ref_min) for f in reference_phrase]
-        #     if user_max != user_min:
-        #         user_phrase = [(f - user_min) / (user_max - user_min) for f in user_phrase]
+        if len(reference_phrase) > 0 and len(user_phrase) > 0:
+            ref_min, ref_max = min(reference_phrase), max(reference_phrase)
+            user_min, user_max = min(user_phrase), max(user_phrase)
+            if ref_max != ref_min:
+                reference_phrase = [(f - ref_min) / (ref_max - ref_min) for f in reference_phrase]
+            if user_max != user_min:
+                user_phrase = [(f - user_min) / (user_max - user_min) for f in user_phrase]
 
         user_series = [(f,) for f in user_phrase]
         reference_series = [(f,) for f in reference_phrase]
@@ -247,7 +247,8 @@ def calculate_alignment(characters_user, characters_ref, char_amount, alignment_
         print("Slope score:", slope_score)
 
         # --- Combined score ---
-        combined_accuracy = 0.2 * accuracy + 0.8 * slope_score
+        # combined_accuracy = 0.2 * accuracy + 0.8 * slope_score
+        combined_accuracy = slope_score * 1.2
         print("Total score:", combined_accuracy)
         total_accuracy += combined_accuracy
 
