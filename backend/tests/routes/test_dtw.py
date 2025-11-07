@@ -30,3 +30,10 @@ def test_get_characters_from_csv_no_file_found():
     with pytest.raises(FileNotFoundError):
         dtw.get_characters_from_csv(1, "0")
 
+def test_get_copy_of_characters():
+    copy = dtw.get_copy_of_characters(word_user)
+    assert copy == word_user
+
+def test_align_pitch_with_characters():
+    result = dtw.align_pitch_with_characters(test_user_pitch, word_user)
+    assert result == {"frequency": [None, None, None, 0.45, 0.73, 0.3, None, None, None], "time": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], "character": [None, None, None, "八", "八", "八", None, None, None]}

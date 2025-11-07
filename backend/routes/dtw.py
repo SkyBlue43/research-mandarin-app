@@ -45,7 +45,9 @@ def stretch_user_pitch(user_times, user_pitch, target_times):
 
     return stretched_user_pitch
 
-def align_pitch(pitch, characters):
+def align_pitch_with_characters(pitch, characters):
+    copied_chars = get_copy_of_characters(characters)
+
     alignment = {'frequency': [], 'time': [], 'character': []}
     if pitch.frequency[0] is None:
         is_none = True
@@ -57,38 +59,32 @@ def align_pitch(pitch, characters):
     blocked_first = False
     for i, (frequency, time) in enumerate(zip(pitch.frequency, pitch.time)):
         if i == len(pitch.frequency) - 1:
-            alignment["frequency"].append(None)
-            alignment["time"].append(time)
-            alignment["character"].append(None)
+            add_alignment(alignment, None, time, None)
             break
         
         if is_none or blocked_end or blocked_first:
-            alignment["frequency"].append(None)
-            alignment["time"].append(time)
-            alignment["character"].append(None)
+            add_alignment(alignment, None, time, None)
             if pitch.frequency[i + 1] is not None:
                 char = True
                 is_none = False
-            if pitch.frequency[i + 1] is None:
+            elif pitch.frequency[i + 1] is None:
                 blocked_first = False
                 is_none = True 
 
         elif char:
-            alignment["frequency"].append(frequency)
-            alignment["time"].append(time)
-            alignment["character"].append(characters[0]['char'])
+            add_alignment(alignment, frequency, time, copied_chars[0]['char'])
             if pitch.frequency[i + 1] is None:
                 blocked_end = True
                 char = False
                 is_none = True
             
-        if pitch.time[i + 1] > characters[0]['end'] and len(characters) > 1:
+        if pitch.time[i + 1] > copied_chars[0]['end'] and len(copied_chars) > 1:
                 k = i + 1
                 first_word = []
                 second_word = []
                 first = True
                 second = False
-                while pitch.time[k] < characters[1]['end']:
+                while pitch.time[k] < copied_chars[1]['end']:
                     k += 1
                     if pitch.frequency[k] is None:
                         first = False
@@ -99,10 +95,15 @@ def align_pitch(pitch, characters):
                         second_word.append(None)
                 if len(first_word) < len(second_word):
                     blocked_first = True
-                characters.pop(0)
+                copied_chars.pop(0)
                 blocked_end = False
-    characters.pop(0)
+    copied_chars.pop(0)
     return alignment
+
+def add_alignment(alignment, frequency, time, character):
+    alignment["frequency"].append(frequency)
+    alignment["time"].append(time)
+    alignment["character"].append(character)
 
 def get_character_array(words_reference_data):
     characters = []
@@ -146,69 +147,81 @@ def dtw(
         })
 
     characters_ref = get_characters_from_csv(test, current_index)
-
-    copy_words_user, copy_words_ref = get_copy_of_character_lists(characters_user, characters_ref)
     
     if len(characters_user) != len(characters_ref):
         align_characters(characters_user, characters_ref)
 
     char_amount = len(characters_ref)
-    reference_alignment = align_pitch(reference_pitch, characters_ref)
-    user_alignment = align_pitch(user_pitch, characters_user)
+    alignment_ref = align_pitch_with_characters(reference_pitch, characters_ref)
+    alignment_user = align_pitch_with_characters(user_pitch, characters_user)
 
+    return calculate_alignment(characters_user, characters_ref, char_amount, alignment_ref, alignment_user)
+
+
+def calculate_alignment(characters_user, characters_ref, char_amount, alignment_ref, alignment_user):
     total_accuracy = 0
     alignment = []
     counter = 0
     user_counter = 0
     for i in range(char_amount):
-        word_we_are_on_user = copy_words_user[i]
-        word_we_are_on_ref = copy_words_ref[i]
+        word_we_are_on_user = characters_user[i]
+        word_we_are_on_ref = characters_ref[i]
         user_phrase = []
         reference_phrase = []
         ref_time = []
         user_time = []
         count = 0
-        for j in range(counter, len(reference_alignment['character'])):
-            if reference_alignment['character'][j] != None:
+        for j in range(counter, len(alignment_ref['character'])):
+            if alignment_ref['character'][j] != None:
                 counter += count
                 break
             else:
                 count += 1
                 alignment.append({
-                    "time": reference_alignment['time'][j],
+                    "time": alignment_ref['time'][j],
                     "reference": None,
                     "user": None
                     })
         count = 0
-        current_character = reference_alignment["character"][counter]
-        for j in range(counter, len(reference_alignment['character'])):
-            if reference_alignment['character'][j] == None or reference_alignment['character'][j] != current_character or reference_alignment['time'][j] > word_we_are_on_ref['end']:
+        current_character = alignment_ref["character"][counter]
+        for j in range(counter, len(alignment_ref['character'])):
+            if alignment_ref['character'][j] == None or alignment_ref['character'][j] != current_character or alignment_ref['time'][j] > word_we_are_on_ref['end']:
                 counter += count
                 break
             else:
                 count += 1
-                reference_phrase.append(reference_alignment['frequency'][j])
-                ref_time.append(reference_alignment['time'][j])
+                reference_phrase.append(alignment_ref['frequency'][j])
+                ref_time.append(alignment_ref['time'][j])
         count = 0
-        for j in range(user_counter, len(user_alignment['character'])):
-            if user_alignment['character'][j] != None:
+        for j in range(user_counter, len(alignment_user['character'])):
+            if alignment_user['character'][j] != None:
                 user_counter += count
                 break
             else:
                 count += 1
         count = 0
-        current_character = user_alignment['character'][user_counter]
-        for j in range(user_counter, len(user_alignment['character'])):
-            if user_alignment['character'][j] == None or user_alignment['character'][j] != current_character or user_alignment['time'][j] > word_we_are_on_user['end']:
+        current_character = alignment_user['character'][user_counter]
+        for j in range(user_counter, len(alignment_user['character'])):
+            if alignment_user['character'][j] == None or alignment_user['character'][j] != current_character or alignment_user['time'][j] > word_we_are_on_user['end']:
                 user_counter += count
                 break
             else:
                 count += 1
-                user_phrase.append(user_alignment['frequency'][j])
-                user_time.append(user_alignment['time'][j])
+                user_phrase.append(alignment_user['frequency'][j])
+                user_time.append(alignment_user['time'][j])
 
 
                 # --- Height-based accuracy ---
+
+        # Normalize pitch values before DTW
+        # if len(reference_phrase) > 0 and len(user_phrase) > 0:
+        #     ref_min, ref_max = min(reference_phrase), max(reference_phrase)
+        #     user_min, user_max = min(user_phrase), max(user_phrase)
+        #     if ref_max != ref_min:
+        #         reference_phrase = [(f - ref_min) / (ref_max - ref_min) for f in reference_phrase]
+        #     if user_max != user_min:
+        #         user_phrase = [(f - user_min) / (user_max - user_min) for f in user_phrase]
+
         user_series = [(f,) for f in user_phrase]
         reference_series = [(f,) for f in reference_phrase]
 
@@ -249,24 +262,20 @@ def dtw(
                 "accuracy": combined_accuracy
             })
 
-    return {"alignment": alignment, "accuracy": round((total_accuracy / char_amount) * 100, 2), 'ref_characters': copy_words_ref}
+    return {"alignment": alignment, "accuracy": round((total_accuracy / char_amount) * 100, 2), 'ref_characters': characters_ref}
+
 
 def get_characters_from_csv(test, current_index):
     try:
         with open(f'transcripts/results_{test}/{current_index}.json') as file:
-            characters_ref = json.load(file)['alignment']
+            characters = json.load(file)['alignment']
     except FileNotFoundError:
         raise FileNotFoundError("File not found")
-    return characters_ref
+    return characters
 
 
-def get_copy_of_character_lists(characters_user, characters):
-    copy_words_user = []
-    for thing in characters_user:
-        copy_words_user.append(thing)
-
-    copy_words_ref = []
-    for thing in characters:
-        copy_words_ref.append(thing)
-
-    return copy_words_user, copy_words_ref
+def get_copy_of_characters(characters):
+    copied_chars = []
+    for character in characters:
+        copied_chars.append(character)
+    return copied_chars
