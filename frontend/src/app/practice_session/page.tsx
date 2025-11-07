@@ -17,6 +17,7 @@ import { useAudio } from "../../hooks/useAudio";
 import { useShiftedAudio } from "../../hooks/useShiftedAudio";
 import { useAccuracy } from "../../hooks/useAccuracy";
 import { useAlert } from "../../hooks/useAlert";
+import Score from "src/components/Score";
 
 function TestPageContent() {
   const router = useRouter();
@@ -120,8 +121,7 @@ function TestPageContent() {
     setState(0);
     setGraphState(0);
 
-    if (arrayIndex === 0) {
-      //characters.length - 1) {
+    if (arrayIndex === characters.length - 1) {
       setArrayIndex(0);
       changeWord(
         "1",
@@ -180,7 +180,7 @@ function TestPageContent() {
         </div>
       </header>
 
-      <div className="grid grid-cols-3 w-screen h-100">
+      <div className="grid [grid-template-columns:1fr_4fr_1fr] w-screen h-100">
         <div>
           {userPitch.length > 0 && (
             <div>
@@ -253,7 +253,7 @@ function TestPageContent() {
                     const chartLeftPadding = 8;
                     const chartRightPadding = 38;
                     const usableWidth =
-                      150 - chartLeftPadding - chartRightPadding;
+                      140 - chartLeftPadding - chartRightPadding;
 
                     const left =
                       chartLeftPadding +
@@ -281,13 +281,7 @@ function TestPageContent() {
           </div>
         )}
 
-        <div className="flex justify-center items-center">
-          {accuracy !== 0.0 && (
-            <div className="w-64 h-64 flex justify-center items-center rounded-lg border-4 border-[#4682B4] text-[#4682B4] font-bold text-xl">
-              {accuracy}%
-            </div>
-          )}
-        </div>
+        <Score accuracy={accuracy} />
       </div>
 
       <footer className="grid grid-cols-3 w-screen p-8 pt-20">

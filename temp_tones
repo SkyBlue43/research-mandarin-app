@@ -1,0 +1,36 @@
+Index,Simplified,Traditional,Pinyin,English,Hint
+1,男生,男生,nán shēng,boy student,Second tone First tone 
+2,篮球,籃球,lán qiú,basketball,Second tone Second tone
+3,游泳,游泳,yóu yǒng,to swim,Second tone Third tone 
+4,一下,一下,yí xià,once,Second tone Fourth tone 
+5,每天,每天,měi tiān,every day,Third tone First tone 
+6,打球,打球,dǎ qiú,to play ball ,Third tone Second tone
+7,几点,幾點,jǐ diǎn,what time,Third tone Third tone 
+8,晚饭,晚飯,wǎn fàn,dinner,Third tone Fourth tone 
+9,在家,在家,zài jiā,at home,Fourth tone First tone 
+10,数学,數學,shù xué,math,Fourth tone Second tone
+11,课本,課本,kè běn,textbook,Fourth tone Third tone
+12,上课,上課,shàng kè,to attend class,Fourth tone Fourth tone 
+13,你是从中国来的吗？,你是從中國來的嗎？,Nǐ shì cóng Zhōng guó lái de ma?,Are you from China?,Sentences
+14,对，我家在北京。,對，我家在北京。,"Duì, wǒ jiā zài Běi jīng.","Yes, my home is in Beijing.",Sentences
+15,那你现在住在哪里？,那你現在住在哪裡？,Nà nǐ xiàn zài zhù zài nǎ lǐ?,Then where do you live now?,Sentences
+16,我住在学校附近。,我住在學校附近。,Wǒ zhù zài xué xiào fù jìn.,I live near the school.,Sentences
+
+
+Index,Simplified,Traditional,Pinyin,English,Hint
+1,男生,男生,nan sheng,boy student,Second tone First tone 
+2,篮球,籃球,lan qiu,basketball,Second tone Second tone
+3,游泳,游泳,you yong,to swim,Second tone Third tone 
+4,一下,一下,yi xia,once,Second tone Fourth tone 
+5,每天,每天,mei tian,every day,Third tone First tone 
+6,打球,打球,da qiu,to play ball ,Third tone Second tone
+7,几点,幾點,ji dian,what time,Third tone Third tone 
+8,晚饭,晚飯,wan fan,dinner,Third tone Fourth tone 
+9,在家,在家,zai jia,at home,Fourth tone First tone 
+10,数学,數學,shu xue,math,Fourth tone Second tone
+11,课本,課本,ke ben,textbook,Fourth tone Third tone
+12,上课,上課,shang ke,to attend class,Fourth tone Fourth tone 
+13,你是从中国来的吗？,你是從中國來的嗎？,Ni shi cong Zhong guo lai de ma?,Are you from China?,Sentences
+14,对，我家在北京。,對，我家在北京。,"Dui, wo jia zai Bei jing.","Yes, my home is in Beijing.",Sentences
+15,那你现在住在哪里？,那你現在住在哪裡？,Na ni xian zai zhu zai na li?,Then where do you live now?,Sentences
+16,我住在学校附近。,我住在學校附近。,Wo zhu zai xue xiao fu jin.,I live near the school.,Sentences
