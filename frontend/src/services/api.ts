@@ -162,7 +162,7 @@ export const saveAccuracyData = async (
     phrase,
     array_index,
   };
-  await fetch("http://localhost:8000/save_accuracy", {
+  await fetch("http://localhost:8000/save-accuracy", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -192,7 +192,7 @@ export const getHighestAccuracies = async (
 };
 
 export const updateTest = async (username: string | null) => {
-  await fetch("http://localhost:8000/update_test", {
+  await fetch("http://localhost:8000/update-test", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

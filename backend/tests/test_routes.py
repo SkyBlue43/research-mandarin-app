@@ -47,4 +47,7 @@ def test_check_username_and_password_is_invalid():
     assert response.status_code == 401
     assert response.json()["detail"] == 'Invalid username or password'
 
+def test_update_users():
+    pass
+
 
