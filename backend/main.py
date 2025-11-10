@@ -1,10 +1,9 @@
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
-from pydantic import BaseModel
-from typing import List
 
 
+from backend.models import Accuracy, Auth, DTWRequest, Highest_Accuracy, Phrase, Test, User
 from routes.clone_audio import shift_audio
 from routes.transcribe import transcribe_audio
 from routes.analyze_audio import analyze_given_audio
@@ -27,9 +26,6 @@ app.add_middleware(
 )
 
 
-class Test(BaseModel):
-    test_number: str
-
 @app.post("/get-characters")
 def get_characters(data: Test):
     try:
@@ -38,10 +34,6 @@ def get_characters(data: Test):
     except FileNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
     
-
-class Auth(BaseModel):
-    username: str
-    password: str
 
 @app.post("/check-password")
 def check_password(data: Auth):
@@ -54,9 +46,6 @@ def check_password(data: Auth):
         raise HTTPException(status_code=401, detail=str(e))
 
 
-class User(BaseModel):
-    username: str
-
 @app.post("/update-test")
 def update_test(data: User):
     try:
@@ -68,14 +57,6 @@ def update_test(data: User):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     
-
-class Accuracy(BaseModel):
-    name: str
-    test: str
-    accuracy: int | None
-    group: str
-    phrase: str
-    array_number: str
     
 @app.post("/save-accuracy")
 def save_accuracy(data: Accuracy):
@@ -86,11 +67,6 @@ def save_accuracy(data: Accuracy):
     except IndexError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-
-class Highest_Accuracy(BaseModel):
-    name: str
-    test: str
-    group: str
 
 @app.post("/get-highest-accuracies")
 def get_highest_accuracies(data: Highest_Accuracy):
@@ -104,22 +80,6 @@ def get_highest_accuracies(data: Highest_Accuracy):
     except IndexError as e:
         raise HTTPException(status_code=400, detail=str(e))
         
-
-class PitchData(BaseModel):
-    frequency: List[float | None]
-    time: List[float]
-
-class WordData(BaseModel):
-    char: str
-    start: float
-    end: float
-
-class DTWRequest(BaseModel):
-    reference_pitch: PitchData
-    user_pitch: PitchData
-    test: str
-    currentIndex: str
-    words_user: List[WordData]
 
 @app.post("/dtw-characters")
 def dtw_characters(data: DTWRequest):
@@ -140,9 +100,6 @@ def analyze_audio(file: UploadFile = File(...)):
         pass
 
 
-class Phrase(BaseModel):
-    phrase: str
-
 @app.post("/transcribe")
 async def transcribe(file: UploadFile = File(...), data: str = Form(...)):
     try:
@@ -150,6 +107,7 @@ async def transcribe(file: UploadFile = File(...), data: str = Form(...)):
         return await transcribe_audio(file, data.phrase)
     except:
         pass
+
 
 @app.post("/clone")
 async def clone(reference: UploadFile = File(...), user: UploadFile = File(...)):
