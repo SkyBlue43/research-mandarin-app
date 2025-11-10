@@ -138,8 +138,7 @@ def correct_pitch_to_reference(
 from pydub import AudioSegment
 import tempfile, shutil, os
 
-@router.post("/shift_audio/")
-async def shift_audio(reference: UploadFile = File(...), user: UploadFile = File(...)):
+async def shift_audio(reference, user):
     # Save reference
     with tempfile.NamedTemporaryFile(delete=False) as ref_tmp:
         shutil.copyfileobj(reference.file, ref_tmp)

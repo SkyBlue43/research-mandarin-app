@@ -1,4 +1,3 @@
-from fastapi import APIRouter, UploadFile, File, Form
 import subprocess
 import wave
 from vosk import Model, KaldiRecognizer, SetLogLevel
@@ -6,8 +5,6 @@ from fastapi.responses import JSONResponse
 import tempfile
 import os
 import json
-
-router = APIRouter()
 
 SetLogLevel(-1)
 
@@ -56,8 +53,7 @@ def transcribe_with_vosk(audio_path, phrase_list):
     return char_segments
 
 
-@router.post("/transcribe/")
-async def transcribe_audio(file: UploadFile = File(...), current_phrase: str = Form(...)):
+async def transcribe_audio(file, current_phrase):
     # Save MP3
     with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as temp_mp3:
         mp3_path = temp_mp3.name

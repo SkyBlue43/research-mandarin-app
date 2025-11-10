@@ -80,7 +80,7 @@ export const transcribeAudio = async (
 
   const formData = new FormData();
   formData.append("file", audio_blob, audio_location);
-  formData.append("current_phrase", currentPhrase);
+  formData.append("data", currentPhrase);
 
   try {
     const result = await fetch("http://localhost:8000/transcribe/", {
@@ -109,7 +109,7 @@ export const analyzeAudio = async (
   if (!audio_blob) return null;
   const formData = new FormData();
   formData.append("file", audio_blob, audio_location);
-  const result = await fetch("http://localhost:8000/analyze-audio-voiceless", {
+  const result = await fetch("http://localhost:8000/analyze-audio", {
     method: "POST",
     body: formData,
   });
@@ -134,7 +134,7 @@ export const shiftAudio = async (referenceBlob: Blob, userBlob: Blob) => {
   const formData = new FormData();
   formData.append("reference", referenceBlob);
   formData.append("user", userBlob);
-  const result = await fetch("http://localhost:8000/shift_audio", {
+  const result = await fetch("http://localhost:8000/clone", {
     method: "POST",
     body: formData,
   });
@@ -152,7 +152,7 @@ export const saveAccuracyData = async (
   test: string,
   group: string,
   phrase: string,
-  array_index: string
+  array_number: string
 ) => {
   const payload = {
     name,
@@ -160,7 +160,7 @@ export const saveAccuracyData = async (
     accuracy,
     group,
     phrase,
-    array_index,
+    array_number,
   };
   await fetch("http://localhost:8000/save-accuracy", {
     method: "POST",
@@ -176,7 +176,7 @@ export const getHighestAccuracies = async (
   group: string,
   test: string
 ) => {
-  const result = await fetch("http://localhost:8000/get_highest_accuracies", {
+  const result = await fetch("http://localhost:8000/get-highest-accuracies", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

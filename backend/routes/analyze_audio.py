@@ -1,10 +1,9 @@
-from fastapi import APIRouter, UploadFile, File
+from fastapi import UploadFile, File
 import parselmouth
 import numpy as np
 import shutil, os
 from pydub import AudioSegment
 
-router = APIRouter()
 
 def clean_audio(pitch):
     on_pitch = False
@@ -23,13 +22,12 @@ def clean_audio(pitch):
     return pitch
 
 
-@router.post("/analyze-audio-voiceless/")
-async def analyze_audio(file: UploadFile = File(...)):
+def analyze_given_audio(infile):
     input_path = "temp_input"
     output_path = "temp.wav"
 
     with open(input_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+        shutil.copyfileobj(infile.file, buffer)
 
     audio = AudioSegment.from_file(input_path)
 

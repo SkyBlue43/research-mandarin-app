@@ -8,7 +8,7 @@ def write_lines(outfile, lines):
     with open(outfile, 'w') as file:
         file.writelines(lines)
 
-async def save_pitch_accuracy(name, test, group, phrase, array_number, accuracy):
+def save_pitch_accuracy(name, test, group, phrase, array_number, accuracy):
     if accuracy == 0 or accuracy is None:
         return
 
