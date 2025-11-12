@@ -3,7 +3,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 
 
-from backend.models import Accuracy, Auth, DTWRequest, Highest_Accuracy, Phrase, Test, User
+from models import Accuracy, Auth, DTWRequest, Highest_Accuracy, Phrase, Test, User
 from routes.clone_audio import shift_audio
 from routes.transcribe import transcribe_audio
 from routes.analyze_audio import analyze_given_audio
