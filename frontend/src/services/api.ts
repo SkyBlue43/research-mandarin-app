@@ -1,3 +1,5 @@
+const BASE = process.env.NEXT_PUBLIC_BACKEND_URL;
+
 type PitchPoint = {
   time: number;
   frequency: number;
@@ -23,7 +25,7 @@ export const DTW = async (
     currentIndex,
     words_user: userWordArray,
   };
-  const result = await fetch("http://localhost:8000/dtw-characters", {
+  const result = await fetch(`${BASE}/dtw-characters`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -48,7 +50,7 @@ export const transcribeAudio = async (
   formData.append("data", currentPhrase);
 
   try {
-    const result = await fetch("http://localhost:8000/transcribe/", {
+    const result = await fetch(`${BASE}/transcribe/`, {
       method: "POST",
       body: formData,
     });
@@ -74,7 +76,7 @@ export const analyzeAudio = async (
   if (!audio_blob) return null;
   const formData = new FormData();
   formData.append("file", audio_blob, audio_location);
-  const result = await fetch("http://localhost:8000/analyze-audio", {
+  const result = await fetch(`${BASE}/analyze-audio`, {
     method: "POST",
     body: formData,
   });
@@ -84,7 +86,7 @@ export const analyzeAudio = async (
 };
 
 export const fetchCharacters = async (test: string | null) => {
-  const result = await fetch("http://localhost:8000/get-characters", {
+  const result = await fetch(`${BASE}/get-characters`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -99,7 +101,7 @@ export const shiftAudio = async (referenceBlob: Blob, userBlob: Blob) => {
   const formData = new FormData();
   formData.append("reference", referenceBlob);
   formData.append("user", userBlob);
-  const result = await fetch("http://localhost:8000/clone", {
+  const result = await fetch(`${BASE}/clone`, {
     method: "POST",
     body: formData,
   });
@@ -127,7 +129,7 @@ export const saveAccuracyData = async (
     phrase,
     array_number,
   };
-  await fetch("http://localhost:8000/save-accuracy", {
+  await fetch(`${BASE}/save-accuracy`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -141,7 +143,7 @@ export const getHighestAccuracies = async (
   group: string,
   test: string
 ) => {
-  const result = await fetch("http://localhost:8000/get-highest-accuracies", {
+  const result = await fetch(`${BASE}/get-highest-accuracies`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -157,7 +159,7 @@ export const getHighestAccuracies = async (
 };
 
 export const updateTest = async (username: string | null) => {
-  await fetch("http://localhost:8000/update-test", {
+  await fetch(`${BASE}/update-test`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
