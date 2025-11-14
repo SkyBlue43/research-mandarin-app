@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+python-multipart
+praat-parselmouth
+numpy
+scipy
+soundfile
+librosa
+pydub
+whisper
+vosk
+pydub
+zhon
+biopython
+fastdtw

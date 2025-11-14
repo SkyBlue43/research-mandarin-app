@@ -5,11 +5,7 @@ import numpy as np
 import parselmouth
 from parselmouth.praat import call
 from scipy.signal import savgol_filter
-from fastapi import APIRouter, File, UploadFile
-import os
 import soundfile as sf
-
-router = APIRouter()
 
 def _hz_to_st(f0_hz):
     f0_hz = np.asarray(f0_hz, dtype=float)
