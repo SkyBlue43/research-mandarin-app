@@ -3,40 +3,6 @@ type PitchPoint = {
   frequency: number;
 };
 
-// export const DTW = async (
-//   userPitch: PitchPoint[],
-//   referencePitch: PitchPoint[],
-//   test: string | null,
-//   userWordArray: any[],
-//   currentIndex: string
-// ) => {
-//   const formData = new FormData();
-//   formData.append(
-//     "reference_pitch",
-//     JSON.stringify({
-//       frequency: referencePitch.map((p) => p.frequency),
-//       time: referencePitch.map((p) => p.time),
-//     })
-//   );
-//   formData.append(
-//     "user_pitch",
-//     JSON.stringify({
-//       frequency: userPitch.map((p) => p.frequency),
-//       time: userPitch.map((p) => p.time),
-//     })
-//   );
-//   formData.append("test", JSON.stringify(test));
-//   formData.append("currentIndex", JSON.stringify(currentIndex));
-//   formData.append("words_user", JSON.stringify(userWordArray));
-//   const result = await fetch("http://localhost:8000/dtw_characters", {
-//     method: "POST",
-//     body: formData,
-//   });
-//   const data = await result.json();
-//   console.log("DTW result:", data);
-//   return [data.alignment, data.accuracy, data.ref_characters];
-// };
-
 export const DTW = async (
   userPitch: PitchPoint[],
   referencePitch: PitchPoint[],
@@ -57,7 +23,6 @@ export const DTW = async (
     currentIndex,
     words_user: userWordArray,
   };
-  console.log(body);
   const result = await fetch("http://localhost:8000/dtw-characters", {
     method: "POST",
     headers: {

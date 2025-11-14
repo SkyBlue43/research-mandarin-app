@@ -248,7 +248,7 @@ def calculate_alignment(characters_user, characters_ref, char_amount, alignment_
 
         # --- Combined score ---
         # combined_accuracy = 0.2 * accuracy + 0.8 * slope_score
-        combined_accuracy = slope_score * 1.2
+        combined_accuracy = slope_score * 1.0
         print("Total score:", combined_accuracy)
         total_accuracy += combined_accuracy
 
