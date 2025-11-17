@@ -5,25 +5,70 @@ from fastapi.responses import JSONResponse
 import tempfile
 import os
 import json
+import zipfile
+import requests
 
 SetLogLevel(-1)
 
-MODEL_PATH = "vosk-model-cn-0.22"
-if not os.path.exists(MODEL_PATH):
-    raise RuntimeError("❌ Vosk model not found! Download from https://alphacephei.com/vosk/models")
+MODEL_URL = "https://alphacephei.com/vosk/models/vosk-model-cn-0.22.zip"
+MODEL_DIR = "models"
+MODEL_PATH = os.path.join(MODEL_DIR, "vosk-model-cn-0.22")
 
+
+# --------------------------------------------------------
+#  Ensure the Vosk model exists locally or download it
+# --------------------------------------------------------
+def ensure_model():
+    # If model exists locally (your development environment)
+    if os.path.exists(MODEL_PATH):
+        print("✔ Vosk model found locally.")
+        return
+
+    # If not found, download into Render's filesystem
+    print("⬇ Vosk model not found. Downloading...")
+    os.makedirs(MODEL_DIR, exist_ok=True)
+
+    zip_path = os.path.join(MODEL_DIR, "model.zip")
+
+    # Download
+    with requests.get(MODEL_URL, stream=True) as r:
+        r.raise_for_status()
+        with open(zip_path, "wb") as f:
+            for chunk in r.iter_content(chunk_size=8192):
+                f.write(chunk)
+
+    # Extract
+    print("📦 Extracting Vosk model...")
+    with zipfile.ZipFile(zip_path, "r") as z:
+        z.extractall(MODEL_DIR)
+
+    os.remove(zip_path)
+    print("✔ Vosk model installed.")
+
+
+# Make sure model is available before loading
+ensure_model()
+
+# Load Vosk model
 model = Model(MODEL_PATH)
 
+
+# --------------------------------------------------------
+#  Audio conversion helper
+# --------------------------------------------------------
 def convert_to_wav(input_path, output_path):
     cmd = ["ffmpeg", "-y", "-i", input_path, "-ar", "16000", "-ac", "1", output_path]
     subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
+
+# --------------------------------------------------------
+#  Char-level transcription with Vosk
+# --------------------------------------------------------
 def transcribe_with_vosk(audio_path, phrase_list):
     wf = wave.open(audio_path, "rb")
     if wf.getnchannels() != 1 or wf.getsampwidth() != 2 or wf.getframerate() != 16000:
         raise ValueError("Audio must be WAV PCM 16kHz Mono")
 
-    # ✅ Use grammar-based recognition
     rec = KaldiRecognizer(model, wf.getframerate(), json.dumps(phrase_list))
     rec.SetWords(True)
 
@@ -34,9 +79,10 @@ def transcribe_with_vosk(audio_path, phrase_list):
             break
         if rec.AcceptWaveform(data):
             results.append(json.loads(rec.Result()))
+
     results.append(json.loads(rec.FinalResult()))
 
-    # ✅ Convert to char-level timestamps
+    # Convert to char-level timestamped segments
     char_segments = []
     for res in results:
         for word_info in res.get("result", []):
@@ -48,11 +94,18 @@ def transcribe_with_vosk(audio_path, phrase_list):
             for i, char in enumerate(word):
                 char_start = round(start + i * char_duration, 2)
                 char_end = round(char_start + char_duration, 2)
-                char_segments.append({"char": char, "start": char_start, "end": char_end})
+                char_segments.append({
+                    "char": char,
+                    "start": char_start,
+                    "end": char_end
+                })
 
     return char_segments
 
 
+# --------------------------------------------------------
+#  Public transcribe function (unchanged)
+# --------------------------------------------------------
 async def transcribe_audio(file, current_phrase):
     # Save MP3
     with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as temp_mp3:
@@ -64,11 +117,12 @@ async def transcribe_audio(file, current_phrase):
     convert_to_wav(mp3_path, wav_path)
 
     try:
-        # ✅ Split phrase into words for Vosk biasing
         phrase_list = current_phrase.strip().split()
         result = transcribe_with_vosk(wav_path, phrase_list)
+
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
+
     finally:
         os.remove(mp3_path)
         os.remove(wav_path)

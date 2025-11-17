@@ -28,6 +28,7 @@ __pycache__/
 *.pyc
 backend/vosk-model-cn-0.22/
 backend/MFA/pretrained_models/
+backend/models
 
 # =========================
 # ROOT
