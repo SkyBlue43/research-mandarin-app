@@ -15,7 +15,7 @@ from routes.check_password import authenticate_user
 from routes.get_characters import get_characters_from_curriculum
 from routes.dtw import dtw
 
-port = int(os.environ.get("PORT", 8000))
+port = int(os.environ.get("PORT", 10000))
 
 app = FastAPI()
 
