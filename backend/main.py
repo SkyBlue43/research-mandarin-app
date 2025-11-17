@@ -27,6 +27,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/")
+def root():
+    return {"message": "Welcome to the Mandarin Research API!"}
+
 
 @app.post("/get-characters")
 def get_characters(data: Test):
