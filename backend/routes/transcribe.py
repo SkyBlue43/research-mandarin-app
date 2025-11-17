@@ -14,23 +14,22 @@ MODEL_URL = "https://alphacephei.com/vosk/models/vosk-model-cn-0.22.zip"
 MODEL_DIR = "models"
 MODEL_PATH = os.path.join(MODEL_DIR, "vosk-model-cn-0.22")
 
+# Global variable for lazy loading
+model = None
 
 # --------------------------------------------------------
-#  Ensure the Vosk model exists locally or download it
+# Ensure the Vosk model exists locally or download it
 # --------------------------------------------------------
 def ensure_model():
-    # If model exists locally (your development environment)
     if os.path.exists(MODEL_PATH):
         print("✔ Vosk model found locally.")
         return
 
-    # If not found, download into Render's filesystem
     print("⬇ Vosk model not found. Downloading...")
     os.makedirs(MODEL_DIR, exist_ok=True)
-
     zip_path = os.path.join(MODEL_DIR, "model.zip")
 
-    # Download
+    # Download the model
     with requests.get(MODEL_URL, stream=True) as r:
         r.raise_for_status()
         with open(zip_path, "wb") as f:
@@ -45,31 +44,34 @@ def ensure_model():
     os.remove(zip_path)
     print("✔ Vosk model installed.")
 
-
-# Make sure model is available before loading
-ensure_model()
-
-# Load Vosk model
-model = Model(MODEL_PATH)
-
+# --------------------------------------------------------
+# Lazy load the model on first use
+# --------------------------------------------------------
+def get_model():
+    global model
+    if model is None:
+        ensure_model()
+        model = Model(MODEL_PATH)
+        print("✔ Vosk model loaded.")
+    return model
 
 # --------------------------------------------------------
-#  Audio conversion helper
+# Audio conversion helper
 # --------------------------------------------------------
 def convert_to_wav(input_path, output_path):
     cmd = ["ffmpeg", "-y", "-i", input_path, "-ar", "16000", "-ac", "1", output_path]
     subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-
 # --------------------------------------------------------
-#  Char-level transcription with Vosk
+# Char-level transcription with Vosk
 # --------------------------------------------------------
 def transcribe_with_vosk(audio_path, phrase_list):
     wf = wave.open(audio_path, "rb")
     if wf.getnchannels() != 1 or wf.getsampwidth() != 2 or wf.getframerate() != 16000:
         raise ValueError("Audio must be WAV PCM 16kHz Mono")
 
-    rec = KaldiRecognizer(model, wf.getframerate(), json.dumps(phrase_list))
+    # Lazy-load the model here
+    rec = KaldiRecognizer(get_model(), wf.getframerate(), json.dumps(phrase_list))
     rec.SetWords(True)
 
     results = []
@@ -89,7 +91,6 @@ def transcribe_with_vosk(audio_path, phrase_list):
             word = word_info["word"]
             start = word_info["start"]
             end = word_info["end"]
-
             char_duration = (end - start) / len(word)
             for i, char in enumerate(word):
                 char_start = round(start + i * char_duration, 2)
@@ -102,9 +103,8 @@ def transcribe_with_vosk(audio_path, phrase_list):
 
     return char_segments
 
-
 # --------------------------------------------------------
-#  Public transcribe function (unchanged)
+# Public transcribe function
 # --------------------------------------------------------
 async def transcribe_audio(file, current_phrase):
     # Save MP3
