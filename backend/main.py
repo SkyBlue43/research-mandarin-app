@@ -19,15 +19,34 @@ port = int(os.environ.get("PORT", 8000))
 
 app = FastAPI()
 
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=[
+#         "https://research-mandarin-app.vercel.app",
+#         "https://*.vercel.app",
+#     ],  # Change to your frontend URL in production
+#     allow_credentials=True,
+#     allow_methods=["GET", "POST", "OPTIONS"],
+#     allow_headers=["*"],
+# )
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=[
+#         "*",
+#     ],  # Change to your frontend URL in production
+#     allow_credentials=True,
+#     allow_methods=["GET", "POST", "OPTIONS"],
+#     allow_headers=["*"],
+# )
+
+FRONTEND_URL = os.environ.get("https://research-mandarin-app.vercel.app", "http://localhost:3000")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://research-mandarin-app.vercel.app",
-        "https://*.vercel.app",
-    ],  # Change to your frontend URL in production
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "OPTIONS"],
-    allow_headers=["*"],
+    allow_origins=[FRONTEND_URL],  # local or production URL
+    allow_credentials=True,        # only if you use cookies or auth headers
+    allow_methods=["*"],           # GET, POST, PUT, DELETE, OPTIONS, etc.
+    allow_headers=["*"],           # all headers
 )
 
 @app.get("/")

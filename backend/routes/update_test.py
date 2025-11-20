@@ -6,7 +6,7 @@ def write_lines(outfile, lines):
     with open(outfile, 'w') as file:
         file.writelines(lines)
 
-async def update_users_test(username):
+def update_users_test(username):
     try:
         lines = read_lines('students.csv')
     except FileNotFoundError:
