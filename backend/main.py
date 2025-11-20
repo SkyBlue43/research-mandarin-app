@@ -39,11 +39,10 @@ app = FastAPI()
 #     allow_headers=["*"],
 # )
 
-FRONTEND_URL = os.environ.get("https://research-mandarin-app.vercel.app", "http://localhost:3000")
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[FRONTEND_URL],  # local or production URL
+    allow_origins=["https://research-mandarin-app.vercel.app",
+         "https://*.vercel.app", "http://localhost:3000"],  # local or production URL
     allow_credentials=True,        # only if you use cookies or auth headers
     allow_methods=["*"],           # GET, POST, PUT, DELETE, OPTIONS, etc.
     allow_headers=["*"],           # all headers
