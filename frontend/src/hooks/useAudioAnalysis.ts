@@ -46,6 +46,7 @@ export function useAudioAnalysisUser(
   const [alignedGraphData, setAlignedGraphData] = useState<any[]>([]);
   const [accuracy, setAccuracy] = useState(0);
   const [refWordsArray, setRefWordsArray] = useState<any[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const analyzeUser = async () => {
@@ -61,18 +62,22 @@ export function useAudioAnalysisUser(
           );
           setUserWordsArray(user_chars_array);
 
-          console.log("✅ User Character Segments:", user_chars_array);
-          const [aligned_graph_data, total_accuracy, ref_characters] =
-            await DTW(
-              data.pitch,
-              referencePitch,
-              test,
-              user_chars_array,
-              currentIndex
-            );
-          setAlignedGraphData(aligned_graph_data);
-          setAccuracy(total_accuracy);
-          setRefWordsArray(ref_characters);
+          //console.log("✅ User Character Segments:", user_chars_array);
+          try {
+            const [aligned_graph_data, total_accuracy, ref_characters] =
+              await DTW(
+                data.pitch,
+                referencePitch,
+                test,
+                user_chars_array,
+                currentIndex
+              );
+            setAlignedGraphData(aligned_graph_data);
+            setAccuracy(total_accuracy);
+            setRefWordsArray(ref_characters);
+          } catch (err: any) {
+            setError(err.message || "Unknown error");
+          }
         }
       }
     };
@@ -94,5 +99,6 @@ export function useAudioAnalysisUser(
     alignedGraphData,
     clearPitch,
     accuracy,
+    error,
   };
 }

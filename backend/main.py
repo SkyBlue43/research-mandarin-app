@@ -116,6 +116,8 @@ def dtw_characters(data: DTWRequest):
         return result
     except FileNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=str(e))
 
 
 @app.post("/analyze-audio")

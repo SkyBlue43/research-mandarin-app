@@ -59,15 +59,33 @@ function TestPageContent() {
     chosenAudio
   );
 
-  const { userPitch, alignedGraphData, refWordsArray, clearPitch, accuracy } =
-    useAudioAnalysisUser(
-      userBlob,
-      chosenAudio,
-      referencePitch,
-      currentSimplified,
-      test,
-      currentIndex
-    );
+  const {
+    userPitch,
+    alignedGraphData,
+    refWordsArray,
+    clearPitch,
+    accuracy,
+    error,
+  } = useAudioAnalysisUser(
+    userBlob,
+    chosenAudio,
+    referencePitch,
+    currentSimplified,
+    test,
+    currentIndex
+  );
+
+  useEffect(() => {
+    if (error) {
+      alert(error);
+      setPlayReady(false);
+      clearReferencePitch();
+      clearPitch();
+      clearBlob();
+      setState(0);
+      setGraphState(0);
+    }
+  }, [error]);
 
   const { correctedAudio } = useShiftedAudio(referenceBlob, userBlob);
 
@@ -105,7 +123,9 @@ function TestPageContent() {
   const handleRecording = () => {
     if (recording && state === 0) {
       stopRecording();
-      referenceAlert();
+      if (!error) {
+        referenceAlert();
+      }
     } else if (recording) {
       stopRecording();
     } else {
