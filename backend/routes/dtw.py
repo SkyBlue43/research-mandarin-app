@@ -8,27 +8,27 @@ from scipy.interpolate import interp1d
 from Bio.Align import PairwiseAligner
 
 
-def align_characters(user, ref):
-    user_string = ''
-    ref_string = ''
-    for item in user:
-        user_string += item['char']
-    for item in ref:
-        ref_string += item['char']
-    print("Length spoken: ",len(user_string))
-    print("Length recorded: ", len(ref_string))
-    aligner = PairwiseAligner()
-    aligner.open_gap_score = -10
-    aligner.extend_gap_score = -10
-    alignments = aligner.align(user_string, ref_string)
-    alignment = alignments[0]
+# def align_characters(user, ref):
+#     user_string = ''
+#     ref_string = ''
+#     for item in user:
+#         user_string += item['char']
+#     for item in ref:
+#         ref_string += item['char']
+#     print("Length spoken: ",len(user_string))
+#     print("Length recorded: ", len(ref_string))
+#     aligner = PairwiseAligner()
+#     aligner.open_gap_score = -10
+#     aligner.extend_gap_score = -10
+#     alignments = aligner.align(user_string, ref_string)
+#     alignment = alignments[0]
 
-    first = alignment[0]
-    second = alignment[1]
+#     first = alignment[0]
+#     second = alignment[1]
 
-    print("Detected: ", first)
-    print('Reference: ', second)
-    return
+#     print("Detected: ", first)
+#     print('Reference: ', second)
+#     return
 
 def stretch_user_pitch(user_times, user_pitch, target_times):
     # Normalize user times to [0, 1]
@@ -132,11 +132,6 @@ def dtw(
     current_index,
     words_user_data
 ):
-    # reference_pitch = json.loads(reference_pitch)
-    # user_pitch = json.loads(user_pitch)
-    # test = json.loads(test)
-    # current_index = json.loads(current_index)
-    # words_user_data = json.loads(words_user)
 
     characters_user = []
     for word in words_user_data:
@@ -149,7 +144,8 @@ def dtw(
     characters_ref = get_characters_from_csv(test, current_index)
     
     if len(characters_user) != len(characters_ref):
-        align_characters(characters_user, characters_ref)
+        raise ValueError("Unable to detect audio. Try recording again.")
+        #align_characters(characters_user, characters_ref)
 
     char_amount = len(characters_ref)
     alignment_ref = align_pitch_with_characters(reference_pitch, characters_ref)

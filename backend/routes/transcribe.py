@@ -8,7 +8,7 @@ import json
 
 SetLogLevel(-1)
 
-MODEL_PATH = "vosk-model-cn-0.22"
+MODEL_PATH = "models/vosk-model-cn-0.22"
 if not os.path.exists(MODEL_PATH):
     raise RuntimeError("❌ Vosk model not found! Download from https://alphacephei.com/vosk/models")
 

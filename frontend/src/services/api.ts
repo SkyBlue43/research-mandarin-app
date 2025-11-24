@@ -31,8 +31,17 @@ export const DTW = async (
     body: JSON.stringify(body),
   });
 
+  if (!result.ok) {
+    const error = await result.json();
+
+    if (result.status === 422) {
+      throw new Error(error.detail);
+    }
+    throw new Error(error.detail || "An error occurred.");
+  }
+
   const data = await result.json();
-  console.log("DTW result:", data);
+  //console.log("DTW result:", data);
   return [data.alignment, data.accuracy, data.ref_characters];
 };
 
