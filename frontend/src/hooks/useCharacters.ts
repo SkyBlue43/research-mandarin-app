@@ -1,8 +1,16 @@
 import { useEffect, useState } from "react";
 import { fetchCharacters } from "../services/api";
 
+export type Character = {
+  simplified: string;
+  traditional: string;
+  pinyin: string;
+  index: string;
+  hint: string;
+};
+
 export function useCharacters(test: string | null, currentPhrase: number) {
-  const [characters, setCharacters] = useState<any[]>([]);
+  const [characters, setCharacters] = useState<Character[]>([]);
   const [currentSimplified, setCurrentSimplified] = useState("");
   const [currentTraditional, setCurrentTraditional] = useState("");
   const [currentPinyin, setCurrentPinyin] = useState("");

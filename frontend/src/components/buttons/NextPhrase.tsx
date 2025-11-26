@@ -1,0 +1,47 @@
+import { useRouter } from "next/navigation";
+import { Character } from "src/hooks/useCharacters";
+
+type Props = {
+  name: string;
+  test: string;
+  group: string;
+  currentPhrase: number;
+  pageState: number;
+  characters: Character[];
+  setCurrentPhrase: (value: number | ((prev: number) => number)) => void;
+};
+
+export default function NextPhrase(props: Props) {
+  const router = useRouter();
+  const handleRightClick = () => {
+    // setPlayReady(false);
+    // clearReferencePitch();
+    // clearPitch();
+    // clearBlob();
+    // setState(0);
+    // setGraphState(0);
+
+    if (props.currentPhrase === props.characters.length - 1) {
+      props.setCurrentPhrase(() => 0);
+      router.push(
+        `finished?name=${props.name}&test=${props.test}&group=${props.group}`
+      );
+    } else {
+      props.setCurrentPhrase((prev) => prev + 1);
+    }
+  };
+
+  return (
+    <div>
+      {((props.group === "b" && props.pageState === 1) ||
+        props.pageState === 3) && (
+        <button
+          className="text-md p-4 rounded-full bg-purple-500 text-white hover:bg-purple-600"
+          onClick={handleRightClick}
+        >
+          Next Phrase
+        </button>
+      )}
+    </div>
+  );
+}
