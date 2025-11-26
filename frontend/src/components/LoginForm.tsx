@@ -21,7 +21,7 @@ export default function LoginForm() {
         );
       } else {
         router.push(
-          `/practice_session?test=${data.test}&group=${data.group}&name=${data.name}`
+          `/session?test=${data.test}&group=${data.group}&name=${data.name}`
         );
       }
     } catch (error: any) {

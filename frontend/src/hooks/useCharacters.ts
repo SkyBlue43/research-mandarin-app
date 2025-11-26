@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-
 import { fetchCharacters } from "../services/api";
 
-export function useCharacters(test: string | null, arrayIndex: number) {
+export function useCharacters(test: string | null, currentPhrase: number) {
   const [characters, setCharacters] = useState<any[]>([]);
   const [currentSimplified, setCurrentSimplified] = useState("");
   const [currentTraditional, setCurrentTraditional] = useState("");
@@ -10,33 +9,36 @@ export function useCharacters(test: string | null, arrayIndex: number) {
   const [currentIndex, setCurrentIndex] = useState("1");
   const [currentHint, setCurrentHint] = useState("");
 
+  const [charError, setCharError] = useState<string | null>(null);
+  const [charLoading, setCharLoading] = useState(true);
+
   useEffect(() => {
     const loadCharacters = async () => {
-      const data = await fetchCharacters(test);
-      setCharacters(data.characters);
-      setCurrentSimplified(data.characters[arrayIndex].simplified);
-      setCurrentTraditional(data.characters[arrayIndex].traditional);
-      setCurrentPinyin(data.characters[arrayIndex].pinyin);
-      setCurrentIndex(data.characters[arrayIndex].index);
-      setCurrentHint(data.characters[arrayIndex].hint);
+      try {
+        setCharLoading(true);
+        setCharError(null);
+
+        const data = await fetchCharacters(test);
+        setCharacters(data.characters);
+
+        const curr = data.characters[currentPhrase];
+        if (curr) {
+          setCurrentSimplified(curr.simplified);
+          setCurrentTraditional(curr.traditional);
+          setCurrentPinyin(curr.pinyin);
+          setCurrentIndex(curr.index);
+          setCurrentHint(curr.hint);
+        }
+      } catch (err: any) {
+        console.error("Error loading characters:", err);
+        setCharError(err.message || "Failed to load characters");
+      } finally {
+        setCharLoading(false);
+      }
     };
 
     loadCharacters();
-  }, [test]);
-
-  const changeWord = (
-    num: string,
-    simplified: string,
-    traditional: string,
-    pinyin: string,
-    hint: string
-  ) => {
-    setCurrentIndex(num);
-    setCurrentSimplified(simplified);
-    setCurrentTraditional(traditional);
-    setCurrentHint(hint);
-    setCurrentPinyin(pinyin);
-  };
+  }, [test, currentPhrase]);
 
   return {
     characters,
@@ -45,6 +47,7 @@ export function useCharacters(test: string | null, arrayIndex: number) {
     currentTraditional,
     currentPinyin,
     currentHint,
-    changeWord,
+    charError,
+    charLoading,
   };
 }

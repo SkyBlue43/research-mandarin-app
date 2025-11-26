@@ -95,15 +95,19 @@ export const analyzeAudio = async (
 };
 
 export const fetchCharacters = async (test: string | null) => {
-  const result = await fetch(`${BASE}/get-characters`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ test_number: test }),
-  });
-  const data = await result.json();
-  return data;
+  try {
+    const result = await fetch(`${BASE}/get-characters`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ test_number: test }),
+    });
+    const data = await result.json();
+    return data;
+  } catch (err: any) {
+    throw new Error(err.message);
+  }
 };
 
 export const shiftAudio = async (referenceBlob: Blob, userBlob: Blob) => {
