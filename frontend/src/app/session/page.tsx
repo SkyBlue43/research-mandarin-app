@@ -3,10 +3,13 @@
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import NextPhrase from "src/components/buttons/NextPhrase";
+import Record from "src/components/buttons/Record";
 import CharacterDisplay from "src/components/header/CharacterDisplay";
 import PinyinDisplay from "src/components/header/PinyinDisplay";
 import Timer from "src/components/header/Timer";
+import { useAudioRecorder } from "src/hooks/useAudioRecorder";
 import { useCharacters } from "src/hooks/useCharacters";
+import { useReferenceAudio } from "src/hooks/useReferenceAudio";
 
 export default function Session() {
   const searchParams = useSearchParams();
@@ -14,7 +17,7 @@ export default function Session() {
   const group = searchParams.get("group");
   const name = searchParams.get("name");
   const [currentPhrase, setCurrentPhrase] = useState(0);
-  const [pageState, setPageState] = useState(3);
+  const [pageState, setPageState] = useState(0);
 
   const {
     characters,
@@ -26,6 +29,20 @@ export default function Session() {
     charError,
     charLoading,
   } = useCharacters(test, currentPhrase);
+
+  const { referenceAudioPath, referenceBlob } = useReferenceAudio(
+    test!,
+    currentIndex
+  );
+
+  const {
+    startRecording,
+    stopRecording,
+    userAudioPath,
+    recording,
+    userBlob,
+    clearBlob,
+  } = useAudioRecorder();
 
   return (
     <div className="h-screen flex flex-col items-center text-center">
@@ -43,18 +60,11 @@ export default function Session() {
 
       <footer className="grid grid-cols-3 w-screen p-8 pt-20">
         <div></div>
-        <div>
-          {/* <button
-            className={`p-4 rounded-full text-white ${
-              recording
-                ? "bg-red-500 hover:bg-red-600"
-                : "bg-green-500 hover:bg-green-600"
-            }`}
-            onClick={handleRecording}
-          >
-            {recording ? <Square /> : <Mic />}
-          </button> */}
-        </div>
+        <Record
+          recording={recording}
+          onStart={startRecording}
+          onStop={stopRecording}
+        />
         <NextPhrase
           name={name!}
           test={test!}

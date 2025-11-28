@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect, Suspense } from "react";
-import Timer from "../../components/Timer";
+import Timer from "../../components/header/Timer";
 import { useCharacters } from "../../hooks/useCharacters";
 import { getHighestAccuracies } from "../../services/api";
 

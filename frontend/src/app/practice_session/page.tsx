@@ -13,7 +13,7 @@ import {
 } from "../../hooks/useAudioAnalysis";
 import { useAudioRecorder } from "../../hooks/useAudioRecorder";
 import { useCharacters } from "../../hooks/useCharacters";
-import { useAudio } from "../../hooks/useAudio";
+import { useAudio } from "../../hooks/useReferenceAudio";
 import { useShiftedAudio } from "../../hooks/useShiftedAudio";
 import { useAccuracy } from "../../hooks/useAccuracy";
 import { useAlert } from "../../hooks/useAlert";
