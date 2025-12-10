@@ -1,11 +1,12 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import NextPhrase from "src/components/buttons/NextPhrase";
 import PlayReferenceAudio from "src/components/buttons/PlayReferenceAudio";
 import PlayUserAudio from "src/components/buttons/PlayUserAudio";
 import Record from "src/components/buttons/Record";
+import PitchChart from "src/components/charts/PitchChart";
 import CharacterDisplay from "src/components/header/CharacterDisplay";
 import PinyinDisplay from "src/components/header/PinyinDisplay";
 import Timer from "src/components/header/Timer";
@@ -20,6 +21,8 @@ export type PageState =
   | "playingReferenceAudio"
   | "moveOn";
 
+export type GraphState = "none" | "user" | "reference" | "both";
+
 export default function Session() {
   const searchParams = useSearchParams();
   const test = searchParams.get("test");
@@ -27,6 +30,7 @@ export default function Session() {
   const name = searchParams.get("name");
   const [currentPhrase, setCurrentPhrase] = useState(0);
   const [pageState, setPageState] = useState<PageState>("none");
+  const [graphState, setGraphState] = useState<GraphState>("none");
 
   const {
     characters,
@@ -45,14 +49,28 @@ export default function Session() {
   );
 
   const { startRecording, stopRecording, userAudioPath, recording, userPitch } =
-    useAudioRecorder({ setPageState: setPageState });
+    useAudioRecorder({
+      setPageState: setPageState,
+      setGraphState: setGraphState,
+    });
 
   usePageState({
     pageState: pageState,
     setPageState: setPageState,
+    setGraphState: setGraphState,
     userAudioPath: userAudioPath!,
     referenceAudioPath: referenceAudioPath,
   });
+
+  const memoizedReferencePitch = useMemo(
+    () => referencePitch,
+    [referencePitch]
+  );
+  const memoizedUserPitch = useMemo(() => userPitch, [userPitch]);
+  // const memoizedAlignedPitch = useMemo(
+  //   () => alignedGraphData,
+  //   [alignedGraphData]
+  // );
 
   return (
     <div className="h-screen flex flex-col items-center text-center">
@@ -84,15 +102,15 @@ export default function Session() {
           )}
         </div>
 
-        {/* {group === "a" && graphState === 1 && (
+        {group === "a" && graphState === "reference" && (
           <div className="flex items-center justify-center mr-4 ml-4 text-black">
-            {playReady && referencePitch.length > 0 && (
-              <PitchChart data={memoizedPitch} color="#B0B0B0" />
+            {referencePitch.length > 0 && (
+              <PitchChart data={memoizedReferencePitch} color="#B0B0B0" />
             )}
           </div>
         )}
 
-        {group === "a" && graphState === 0 && (
+        {group === "a" && graphState === "user" && (
           <div className="flex flex-col items-center justify-center ml-4 mr-4 text-white">
             {userPitch.length > 0 && (
               <PitchChart data={memoizedUserPitch} color="#4682B4" />
@@ -100,7 +118,7 @@ export default function Session() {
           </div>
         )}
 
-        {group === "a" && graphState === 2 && (
+        {/* {group === "a" && graphState === "both" && (
           <div className="flex flex-col items-center justify-center ml-4 mr-4 text-white">
             {alignedGraphData.length > 0 && (
               <>
@@ -164,6 +182,7 @@ export default function Session() {
             test={test!}
             group={group!}
             setPageState={setPageState}
+            setGraphState={setGraphState}
             currentPhrase={currentPhrase}
             characters={characters}
             setCurrentPhrase={setCurrentPhrase}

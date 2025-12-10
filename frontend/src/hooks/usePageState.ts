@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import { useAlert } from "./useAlert";
-import { PageState } from "src/app/session/page";
+import { GraphState, PageState } from "src/app/session/page";
 
 type Props = {
   pageState: PageState;
   setPageState: (pageState: PageState) => void;
+  setGraphState: (graphState: GraphState) => void;
   userAudioPath: string;
   referenceAudioPath: string;
 };
@@ -29,9 +30,11 @@ export default function usePageState(props: Props) {
         audio.play().catch((err) => console.error("Audio error:", err));
 
         await waitForAudioEnd(audio);
+        await sleep(1000);
 
         closeAlert();
         props.setPageState("playingReferenceAudio");
+        props.setGraphState("reference");
       } else if (props.pageState === "playingReferenceAudio") {
         showAlert("Playing the correct audio", "#d1d5db");
 
@@ -39,16 +42,18 @@ export default function usePageState(props: Props) {
         audio.play().catch((err) => console.error("Audio error:", err));
 
         await waitForAudioEnd(audio);
+        await sleep(1000);
 
         closeAlert();
         props.setPageState("moveOn");
+        props.setGraphState("both");
       } else if (props.pageState === "moveOn") {
         showAlert(
           "Displaying both graphs now. You may move on or retry",
           "#22c55e"
         );
 
-        await sleep(5000);
+        await sleep(3000);
         closeAlert();
       }
     };

@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { PageState } from "src/app/session/page";
+import { GraphState, PageState } from "src/app/session/page";
 import { analyzeAudio } from "src/services/api";
 
 type PitchPoint = {
@@ -8,7 +8,8 @@ type PitchPoint = {
 };
 
 type Props = {
-  setPageState: (state: PageState) => void;
+  setPageState: (pageState: PageState) => void;
+  setGraphState: (graphState: GraphState) => void;
 };
 
 export function useAudioRecorder(props: Props) {
@@ -48,6 +49,7 @@ export function useAudioRecorder(props: Props) {
       if (!startPageTransition) {
         setStartPageTransition(true);
         props.setPageState("playingUserAudio");
+        props.setGraphState("user");
       }
     };
 

@@ -1,5 +1,5 @@
 import { useRouter } from "next/navigation";
-import { PageState } from "src/app/session/page";
+import { GraphState, PageState } from "src/app/session/page";
 import { Character } from "src/hooks/useCharacters";
 
 type Props = {
@@ -7,6 +7,7 @@ type Props = {
   test: string;
   group: string;
   setPageState: (pageState: PageState) => void;
+  setGraphState: (graphState: GraphState) => void;
   currentPhrase: number;
   characters: Character[];
   setCurrentPhrase: (value: number | ((prev: number) => number)) => void;
@@ -16,6 +17,7 @@ export default function NextPhrase(props: Props) {
   const router = useRouter();
   const handleRightClick = () => {
     props.setPageState("none");
+    props.setGraphState("none");
     // setPlayReady(false);
     // clearReferencePitch();
     // clearPitch();
