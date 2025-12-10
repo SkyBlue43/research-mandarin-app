@@ -18,6 +18,7 @@ export function useAudioRecorder(props: Props) {
 
   const [userAudioPath, setUserAudioPath] = useState<string | null>(null);
   const [recording, setRecording] = useState(false);
+  const [userBlob, setUserBlob] = useState<Blob | null>(null);
   const [userPitch, setUserPitch] = useState<PitchPoint[]>([]);
   const [startPageTransition, setStartPageTransition] = useState(false);
 
@@ -41,6 +42,7 @@ export function useAudioRecorder(props: Props) {
 
     mediaRecorder.onstop = async () => {
       const audioBlob = new Blob(audioChunksRef.current, { type: mimeType });
+      setUserBlob(audioBlob);
       const userAudioURL = URL.createObjectURL(audioBlob);
       setUserAudioPath(userAudioURL);
       const data = await analyzeAudio(audioBlob, "recording" + userAudioURL);
@@ -69,6 +71,7 @@ export function useAudioRecorder(props: Props) {
     stopRecording,
     userAudioPath,
     recording,
+    userBlob,
     userPitch,
     setStartPageTransition,
   };

@@ -6,12 +6,15 @@ import NextPhrase from "src/components/buttons/NextPhrase";
 import PlayReferenceAudio from "src/components/buttons/PlayReferenceAudio";
 import PlayUserAudio from "src/components/buttons/PlayUserAudio";
 import Record from "src/components/buttons/Record";
+import AlignedPitchChart from "src/components/charts/AlignedPitchCharts";
 import PitchChart from "src/components/charts/PitchChart";
 import CharacterDisplay from "src/components/header/CharacterDisplay";
 import PinyinDisplay from "src/components/header/PinyinDisplay";
 import Timer from "src/components/header/Timer";
 import { useAudioRecorder } from "src/hooks/useAudioRecorder";
+import { useAudioTranscriber } from "src/hooks/useAudioTranscriber";
 import { useCharacters } from "src/hooks/useCharacters";
+import { useDtw } from "src/hooks/useDtw";
 import usePageState from "src/hooks/usePageState";
 import { useReferenceAudio } from "src/hooks/useReferenceAudio";
 
@@ -48,11 +51,17 @@ export default function Session() {
     currentIndex
   );
 
-  const { startRecording, stopRecording, userAudioPath, recording, userPitch } =
-    useAudioRecorder({
-      setPageState: setPageState,
-      setGraphState: setGraphState,
-    });
+  const {
+    startRecording,
+    stopRecording,
+    userAudioPath,
+    recording,
+    userBlob,
+    userPitch,
+  } = useAudioRecorder({
+    setPageState: setPageState,
+    setGraphState: setGraphState,
+  });
 
   usePageState({
     pageState: pageState,
@@ -62,15 +71,29 @@ export default function Session() {
     referenceAudioPath: referenceAudioPath,
   });
 
+  const { transcribedWords } = useAudioTranscriber(
+    userBlob!,
+    referenceAudioPath,
+    currentIndex
+  );
+
+  const { refWordsArray, alignedGraphData, accuracy, error } = useDtw(
+    userPitch,
+    referencePitch,
+    test!,
+    transcribedWords,
+    currentIndex
+  );
+
   const memoizedReferencePitch = useMemo(
     () => referencePitch,
     [referencePitch]
   );
   const memoizedUserPitch = useMemo(() => userPitch, [userPitch]);
-  // const memoizedAlignedPitch = useMemo(
-  //   () => alignedGraphData,
-  //   [alignedGraphData]
-  // );
+  const memoizedAlignedPitch = useMemo(
+    () => alignedGraphData,
+    [alignedGraphData]
+  );
 
   return (
     <div className="h-screen flex flex-col items-center text-center">
@@ -118,7 +141,7 @@ export default function Session() {
           </div>
         )}
 
-        {/* {group === "a" && graphState === "both" && (
+        {group === "a" && graphState === "both" && (
           <div className="flex flex-col items-center justify-center ml-4 mr-4 text-white">
             {alignedGraphData.length > 0 && (
               <>
@@ -164,7 +187,7 @@ export default function Session() {
               </>
             )}
           </div>
-        )} */}
+        )}
 
         {/* <Score accuracy={accuracy} /> */}
       </div>
