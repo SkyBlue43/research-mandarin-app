@@ -1,12 +1,24 @@
 import { useRef, useState } from "react";
+import { PageState } from "src/app/session/page";
+import { analyzeAudio } from "src/services/api";
 
-export function useAudioRecorder() {
+type PitchPoint = {
+  time: number;
+  frequency: number;
+};
+
+type Props = {
+  setPageState: (state: PageState) => void;
+};
+
+export function useAudioRecorder(props: Props) {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
 
   const [userAudioPath, setUserAudioPath] = useState<string | null>(null);
   const [recording, setRecording] = useState(false);
-  const [userBlob, setUserBlob] = useState<Blob | null>(null);
+  const [userPitch, setUserPitch] = useState<PitchPoint[]>([]);
+  const [startPageTransition, setStartPageTransition] = useState(false);
 
   const startRecording = async () => {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -26,11 +38,17 @@ export function useAudioRecorder() {
       setTimeout(() => setRecording(true), 250);
     };
 
-    mediaRecorder.onstop = () => {
+    mediaRecorder.onstop = async () => {
       const audioBlob = new Blob(audioChunksRef.current, { type: mimeType });
-      setUserAudioPath(URL.createObjectURL(audioBlob));
-      setUserBlob(audioBlob);
+      const userAudioURL = URL.createObjectURL(audioBlob);
+      setUserAudioPath(userAudioURL);
+      const data = await analyzeAudio(audioBlob, "recording" + userAudioURL);
+      setUserPitch(data.pitch);
       mediaRecorder.stream.getTracks().forEach((track) => track.stop());
+      if (!startPageTransition) {
+        setStartPageTransition(true);
+        props.setPageState("playingUserAudio");
+      }
     };
 
     audioChunksRef.current = [];
@@ -44,16 +62,12 @@ export function useAudioRecorder() {
     }
   };
 
-  const clearBlob = () => {
-    setUserBlob(null);
-  };
-
   return {
     startRecording,
     stopRecording,
     userAudioPath,
     recording,
-    userBlob,
-    clearBlob,
+    userPitch,
+    setStartPageTransition,
   };
 }

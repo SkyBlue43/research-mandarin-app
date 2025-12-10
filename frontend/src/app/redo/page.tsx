@@ -6,7 +6,7 @@ import { Mic, Play, Square } from "lucide-react";
 
 import PitchChart from "../../components/charts/PitchChart";
 import AlignedPitchChart from "../../components/charts/AlignedPitchCharts";
-import Timer from "../../components/Timer";
+import Timer from "../../components/header/Timer";
 import {
   useAudioAnalysisReference,
   useAudioAnalysisUser,

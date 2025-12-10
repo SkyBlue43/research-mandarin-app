@@ -1,10 +1,16 @@
 const BASE = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 import { useState, useEffect } from "react";
+import { analyzeAudio } from "src/services/api";
+
+type PitchPoint = {
+  time: number;
+  frequency: number;
+};
 
 export function useReferenceAudio(test: string, currentIndex: string) {
   const [referenceAudioPath, setReferenceAudioPath] = useState("");
-  const [referenceBlob, setReferenceBlob] = useState<Blob | null>(null);
+  const [referencePitch, setReferencePitch] = useState<PitchPoint[]>([]);
 
   useEffect(() => {
     const getReferenceAudio = async () => {
@@ -12,10 +18,11 @@ export function useReferenceAudio(test: string, currentIndex: string) {
       setReferenceAudioPath(path);
       const response = await fetch(path);
       const blob = await response.blob();
-      setReferenceBlob(blob);
+      const data = await analyzeAudio(blob, path);
+      setReferencePitch(data.pitch);
     };
     getReferenceAudio();
   }, [currentIndex]);
 
-  return { referenceAudioPath, referenceBlob };
+  return { referenceAudioPath, referencePitch };
 }

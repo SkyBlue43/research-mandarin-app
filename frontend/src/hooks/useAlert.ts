@@ -1,51 +1,18 @@
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
 
-export function useAlert(
-    handlePlayAudio: (audio: string | null, graphStateValue: number, extraStateValue?: number) => void,
-    chosenAudio: string | null,
-    setState: (state: number) => void,
-    setGraphState: (state: number) => void,
-    group: string | null
-) { 
-    const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+export function useAlert() {
+  const showAlert = (message: string, color: string) => {
+    Swal.fire({
+      text: `\n${message}...\n`,
+      position: "top-end",
+      showConfirmButton: false,
+      background: color,
+      color: "white",
+      toast: true,
+    });
+  };
 
-    const referenceAlert = async () => {
-        await sleep(2000);
-        Swal.fire({
-            title: 'Heads up!',
-            text: 'Click "OK" to hear and see the correct tone',
-            icon: 'info',
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            confirmButtonText: 'OK',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                handlePlayAudio(chosenAudio, 1);
-                setState(1);
-                if (group == "a") {
-                    referenceAlert2();
-                }
-            }
-        });
-    };
-    
-    const referenceAlert2 = async () => {
-        await sleep(2000);
-        Swal.fire({
-            title: 'Heads up!',
-            text: 'You can now hear your own corrected voice with the golden button and practice on your own.\nWhen you have clicked on the golden button, you can move on to the next phrase.',
-            icon: 'info',
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            confirmButtonText: 'OK',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                setState(2);
-                setGraphState(2);
-            }
-        });
-    };
-    
+  const closeAlert = () => Swal.close();
 
-    return { referenceAlert };
+  return { showAlert, closeAlert };
 }

@@ -90,7 +90,6 @@ export const analyzeAudio = async (
     body: formData,
   });
   const data = await result.json();
-  console.log("Pitch data:", data);
   return data;
 };
 

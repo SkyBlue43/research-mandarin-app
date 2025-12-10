@@ -3,13 +3,22 @@
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import NextPhrase from "src/components/buttons/NextPhrase";
+import PlayReferenceAudio from "src/components/buttons/PlayReferenceAudio";
+import PlayUserAudio from "src/components/buttons/PlayUserAudio";
 import Record from "src/components/buttons/Record";
 import CharacterDisplay from "src/components/header/CharacterDisplay";
 import PinyinDisplay from "src/components/header/PinyinDisplay";
 import Timer from "src/components/header/Timer";
 import { useAudioRecorder } from "src/hooks/useAudioRecorder";
 import { useCharacters } from "src/hooks/useCharacters";
+import usePageState from "src/hooks/usePageState";
 import { useReferenceAudio } from "src/hooks/useReferenceAudio";
+
+export type PageState =
+  | "none"
+  | "playingUserAudio"
+  | "playingReferenceAudio"
+  | "moveOn";
 
 export default function Session() {
   const searchParams = useSearchParams();
@@ -17,7 +26,7 @@ export default function Session() {
   const group = searchParams.get("group");
   const name = searchParams.get("name");
   const [currentPhrase, setCurrentPhrase] = useState(0);
-  const [pageState, setPageState] = useState(0);
+  const [pageState, setPageState] = useState<PageState>("none");
 
   const {
     characters,
@@ -30,19 +39,20 @@ export default function Session() {
     charLoading,
   } = useCharacters(test, currentPhrase);
 
-  const { referenceAudioPath, referenceBlob } = useReferenceAudio(
+  const { referenceAudioPath, referencePitch } = useReferenceAudio(
     test!,
     currentIndex
   );
 
-  const {
-    startRecording,
-    stopRecording,
-    userAudioPath,
-    recording,
-    userBlob,
-    clearBlob,
-  } = useAudioRecorder();
+  const { startRecording, stopRecording, userAudioPath, recording, userPitch } =
+    useAudioRecorder({ setPageState: setPageState });
+
+  usePageState({
+    pageState: pageState,
+    setPageState: setPageState,
+    userAudioPath: userAudioPath!,
+    referenceAudioPath: referenceAudioPath,
+  });
 
   return (
     <div className="h-screen flex flex-col items-center text-center">
@@ -58,6 +68,89 @@ export default function Session() {
         />
       </header>
 
+      <div className="grid [grid-template-columns:1fr_4fr_1fr] w-screen h-100">
+        <div>
+          {pageState !== "none" && (
+            <PlayUserAudio
+              userPitchLength={userPitch.length}
+              userAudioPath={userAudioPath!}
+            />
+          )}
+          {pageState !== "none" && pageState != "playingReferenceAudio" && (
+            <PlayReferenceAudio
+              referencePitchLength={referencePitch.length}
+              referenceAudioPath={referenceAudioPath}
+            />
+          )}
+        </div>
+
+        {/* {group === "a" && graphState === 1 && (
+          <div className="flex items-center justify-center mr-4 ml-4 text-black">
+            {playReady && referencePitch.length > 0 && (
+              <PitchChart data={memoizedPitch} color="#B0B0B0" />
+            )}
+          </div>
+        )}
+
+        {group === "a" && graphState === 0 && (
+          <div className="flex flex-col items-center justify-center ml-4 mr-4 text-white">
+            {userPitch.length > 0 && (
+              <PitchChart data={memoizedUserPitch} color="#4682B4" />
+            )}
+          </div>
+        )}
+
+        {group === "a" && graphState === 2 && (
+          <div className="flex flex-col items-center justify-center ml-4 mr-4 text-white">
+            {alignedGraphData.length > 0 && (
+              <>
+                <AlignedPitchChart data={memoizedAlignedPitch} />
+                <div
+                  style={{
+                    position: "relative",
+                    width: "100%",
+                    height: "2rem",
+                    marginTop: "1rem",
+                  }}
+                >
+                  {refWordsArray.map((word, i) => {
+                    const firstStart = refWordsArray[0].start;
+                    const totalDuration =
+                      refWordsArray[refWordsArray.length - 1].end - firstStart;
+                    const chartLeftPadding = 8;
+                    const chartRightPadding = 38;
+                    const usableWidth =
+                      140 - chartLeftPadding - chartRightPadding;
+
+                    const left =
+                      chartLeftPadding +
+                      ((word.start - firstStart) / totalDuration) * usableWidth;
+                    const width =
+                      ((word.end - word.start) / totalDuration) * usableWidth;
+
+                    return (
+                      <span
+                        key={i}
+                        style={{
+                          position: "absolute",
+                          left: `${left}%`,
+                          width: `${width}%`,
+                          textAlign: "center",
+                        }}
+                      >
+                        {word.char}
+                      </span>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+          </div>
+        )} */}
+
+        {/* <Score accuracy={accuracy} /> */}
+      </div>
+
       <footer className="grid grid-cols-3 w-screen p-8 pt-20">
         <div></div>
         <Record
@@ -65,15 +158,17 @@ export default function Session() {
           onStart={startRecording}
           onStop={stopRecording}
         />
-        <NextPhrase
-          name={name!}
-          test={test!}
-          group={group!}
-          currentPhrase={currentPhrase}
-          pageState={pageState}
-          characters={characters}
-          setCurrentPhrase={setCurrentPhrase}
-        />
+        {pageState === "moveOn" && (
+          <NextPhrase
+            name={name!}
+            test={test!}
+            group={group!}
+            setPageState={setPageState}
+            currentPhrase={currentPhrase}
+            characters={characters}
+            setCurrentPhrase={setCurrentPhrase}
+          />
+        )}
       </footer>
     </div>
   );

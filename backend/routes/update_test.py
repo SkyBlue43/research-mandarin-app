@@ -30,7 +30,7 @@ def update_users_test(username):
             except ValueError:
                 raise ValueError(f"Invalid test number for user {split_line[0]}")
             
-            new_lines.append(f'{split_line[0]},{split_line[1]},{split_line[2]},{split_line[3]},{new_test}')
+            new_lines.append(f'{split_line[0]},{split_line[1]},{split_line[2]},{split_line[3]},{new_test}\n')
         else:
             new_lines.append(line)
 

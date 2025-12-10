@@ -6,36 +6,9 @@ type PitchPoint = {
   frequency: number;
 };
 
-export function useAudioAnalysisReference(
-  referenceBlob: Blob | null,
-  chosenAudio: string
-) {
-  const [referencePitch, setReferencePitch] = useState<PitchPoint[]>([]);
-
-  useEffect(() => {
-    const analyzeReference = async () => {
-      if (!referenceBlob) return;
-      const data = await analyzeAudio(referenceBlob, chosenAudio);
-      if (
-        data &&
-        JSON.stringify(data.pitch) !== JSON.stringify(referencePitch)
-      ) {
-        setReferencePitch(data.pitch);
-      }
-    };
-    analyzeReference();
-  }, [referenceBlob, chosenAudio]);
-
-  const clearReferencePitch = () => {
-    setReferencePitch([]);
-  };
-
-  return { referencePitch, clearReferencePitch };
-}
-
 export function useAudioAnalysisUser(
   userBlob: Blob | null,
-  chosenAudio: string,
+  referenceAudioPath: string,
   referencePitch: PitchPoint[],
   currentPhrase: string,
   test: string | null,
@@ -50,14 +23,17 @@ export function useAudioAnalysisUser(
 
   useEffect(() => {
     const analyzeUser = async () => {
-      const data = await analyzeAudio(userBlob, "recording" + chosenAudio);
+      const data = await analyzeAudio(
+        userBlob,
+        "recording" + referenceAudioPath
+      );
       if (data) {
         setUserPitch(data.pitch);
 
         if (referencePitch.length > 0) {
           const user_chars_array = await transcribeAudio(
             userBlob,
-            "recording" + chosenAudio,
+            "recording" + referenceAudioPath,
             currentPhrase
           );
           setUserWordsArray(user_chars_array);
@@ -85,7 +61,7 @@ export function useAudioAnalysisUser(
     if (userBlob) {
       analyzeUser();
     }
-  }, [userBlob, chosenAudio]);
+  }, [userBlob, referenceAudioPath]);
 
   const clearPitch = () => {
     setUserPitch([]);
