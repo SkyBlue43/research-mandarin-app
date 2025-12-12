@@ -6,23 +6,30 @@ type PitchPoint = {
   frequency: number;
 };
 
+type TranscribedPoint = {
+  char: string;
+  start: number;
+  end: number;
+};
+
 export function useDtw(
   userPitch: PitchPoint[],
   referencePitch: PitchPoint[],
   test: string,
-  transcribedWords: any[],
+  transcribedWords: TranscribedPoint[],
   currentIndex: string
 ) {
   const [alignedGraphData, setAlignedGraphData] = useState<any[]>([]);
   const [accuracy, setAccuracy] = useState(0);
   const [refWordsArray, setRefWordsArray] = useState<any[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [errorDTW, setErrorDTW] = useState<string | null>(null);
+  const [tick, setTick] = useState(0);
 
   useEffect(() => {
     const dtw = async () => {
       try {
         const [aligned_graph_data, total_accuracy, ref_characters] = await DTW(
-          userPitch,
+          userPitch!,
           referencePitch,
           test,
           transcribedWords,
@@ -32,11 +39,15 @@ export function useDtw(
         setAccuracy(total_accuracy);
         setRefWordsArray(ref_characters);
       } catch (err: any) {
-        setError(err.message || "Unknown error");
+        console.log("shouldn't the error go here");
+        setErrorDTW(err.message || "Unknown error");
+        setTick((x) => x + 1);
       }
     };
-    dtw();
+    if (userPitch.length > 0) {
+      dtw();
+    }
   }, [transcribedWords]);
 
-  return { refWordsArray, alignedGraphData, accuracy, error };
+  return { refWordsArray, alignedGraphData, accuracy, errorDTW };
 }

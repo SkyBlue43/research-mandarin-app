@@ -110,7 +110,6 @@ def get_highest_accuracies(data: Highest_Accuracy):
 
 @app.post("/dtw-characters")
 def dtw_characters(data: DTWRequest):
-    print(data.reference_pitch.frequency[10])
     try:
         result = dtw(data.reference_pitch, data.user_pitch, data.test, data.currentIndex, data.words_user)
         return result

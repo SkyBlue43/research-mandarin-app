@@ -144,6 +144,7 @@ def dtw(
     characters_ref = get_characters_from_csv(test, current_index)
     
     if len(characters_user) != len(characters_ref):
+        print("here")
         raise ValueError("Unable to detect audio. Try recording again.")
         #align_characters(characters_user, characters_ref)
 

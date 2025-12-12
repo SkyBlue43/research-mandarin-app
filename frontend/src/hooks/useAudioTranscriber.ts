@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { transcribeAudio } from "src/services/api";
 
 export function useAudioTranscriber(
-  userBlob: Blob,
+  userBlob: Blob | null,
   referenceAudioPath: string,
   currentIndex: string
 ) {
@@ -18,7 +18,9 @@ export function useAudioTranscriber(
       setTranscribedWords(words);
     };
 
-    transcriber();
+    if (userBlob) {
+      transcriber();
+    }
   }, [userBlob]);
 
   return { transcribedWords };

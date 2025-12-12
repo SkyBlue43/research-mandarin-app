@@ -5,11 +5,17 @@ type PitchPoint = {
   frequency: number;
 };
 
+type TranscribedPoint = {
+  char: string;
+  start: number;
+  end: number;
+};
+
 export const DTW = async (
   userPitch: PitchPoint[],
   referencePitch: PitchPoint[],
   test: string | null,
-  userWordArray: any[],
+  userWordArray: TranscribedPoint[],
   currentIndex: string
 ) => {
   const body = {
@@ -37,6 +43,7 @@ export const DTW = async (
     const error = await result.json();
 
     if (result.status === 422) {
+      console.log("This is an error");
       throw new Error(error.detail);
     }
     throw new Error(error.detail || "An error occurred.");

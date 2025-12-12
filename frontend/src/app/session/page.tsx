@@ -15,6 +15,7 @@ import { useAudioRecorder } from "src/hooks/useAudioRecorder";
 import { useAudioTranscriber } from "src/hooks/useAudioTranscriber";
 import { useCharacters } from "src/hooks/useCharacters";
 import { useDtw } from "src/hooks/useDtw";
+import { useErrorAlerts } from "src/hooks/useErrorAlerts";
 import usePageState from "src/hooks/usePageState";
 import { useReferenceAudio } from "src/hooks/useReferenceAudio";
 
@@ -72,12 +73,12 @@ export default function Session() {
   });
 
   const { transcribedWords } = useAudioTranscriber(
-    userBlob!,
+    userBlob,
     referenceAudioPath,
     currentIndex
   );
 
-  const { refWordsArray, alignedGraphData, accuracy, error } = useDtw(
+  const { refWordsArray, alignedGraphData, accuracy, errorDTW } = useDtw(
     userPitch,
     referencePitch,
     test!,
@@ -94,6 +95,8 @@ export default function Session() {
     () => alignedGraphData,
     [alignedGraphData]
   );
+
+  useErrorAlerts({ errorDTW });
 
   return (
     <div className="h-screen flex flex-col items-center text-center">
