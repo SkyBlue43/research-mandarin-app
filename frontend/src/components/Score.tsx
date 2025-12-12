@@ -1,15 +1,24 @@
 export default function Score({ accuracy }: { accuracy: number }) {
-  //   const calculateColor = (accuracy: number) => {
-  //     if (accuracy > )
-  //   }
+  if (accuracy === 0) return null;
+
+  const config =
+    accuracy < 60
+      ? { color: "#ef4444", text: "Got some work to do!" }
+      : accuracy < 80
+      ? { color: "#eab308", text: "Almost There!" }
+      : { color: "#22c55e", text: "Good Job!" };
 
   return (
     <div className="flex justify-center items-center">
-      {accuracy !== 0.0 && (
-        <div className="w-64 h-64 flex justify-center items-center rounded-lg border-4 border-[#4682B4] text-[#4682B4] font-bold text-xl">
-          {accuracy}%
-        </div>
-      )}
+      <div
+        className="w-64 h-64 flex justify-center items-center rounded-lg border-4 font-bold text-xl"
+        style={{
+          borderColor: config.color,
+          color: config.color,
+        }}
+      >
+        {config.text}
+      </div>
     </div>
   );
 }
