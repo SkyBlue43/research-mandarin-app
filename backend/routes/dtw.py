@@ -259,8 +259,22 @@ def calculate_alignment(characters_user, characters_ref, char_amount, alignment_
                 "user": float(stretched_user[i]),
                 "accuracy": combined_accuracy
             })
+    modified_alignment = []
+    start = True
+    for i in range(len(alignment)):
+        if alignment[i]["reference"] is not None:
+            start = False
+            modified_alignment.append({
+                "time": alignment[i]["time"],
+                "reference": alignment[i]["reference"],
+                "user": alignment[i]["user"],
+                "accuracy": alignment[i]["accuracy"]
+            })
+        elif alignment[i]["reference"] is None and start:
+            continue
 
-    return {"alignment": alignment, "accuracy": round((total_accuracy / char_amount) * 100, 2), 'ref_characters': characters_ref}
+
+    return {"alignment": modified_alignment, "accuracy": round((total_accuracy / char_amount) * 100, 2), 'ref_characters': characters_ref}
 
 
 def get_characters_from_csv(test, current_index):
