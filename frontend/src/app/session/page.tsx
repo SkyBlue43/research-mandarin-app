@@ -118,12 +118,14 @@ export default function Session() {
             <PlayUserAudio
               userPitchLength={userPitch.length}
               userAudioPath={userAudioPath!}
+              setGraphState={setGraphState}
             />
           )}
           {pageState !== "none" && pageState != "playingReferenceAudio" && (
             <PlayReferenceAudio
               referencePitchLength={referencePitch.length}
               referenceAudioPath={referenceAudioPath}
+              setGraphState={setGraphState}
             />
           )}
         </div>
