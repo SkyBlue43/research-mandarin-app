@@ -11,6 +11,8 @@ type Props = {
   currentPhrase: number;
   characters: Character[];
   setCurrentPhrase: (value: number | ((prev: number) => number)) => void;
+  setStartPageTransition: (bool: boolean) => void;
+  clearUserData: () => void;
 };
 
 export default function NextPhrase(props: Props) {
@@ -18,12 +20,8 @@ export default function NextPhrase(props: Props) {
   const handleRightClick = () => {
     props.setPageState("none");
     props.setGraphState("none");
-    // setPlayReady(false);
-    // clearReferencePitch();
-    // clearPitch();
-    // clearBlob();
-    // setState(0);
-    // setGraphState(0);
+    props.setStartPageTransition(false);
+    props.clearUserData();
 
     if (props.currentPhrase === props.characters.length - 1) {
       props.setCurrentPhrase(() => 0);

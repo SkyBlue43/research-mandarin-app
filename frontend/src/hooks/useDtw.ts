@@ -39,7 +39,6 @@ export function useDtw(
         setAccuracy(total_accuracy);
         setRefWordsArray(ref_characters);
       } catch (err: any) {
-        console.log("shouldn't the error go here");
         setErrorDTW(err.message || "Unknown error");
         setTick((x) => x + 1);
       }

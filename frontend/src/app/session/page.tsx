@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import NextPhrase from "src/components/buttons/NextPhrase";
 import PlayReferenceAudio from "src/components/buttons/PlayReferenceAudio";
 import PlayUserAudio from "src/components/buttons/PlayUserAudio";
+import ShowAlignedGraphs from "src/components/buttons/ShowAlignedGraph";
 import Record from "src/components/buttons/Record";
 import AlignedPitchChart from "src/components/charts/AlignedPitchCharts";
 import PitchChart from "src/components/charts/PitchChart";
@@ -18,6 +19,7 @@ import { useDtw } from "src/hooks/useDtw";
 import { useErrorAlerts } from "src/hooks/useErrorAlerts";
 import usePageState from "src/hooks/usePageState";
 import { useReferenceAudio } from "src/hooks/useReferenceAudio";
+import Score from "src/components/Score";
 
 export type PageState =
   | "none"
@@ -59,6 +61,8 @@ export default function Session() {
     recording,
     userBlob,
     userPitch,
+    setStartPageTransition,
+    clearUserData,
   } = useAudioRecorder({
     setPageState: setPageState,
     setGraphState: setGraphState,
@@ -121,13 +125,18 @@ export default function Session() {
               setGraphState={setGraphState}
             />
           )}
-          {pageState !== "none" && pageState != "playingReferenceAudio" && (
+          {pageState !== "none" && pageState !== "playingUserAudio" && (
             <PlayReferenceAudio
               referencePitchLength={referencePitch.length}
               referenceAudioPath={referenceAudioPath}
               setGraphState={setGraphState}
             />
           )}
+          {pageState !== "none" &&
+            pageState !== "playingReferenceAudio" &&
+            pageState !== "playingUserAudio" && (
+              <ShowAlignedGraphs setGraphState={setGraphState} />
+            )}
         </div>
 
         {group === "a" && graphState === "reference" && (
@@ -194,7 +203,9 @@ export default function Session() {
           </div>
         )}
 
-        {/* <Score accuracy={accuracy} /> */}
+        {pageState !== "none" &&
+          pageState !== "playingReferenceAudio" &&
+          pageState !== "playingUserAudio" && <Score accuracy={accuracy} />}
       </div>
 
       <footer className="grid grid-cols-3 w-screen p-8 pt-20">
@@ -214,6 +225,8 @@ export default function Session() {
             currentPhrase={currentPhrase}
             characters={characters}
             setCurrentPhrase={setCurrentPhrase}
+            setStartPageTransition={setStartPageTransition}
+            clearUserData={clearUserData}
           />
         )}
       </footer>

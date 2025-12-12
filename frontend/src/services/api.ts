@@ -43,7 +43,6 @@ export const DTW = async (
     const error = await result.json();
 
     if (result.status === 422) {
-      console.log("This is an error");
       throw new Error(error.detail);
     }
     throw new Error(error.detail || "An error occurred.");

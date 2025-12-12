@@ -66,6 +66,11 @@ export function useAudioRecorder(props: Props) {
     }
   };
 
+  const clearUserData = () => {
+    setUserBlob(null);
+    setUserPitch([]);
+  };
+
   return {
     startRecording,
     stopRecording,
@@ -74,5 +79,6 @@ export function useAudioRecorder(props: Props) {
     userBlob,
     userPitch,
     setStartPageTransition,
+    clearUserData,
   };
 }
