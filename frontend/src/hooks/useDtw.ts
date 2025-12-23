@@ -48,5 +48,15 @@ export function useDtw(
     }
   }, [transcribedWords]);
 
-  return { refWordsArray, alignedGraphData, accuracy, errorDTW };
+  const clearGraphData = () => {
+    setAlignedGraphData([]);
+  };
+
+  return {
+    refWordsArray,
+    alignedGraphData,
+    accuracy,
+    errorDTW,
+    clearGraphData,
+  };
 }

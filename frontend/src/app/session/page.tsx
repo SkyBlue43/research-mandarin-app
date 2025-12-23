@@ -82,13 +82,13 @@ export default function Session() {
     currentIndex
   );
 
-  const { refWordsArray, alignedGraphData, accuracy, errorDTW } = useDtw(
-    userPitch,
-    referencePitch,
-    test!,
-    transcribedWords,
-    currentIndex
-  );
+  const {
+    refWordsArray,
+    alignedGraphData,
+    accuracy,
+    errorDTW,
+    clearGraphData,
+  } = useDtw(userPitch, referencePitch, test!, transcribedWords, currentIndex);
 
   const memoizedReferencePitch = useMemo(
     () => referencePitch,
@@ -100,7 +100,19 @@ export default function Session() {
     [alignedGraphData]
   );
 
-  useErrorAlerts({ errorDTW });
+  const clearAllData = () => {
+    clearUserData();
+    clearGraphData();
+    setGraphState("none");
+    setPageState("none");
+    setStartPageTransition(false);
+  };
+
+  useErrorAlerts({
+    errorDTW,
+    pageState,
+    clearAllData,
+  });
 
   return (
     <div className="h-screen flex flex-col items-center text-center">
@@ -205,7 +217,8 @@ export default function Session() {
 
         {pageState !== "none" &&
           pageState !== "playingReferenceAudio" &&
-          pageState !== "playingUserAudio" && <Score accuracy={accuracy} />}
+          pageState !== "playingUserAudio" &&
+          alignedGraphData && <Score accuracy={accuracy} />}
       </div>
 
       <footer className="grid grid-cols-3 w-screen p-8 pt-20">
@@ -220,13 +233,10 @@ export default function Session() {
             name={name!}
             test={test!}
             group={group!}
-            setPageState={setPageState}
-            setGraphState={setGraphState}
             currentPhrase={currentPhrase}
             characters={characters}
             setCurrentPhrase={setCurrentPhrase}
-            setStartPageTransition={setStartPageTransition}
-            clearUserData={clearUserData}
+            clearAllData={clearAllData}
           />
         )}
       </footer>

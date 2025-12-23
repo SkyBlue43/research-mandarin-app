@@ -6,22 +6,16 @@ type Props = {
   name: string;
   test: string;
   group: string;
-  setPageState: (pageState: PageState) => void;
-  setGraphState: (graphState: GraphState) => void;
   currentPhrase: number;
   characters: Character[];
   setCurrentPhrase: (value: number | ((prev: number) => number)) => void;
-  setStartPageTransition: (bool: boolean) => void;
-  clearUserData: () => void;
+  clearAllData: () => void;
 };
 
 export default function NextPhrase(props: Props) {
   const router = useRouter();
   const handleRightClick = () => {
-    props.setPageState("none");
-    props.setGraphState("none");
-    props.setStartPageTransition(false);
-    props.clearUserData();
+    props.clearAllData();
 
     if (props.currentPhrase === props.characters.length - 1) {
       props.setCurrentPhrase(() => 0);

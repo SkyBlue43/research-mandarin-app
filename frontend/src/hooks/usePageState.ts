@@ -22,15 +22,20 @@ export default function usePageState(props: Props) {
   const { showAlert, closeAlert } = useAlert();
 
   useEffect(() => {
+    let cancelled = false;
+
     const run = async () => {
       if (props.pageState === "playingUserAudio") {
         showAlert("Playing your audio", "#3b82f6");
 
         const audio = new Audio(props.userAudioPath);
-        audio.play().catch((err) => console.error("Audio error:", err));
+        audio.play().catch(console.error);
 
         await waitForAudioEnd(audio);
+        if (cancelled) return;
+
         await sleep(1000);
+        if (cancelled) return;
 
         closeAlert();
         props.setPageState("playingReferenceAudio");
@@ -39,10 +44,13 @@ export default function usePageState(props: Props) {
         showAlert("Playing the correct audio", "#d1d5db");
 
         const audio = new Audio(props.referenceAudioPath);
-        audio.play().catch((err) => console.error("Audio error:", err));
+        audio.play().catch(console.error);
 
         await waitForAudioEnd(audio);
+        if (cancelled) return;
+
         await sleep(1000);
+        if (cancelled) return;
 
         closeAlert();
         props.setPageState("moveOn");
@@ -54,11 +62,18 @@ export default function usePageState(props: Props) {
         );
 
         await sleep(3000);
+        if (cancelled) return;
+
         closeAlert();
       }
     };
 
     run();
+
+    return () => {
+      closeAlert();
+      cancelled = true;
+    };
   }, [props.pageState]);
 
   return;

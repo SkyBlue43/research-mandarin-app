@@ -1,7 +1,10 @@
 import { useEffect } from "react";
+import { GraphState, PageState } from "src/app/session/page";
 
 type Props = {
   errorDTW: string | null;
+  pageState: PageState;
+  clearAllData: () => void;
 };
 
 export function useErrorAlerts(props: Props) {
@@ -9,6 +12,10 @@ export function useErrorAlerts(props: Props) {
     const handleError = () => {
       if (props.errorDTW) {
         alert(props.errorDTW);
+        console.log(props.pageState);
+        if (props.pageState !== "moveOn") {
+          props.clearAllData();
+        }
       }
     };
     handleError();

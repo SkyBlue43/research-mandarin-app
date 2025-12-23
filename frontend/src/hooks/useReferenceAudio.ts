@@ -19,7 +19,9 @@ export function useReferenceAudio(test: string, currentIndex: string) {
       const response = await fetch(path);
       const blob = await response.blob();
       const data = await analyzeAudio(blob, path);
-      setReferencePitch(data.pitch);
+      if (data) {
+        setReferencePitch(data.pitch);
+      }
     };
     getReferenceAudio();
   }, [currentIndex]);
