@@ -1,36 +1,43 @@
 "use client";
 
-import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect, useState, Suspense } from "react";
-import { Mic, Square } from "lucide-react";
-import React from "react";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useMemo, useState } from "react";
+import NextPhrase from "src/components/buttons/NextPhrase";
+import PlayReferenceAudio from "src/components/buttons/PlayReferenceAudio";
+import PlayUserAudio from "src/components/buttons/PlayUserAudio";
+import ShowAlignedGraphs from "src/components/buttons/ShowAlignedGraph";
+import Record from "src/components/buttons/Record";
+import AlignedPitchChart from "src/components/charts/AlignedPitchCharts";
+import PitchChart from "src/components/charts/PitchChart";
+import CharacterDisplay from "src/components/header/CharacterDisplay";
+import PinyinDisplay from "src/components/header/PinyinDisplay";
+import Timer from "src/components/header/Timer";
+import { useAudioRecorder } from "src/hooks/useAudioRecorder";
+import { useAudioTranscriber } from "src/hooks/useAudioTranscriber";
+import { useCharacters } from "src/hooks/useCharacters";
+import { useDtw } from "src/hooks/useDtw";
+import { useErrorAlerts } from "src/hooks/useErrorAlerts";
+import usePageState from "src/hooks/usePageState";
+import { useReferenceAudio } from "src/hooks/useReferenceAudio";
+import Score from "src/components/Score";
 
-import {
-  useAudioAnalysisReference,
-  useAudioAnalysisUser,
-} from "../../hooks/useAudioAnalysis";
-import { useAudioRecorder } from "../../hooks/useAudioRecorder";
-import { useCharacters } from "../../hooks/useCharacters";
-import { useAudio } from "../../hooks/useReferenceAudio";
-import { useAccuracy } from "../../hooks/useAccuracy";
-import { updateTest } from "../../services/api";
+export type PageState =
+  | "none"
+  | "playingUserAudio"
+  | "playingReferenceAudio"
+  | "moveOn";
 
-export default function TestBranch() {
-  return (
-    <Suspense fallback={<div>Loading page...</div>}>
-      <TestBranchInner />
-    </Suspense>
-  );
-}
+export type GraphState = "none" | "user" | "reference" | "both";
 
-function TestBranchInner() {
-  const router = useRouter();
+function TestContent() {
   const searchParams = useSearchParams();
   const test = searchParams.get("test");
-  const name = searchParams.get("name");
   const group = searchParams.get("group");
-  const [arrayIndex, setArrayIndex] = useState(0);
-  const [state, setState] = useState(0);
+  const name = searchParams.get("name");
+  let currentPhraseIndex = Number(searchParams.get("currentPhrase")!);
+  const [currentPhrase, setCurrentPhrase] = useState(currentPhraseIndex);
+  const [pageState, setPageState] = useState<PageState>("none");
+  const [graphState, setGraphState] = useState<GraphState>("none");
 
   const {
     characters,
@@ -39,130 +46,209 @@ function TestBranchInner() {
     currentTraditional,
     currentPinyin,
     currentHint,
-    changeWord,
-  } = useCharacters(test, arrayIndex);
+    charError,
+    charLoading,
+  } = useCharacters(test, currentPhrase);
 
-  const { chosenAudio } = useAudio(test, currentIndex);
+  const { referenceAudioPath, referencePitch } = useReferenceAudio(
+    test!,
+    currentIndex
+  );
 
   const {
     startRecording,
     stopRecording,
-    audioURL,
+    userAudioPath,
     recording,
-    referenceBlob,
     userBlob,
-    clearBlob,
-  } = useAudioRecorder();
+    userPitch,
+    setStartPageTransition,
+    clearUserData,
+  } = useAudioRecorder({
+    setPageState: setPageState,
+    setGraphState: setGraphState,
+  });
 
-  const { referencePitch, clearReferencePitch } = useAudioAnalysisReference(
-    referenceBlob,
-    chosenAudio
+  usePageState({
+    pageState: pageState,
+    setPageState: setPageState,
+    setGraphState: setGraphState,
+    userAudioPath: userAudioPath!,
+    referenceAudioPath: referenceAudioPath,
+  });
+
+  const { transcribedWords } = useAudioTranscriber(
+    userBlob,
+    referenceAudioPath,
+    currentIndex
   );
 
-  const { userPitch, userWordsArray, alignedGraphData, clearPitch, accuracy } =
-    useAudioAnalysisUser(
-      userBlob,
-      chosenAudio,
-      referencePitch,
-      currentSimplified,
-      test,
-      currentIndex
-    );
+  const {
+    refWordsArray,
+    alignedGraphData,
+    accuracy,
+    errorDTW,
+    clearGraphData,
+  } = useDtw(userPitch, referencePitch, test!, transcribedWords, currentIndex);
 
-  if (test && name && group) {
-    useAccuracy(accuracy, name, test, group, currentSimplified, currentIndex);
-  }
+  const memoizedReferencePitch = useMemo(
+    () => referencePitch,
+    [referencePitch]
+  );
+  const memoizedUserPitch = useMemo(() => userPitch, [userPitch]);
+  const memoizedAlignedPitch = useMemo(
+    () => alignedGraphData,
+    [alignedGraphData]
+  );
 
-  useEffect(() => {
-    console.log("Accuracy: ", accuracy);
-    if (accuracy === undefined) {
-      alert("Unable to process audio. Try again");
-    } else if (accuracy !== 0) {
-      setState(1);
-    }
-  }, [accuracy]);
-
-  const handleRecording = () => {
-    if (recording) {
-      stopRecording();
-    } else {
-      startRecording(chosenAudio);
-    }
+  const clearAllData = () => {
+    clearUserData();
+    clearGraphData();
+    setGraphState("none");
+    setPageState("none");
+    setStartPageTransition(false);
   };
 
-  const handleNextPhrase = () => {
-    clearReferencePitch();
-    clearPitch();
-    clearBlob();
-    setState(0);
-
-    if (arrayIndex === characters.length - 1) {
-      setArrayIndex(0);
-      changeWord(
-        "1",
-        characters[0].simplified,
-        characters[0].traditional,
-        characters[0].pinyin,
-        characters[0].hint
-      );
-      updateTest(name);
-      router.push("/");
-    } else {
-      setArrayIndex(arrayIndex + 1);
-      changeWord(
-        String(Number(currentIndex) + 1),
-        characters[arrayIndex + 1].simplified,
-        characters[arrayIndex + 1].traditional,
-        characters[arrayIndex + 1].pinyin,
-        characters[arrayIndex + 1].hint
-      );
-    }
-  };
+  useErrorAlerts({
+    errorDTW,
+    pageState,
+    clearAllData,
+  });
 
   return (
     <div className="h-screen flex flex-col items-center text-center">
-      <header className="m-8 w-screen mt-20">
-        <div className="font-bold text-[70px]">{currentSimplified}</div>
-        <div className="text-[60px]">({currentPinyin})</div>
+      <header className="m-8 w-screen">
+        <Timer username={name} />
+        <CharacterDisplay
+          currentTraditional={currentTraditional}
+          currentSimplified={currentSimplified}
+        />
+        <PinyinDisplay
+          currentPinyin={currentPinyin}
+          currentHint={currentHint}
+        />
       </header>
 
-      <main className="w-screen p-8 mt-40">
-        {state === 0 && (
-          <div>
-            <button
-              className={`p-8 rounded-full text-white ${
-                recording
-                  ? "bg-red-500 hover:bg-red-600"
-                  : "bg-green-500 hover:bg-green-600"
-              }`}
-              onClick={handleRecording}
-            >
-              {recording ? <Square /> : <Mic />}
-            </button>
+      <div className="grid [grid-template-columns:1fr_4fr_1fr] w-screen h-100">
+        <div>
+          {pageState !== "none" && (
+            <PlayUserAudio
+              userPitchLength={userPitch.length}
+              userAudioPath={userAudioPath!}
+              setGraphState={setGraphState}
+            />
+          )}
+          {pageState !== "none" && pageState !== "playingUserAudio" && (
+            <PlayReferenceAudio
+              referencePitchLength={referencePitch.length}
+              referenceAudioPath={referenceAudioPath}
+              setGraphState={setGraphState}
+            />
+          )}
+          {pageState !== "none" &&
+            pageState !== "playingReferenceAudio" &&
+            pageState !== "playingUserAudio" && (
+              <ShowAlignedGraphs setGraphState={setGraphState} />
+            )}
+        </div>
+
+        {group === "a" && graphState === "reference" && (
+          <div className="flex items-center justify-center mr-4 ml-4 text-black">
+            {referencePitch.length > 0 && (
+              <PitchChart data={memoizedReferencePitch} color="#B0B0B0" />
+            )}
           </div>
         )}
 
-        {state === 1 && (
-          <div>
-            <button className={`p-8 rounded-full text-white bg-gray-400`}>
-              <Mic />
-            </button>
+        {group === "a" && graphState === "user" && (
+          <div className="flex flex-col items-center justify-center ml-4 mr-4 text-white">
+            {userPitch.length > 0 && (
+              <PitchChart data={memoizedUserPitch} color="#4682B4" />
+            )}
           </div>
         )}
-      </main>
 
-      {state === 1 && (
-        <footer className="mt-50">
-          <button
-            className={
-              "p-3 rounded text-white bg-blue-500 hover:bg-blue-600 text-lg"
-            }
-            onClick={handleNextPhrase}
-          >
-            Next
-          </button>
-        </footer>
-      )}
+        {group === "a" && graphState === "both" && (
+          <div className="flex flex-col items-center justify-center ml-4 mr-4 text-white">
+            {alignedGraphData.length > 0 && (
+              <>
+                <AlignedPitchChart data={memoizedAlignedPitch} />
+                <div
+                  style={{
+                    position: "relative",
+                    width: "100%",
+                    height: "2rem",
+                    marginTop: "1rem",
+                  }}
+                >
+                  {refWordsArray.map((word, i) => {
+                    const firstStart = refWordsArray[0].start;
+                    const totalDuration =
+                      refWordsArray[refWordsArray.length - 1].end - firstStart;
+                    const chartLeftPadding = 8;
+                    const chartRightPadding = 38;
+                    const usableWidth =
+                      140 - chartLeftPadding - chartRightPadding;
+
+                    const left =
+                      chartLeftPadding +
+                      ((word.start - firstStart) / totalDuration) * usableWidth;
+                    const width =
+                      ((word.end - word.start) / totalDuration) * usableWidth;
+
+                    return (
+                      <span
+                        key={i}
+                        style={{
+                          position: "absolute",
+                          left: `${left}%`,
+                          width: `${width}%`,
+                          textAlign: "center",
+                        }}
+                      >
+                        {word.char}
+                      </span>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+          </div>
+        )}
+
+        {pageState !== "none" &&
+          pageState !== "playingReferenceAudio" &&
+          pageState !== "playingUserAudio" &&
+          alignedGraphData && <Score accuracy={accuracy} />}
+      </div>
+
+      <footer className="grid grid-cols-3 w-screen p-8 pt-20">
+        <div></div>
+        <Record
+          recording={recording}
+          onStart={startRecording}
+          onStop={stopRecording}
+        />
+        {pageState === "moveOn" && (
+          <NextPhrase
+            name={name!}
+            test={test!}
+            group={group!}
+            currentPhrase={currentPhrase}
+            characters={characters}
+            setCurrentPhrase={setCurrentPhrase}
+            clearAllData={clearAllData}
+          />
+        )}
+      </footer>
     </div>
+  );
+}
+
+export default function Test() {
+  return (
+    <Suspense fallback={<div>Loading results...</div>}>
+      <TestContent />
+    </Suspense>
   );
 }

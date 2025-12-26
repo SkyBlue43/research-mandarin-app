@@ -10,6 +10,7 @@ type Props = {
   characters: Character[];
   setCurrentPhrase: (value: number | ((prev: number) => number)) => void;
   clearAllData: () => void;
+  sendBackToFinished?: Boolean;
 };
 
 export default function NextPhrase(props: Props) {
@@ -17,7 +18,10 @@ export default function NextPhrase(props: Props) {
   const handleRightClick = () => {
     props.clearAllData();
 
-    if (props.currentPhrase === props.characters.length - 1) {
+    if (
+      props.currentPhrase === props.characters.length - 1 ||
+      props.sendBackToFinished
+    ) {
       props.setCurrentPhrase(() => 0);
       router.push(
         `finished?name=${props.name}&test=${props.test}&group=${props.group}`

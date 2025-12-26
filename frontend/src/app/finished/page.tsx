@@ -67,8 +67,8 @@ function FinishedContent() {
                     className="border rounded bg-purple-500 hover:bg-purple-600 text-white p-1"
                     onClick={() =>
                       router.push(
-                        `/redo?name=${name}&group=${group}&test=${test}&word_index=${
-                          char.index - 1
+                        `/redo?name=${name}&group=${group}&test=${test}&currentPhrase=${
+                          Number(char.index) - 1
                         }`
                       )
                     }

@@ -17,11 +17,15 @@ export default function LoginForm() {
 
       if (data.test === "pre" || data.test === "post") {
         router.push(
-          `test?test=${data.test}&group=${data.group}&name=${data.name}`
+          `test?test=${data.test}&group=${data.group}&name=${
+            data.name
+          }&=currentPhrase=${0}`
         );
       } else {
         router.push(
-          `/session?test=${data.test}&group=${data.group}&name=${data.name}`
+          `/session?test=${data.test}&group=${data.group}&name=${
+            data.name
+          }&currentPhrase=${0}`
         );
       }
     } catch (error: any) {

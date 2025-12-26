@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 import NextPhrase from "src/components/buttons/NextPhrase";
 import PlayReferenceAudio from "src/components/buttons/PlayReferenceAudio";
 import PlayUserAudio from "src/components/buttons/PlayUserAudio";
@@ -29,12 +29,13 @@ export type PageState =
 
 export type GraphState = "none" | "user" | "reference" | "both";
 
-export default function Session() {
+function SessionContent() {
   const searchParams = useSearchParams();
   const test = searchParams.get("test");
   const group = searchParams.get("group");
   const name = searchParams.get("name");
-  const [currentPhrase, setCurrentPhrase] = useState(0);
+  let currentPhraseIndex = Number(searchParams.get("currentPhrase")!);
+  const [currentPhrase, setCurrentPhrase] = useState(currentPhraseIndex);
   const [pageState, setPageState] = useState<PageState>("none");
   const [graphState, setGraphState] = useState<GraphState>("none");
 
@@ -241,5 +242,13 @@ export default function Session() {
         )}
       </footer>
     </div>
+  );
+}
+
+export default function Session() {
+  return (
+    <Suspense fallback={<div>Loading results...</div>}>
+      <SessionContent />
+    </Suspense>
   );
 }
