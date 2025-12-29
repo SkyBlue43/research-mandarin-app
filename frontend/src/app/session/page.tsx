@@ -88,6 +88,7 @@ function SessionContent() {
     alignedGraphData,
     accuracy,
     errorDTW,
+    setErrorDTW,
     clearGraphData,
   } = useDtw(userPitch, referencePitch, test!, transcribedWords, currentIndex);
 
@@ -107,6 +108,7 @@ function SessionContent() {
     setGraphState("none");
     setPageState("none");
     setStartPageTransition(false);
+    setErrorDTW(null);
   };
 
   useErrorAlerts({

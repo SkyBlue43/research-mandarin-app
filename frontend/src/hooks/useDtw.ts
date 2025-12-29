@@ -40,7 +40,8 @@ export function useDtw(
         setRefWordsArray(ref_characters);
       } catch (err: any) {
         setErrorDTW(err.message || "Unknown error");
-        setTick((x) => x + 1);
+        console.log("here");
+        //setTick((x) => x + 1);
       }
     };
     if (userPitch.length > 0) {
@@ -57,6 +58,7 @@ export function useDtw(
     alignedGraphData,
     accuracy,
     errorDTW,
+    setErrorDTW,
     clearGraphData,
   };
 }
