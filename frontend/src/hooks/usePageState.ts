@@ -26,10 +26,14 @@ export default function usePageState(props: Props) {
 
     const run = async () => {
       if (props.pageState === "playingUserAudio") {
+        if (cancelled) return;
         showAlert("Playing your audio", "#3b82f6");
 
+        if (cancelled) return;
         const audio = new Audio(props.userAudioPath);
+        if (cancelled) return;
         audio.play().catch(console.error);
+        if (cancelled) return;
 
         await waitForAudioEnd(audio);
         if (cancelled) return;
