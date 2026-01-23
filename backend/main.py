@@ -41,7 +41,7 @@ app = FastAPI()
 
 origins = [
     "http://localhost:3000",      # local frontend testing
-    "http://localhost:8080",
+    "http://127.0.0.1:8000",
     "https://tones.cs.byu.edu",   # your eventual server URL
 ]
 
