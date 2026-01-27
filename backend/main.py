@@ -40,10 +40,14 @@ app = FastAPI()
 # )
 
 origins = [
-    "http://localhost:3000",      # local frontend testing
-    "http://127.0.0.1:8000",
-    "https://tones.cs.byu.edu",   # your eventual server URL
+    "http://localhost:8080",
+    "http://localhost:3000",
+    "http://127.0.0.1:8080",
+    "http://127.0.0.1:3000",
+    "https://tones.cs.byu.edu",
+    "http://tones.cs.byu.edu",
 ]
+
 
 app.add_middleware(
     CORSMiddleware,
