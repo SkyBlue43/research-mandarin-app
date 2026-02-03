@@ -4,12 +4,12 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # Install build tools and libraries
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    python3-dev \
-    libsndfile1 \
-    ffmpeg \
-    && rm -rf /var/lib/apt/lists/*
+# RUN apt-get update && apt-get install -y \
+#     build-essential \
+#     python3-dev \
+#     libsndfile1 \
+#     ffmpeg \
+#     && rm -rf /var/lib/apt/lists/*
 
 # Copy and install dependencies
 COPY requirements.txt .
