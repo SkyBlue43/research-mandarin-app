@@ -11,6 +11,7 @@ type Props = {
   setCurrentPhrase: (value: number | ((prev: number) => number)) => void;
   clearAllData: () => void;
   sendBackToFinished?: Boolean;
+  isTest?: Boolean;
 };
 
 export default function NextPhrase(props: Props) {
@@ -22,6 +23,9 @@ export default function NextPhrase(props: Props) {
       props.currentPhrase === props.characters.length - 1 ||
       props.sendBackToFinished
     ) {
+      if (props.isTest) {
+        router.push("/");
+      }
       props.setCurrentPhrase(() => 0);
       router.push(
         `finished?name=${props.name}&test=${props.test}&group=${props.group}`

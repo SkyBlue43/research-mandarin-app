@@ -29,11 +29,12 @@ export type PageState =
 
 export type GraphState = "none" | "user" | "reference" | "both";
 
-function TestContent() {
+function SessionContent() {
   const searchParams = useSearchParams();
   const test = searchParams.get("test");
   const group = searchParams.get("group");
   const name = searchParams.get("name");
+  const isTest = searchParams.get("isTest") === "true";
   let currentPhraseIndex = Number(searchParams.get("currentPhrase")!);
   const [currentPhrase, setCurrentPhrase] = useState(currentPhraseIndex);
   const [pageState, setPageState] = useState<PageState>("none");
@@ -88,6 +89,7 @@ function TestContent() {
     alignedGraphData,
     accuracy,
     errorDTW,
+    setErrorDTW,
     clearGraphData,
   } = useDtw(userPitch, referencePitch, test!, transcribedWords, currentIndex);
 
@@ -107,6 +109,7 @@ function TestContent() {
     setGraphState("none");
     setPageState("none");
     setStartPageTransition(false);
+    setErrorDTW(null);
   };
 
   useErrorAlerts({
@@ -118,7 +121,7 @@ function TestContent() {
   return (
     <div className="h-screen flex flex-col items-center text-center">
       <header className="m-8 w-screen">
-        <Timer username={name} />
+        {!isTest && <Timer username={name} />}
         <CharacterDisplay
           currentTraditional={currentTraditional}
           currentSimplified={currentSimplified}
@@ -152,7 +155,7 @@ function TestContent() {
             )}
         </div>
 
-        {group === "a" && graphState === "reference" && (
+        {!isTest && group === "a" && graphState === "reference" && (
           <div className="flex items-center justify-center mr-4 ml-4 text-black">
             {referencePitch.length > 0 && (
               <PitchChart data={memoizedReferencePitch} color="#B0B0B0" />
@@ -160,7 +163,7 @@ function TestContent() {
           </div>
         )}
 
-        {group === "a" && graphState === "user" && (
+        {!isTest && group === "a" && graphState === "user" && (
           <div className="flex flex-col items-center justify-center ml-4 mr-4 text-white">
             {userPitch.length > 0 && (
               <PitchChart data={memoizedUserPitch} color="#4682B4" />
@@ -168,7 +171,7 @@ function TestContent() {
           </div>
         )}
 
-        {group === "a" && graphState === "both" && (
+        {!isTest && group === "a" && graphState === "both" && (
           <div className="flex flex-col items-center justify-center ml-4 mr-4 text-white">
             {alignedGraphData.length > 0 && (
               <>
@@ -216,7 +219,8 @@ function TestContent() {
           </div>
         )}
 
-        {pageState !== "none" &&
+        {!isTest &&
+          pageState !== "none" &&
           pageState !== "playingReferenceAudio" &&
           pageState !== "playingUserAudio" &&
           alignedGraphData && <Score accuracy={accuracy} />}
@@ -229,7 +233,7 @@ function TestContent() {
           onStart={startRecording}
           onStop={stopRecording}
         />
-        {pageState === "moveOn" && (
+        {(pageState === "moveOn" || isTest) && (
           <NextPhrase
             name={name!}
             test={test!}
@@ -238,6 +242,7 @@ function TestContent() {
             characters={characters}
             setCurrentPhrase={setCurrentPhrase}
             clearAllData={clearAllData}
+            isTest={isTest}
           />
         )}
       </footer>
@@ -245,10 +250,10 @@ function TestContent() {
   );
 }
 
-export default function Test() {
+export default function Session() {
   return (
     <Suspense fallback={<div>Loading results...</div>}>
-      <TestContent />
+      <SessionContent />
     </Suspense>
   );
 }

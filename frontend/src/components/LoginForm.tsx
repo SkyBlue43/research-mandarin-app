@@ -17,9 +17,9 @@ export default function LoginForm() {
 
       if (data.test === "pre" || data.test === "post") {
         router.push(
-          `test?test=${data.test}&group=${data.group}&name=${
+          `/testBranch?test=${data.test}&group=${data.group}&name=${
             data.name
-          }&=currentPhrase=${0}`
+          }&currentPhrase=${0}&isTest=${true}`
         );
       } else {
         router.push(
