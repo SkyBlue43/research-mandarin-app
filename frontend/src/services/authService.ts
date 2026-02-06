@@ -1,7 +1,7 @@
 const BASE = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export async function loginUser(username: string, password: string) {
-  const result = await fetch(`${BASE}/check-password`, {
+  const result = await fetch(`${BASE}/api/check-password`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
