@@ -31,7 +31,7 @@ export const DTW = async (
     currentIndex,
     words_user: userWordArray,
   };
-  const result = await fetch(`${BASE}/dtw-characters`, {
+  const result = await fetch(`${BASE}/api/dtw-characters`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -65,7 +65,7 @@ export const transcribeAudio = async (
   formData.append("data", currentPhrase);
 
   try {
-    const result = await fetch(`${BASE}/transcribe/`, {
+    const result = await fetch(`${BASE}/api/transcribe/`, {
       method: "POST",
       body: formData,
     });
@@ -91,7 +91,7 @@ export const analyzeAudio = async (
   if (!audio_blob) return null;
   const formData = new FormData();
   formData.append("file", audio_blob, audio_location);
-  const result = await fetch(`${BASE}/analyze-audio`, {
+  const result = await fetch(`${BASE}/api/analyze-audio`, {
     method: "POST",
     body: formData,
   });
@@ -101,7 +101,7 @@ export const analyzeAudio = async (
 
 export const fetchCharacters = async (test: string | null) => {
   try {
-    const result = await fetch(`${BASE}/get-characters`, {
+    const result = await fetch(`${BASE}/api/get-characters`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -119,7 +119,7 @@ export const shiftAudio = async (referenceBlob: Blob, userBlob: Blob) => {
   const formData = new FormData();
   formData.append("reference", referenceBlob);
   formData.append("user", userBlob);
-  const result = await fetch(`${BASE}/clone`, {
+  const result = await fetch(`${BASE}/api/clone`, {
     method: "POST",
     body: formData,
   });
@@ -147,7 +147,7 @@ export const saveAccuracyData = async (
     phrase,
     array_number,
   };
-  await fetch(`${BASE}/save-accuracy`, {
+  await fetch(`${BASE}/api/save-accuracy`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -161,7 +161,7 @@ export const getHighestAccuracies = async (
   group: string,
   test: string
 ) => {
-  const result = await fetch(`${BASE}/get-highest-accuracies`, {
+  const result = await fetch(`${BASE}/api/get-highest-accuracies`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -177,7 +177,7 @@ export const getHighestAccuracies = async (
 };
 
 export const updateTest = async (username: string | null) => {
-  await fetch(`${BASE}/update-test`, {
+  await fetch(`${BASE}/api/update-test`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
