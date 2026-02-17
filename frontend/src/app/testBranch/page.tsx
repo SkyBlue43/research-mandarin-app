@@ -20,6 +20,7 @@ import { useErrorAlerts } from "src/hooks/useErrorAlerts";
 import usePageState from "src/hooks/usePageState";
 import { useReferenceAudio } from "src/hooks/useReferenceAudio";
 import Score from "src/components/Score";
+import { useAccuracy } from "src/hooks/useAccuracy";
 
 export type PageState =
   | "none"
@@ -68,6 +69,7 @@ function SessionContent() {
   } = useAudioRecorder({
     setPageState: setPageState,
     setGraphState: setGraphState,
+    isTest: isTest,
   });
 
   usePageState({
@@ -92,6 +94,8 @@ function SessionContent() {
     setErrorDTW,
     clearGraphData,
   } = useDtw(userPitch, referencePitch, test!, transcribedWords, currentIndex);
+
+  useAccuracy(accuracy, name!, test!, group!, currentSimplified, currentIndex);
 
   const memoizedReferencePitch = useMemo(
     () => referencePitch,
@@ -134,21 +138,24 @@ function SessionContent() {
 
       <div className="grid [grid-template-columns:1fr_4fr_1fr] w-screen h-100">
         <div>
-          {pageState !== "none" && (
+          {!isTest && pageState !== "none" && (
             <PlayUserAudio
               userPitchLength={userPitch.length}
               userAudioPath={userAudioPath!}
               setGraphState={setGraphState}
             />
           )}
-          {pageState !== "none" && pageState !== "playingUserAudio" && (
-            <PlayReferenceAudio
-              referencePitchLength={referencePitch.length}
-              referenceAudioPath={referenceAudioPath}
-              setGraphState={setGraphState}
-            />
-          )}
-          {pageState !== "none" &&
+          {!isTest &&
+            pageState !== "none" &&
+            pageState !== "playingUserAudio" && (
+              <PlayReferenceAudio
+                referencePitchLength={referencePitch.length}
+                referenceAudioPath={referenceAudioPath}
+                setGraphState={setGraphState}
+              />
+            )}
+          {!isTest &&
+            pageState !== "none" &&
             pageState !== "playingReferenceAudio" &&
             pageState !== "playingUserAudio" && (
               <ShowAlignedGraphs setGraphState={setGraphState} />
@@ -233,7 +240,7 @@ function SessionContent() {
           onStart={startRecording}
           onStop={stopRecording}
         />
-        {(pageState === "moveOn" || isTest) && (
+        {pageState === "moveOn" && (
           <NextPhrase
             name={name!}
             test={test!}

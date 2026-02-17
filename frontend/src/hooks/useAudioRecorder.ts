@@ -10,6 +10,7 @@ type PitchPoint = {
 type Props = {
   setPageState: (pageState: PageState) => void;
   setGraphState: (graphState: GraphState) => void;
+  isTest?: boolean;
 };
 
 export function useAudioRecorder(props: Props) {
@@ -48,10 +49,13 @@ export function useAudioRecorder(props: Props) {
       const data = await analyzeAudio(audioBlob, "recording" + userAudioURL);
       setUserPitch(data.pitch);
       mediaRecorder.stream.getTracks().forEach((track) => track.stop());
-      if (!startPageTransition) {
+      //This allows the state to start changing if it is not a test
+      if (!startPageTransition && !props.isTest) {
         setStartPageTransition(true);
         props.setPageState("playingUserAudio");
         props.setGraphState("user");
+      } else if (props.isTest) {
+        props.setPageState("moveOn");
       }
     };
 

@@ -60,10 +60,7 @@ export default function usePageState(props: Props) {
         props.setPageState("moveOn");
         props.setGraphState("both");
       } else if (props.pageState === "moveOn") {
-        showAlert(
-          "Displaying both graphs now. You may move on or retry",
-          "#22c55e"
-        );
+        showAlert("You may move on or retry", "#22c55e");
 
         await sleep(3000);
         if (cancelled) return;

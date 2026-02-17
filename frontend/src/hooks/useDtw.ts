@@ -40,7 +40,6 @@ export function useDtw(
         setRefWordsArray(ref_characters);
       } catch (err: any) {
         setErrorDTW(err.message || "Unknown error");
-        console.log("here");
         //setTick((x) => x + 1);
       }
     };
