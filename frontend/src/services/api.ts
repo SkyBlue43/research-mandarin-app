@@ -65,7 +65,7 @@ export const transcribeAudio = async (
   formData.append("data", currentPhrase);
 
   try {
-    const result = await fetch(`${BASE}/api/transcribe/`, {
+    const result = await fetch(`${BASE}/api/transcribe`, {
       method: "POST",
       body: formData,
     });
