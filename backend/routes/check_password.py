@@ -1,9 +1,5 @@
 from database import get_connection
 
-def read_lines(infile):
-    with open(infile) as file:
-        return file.readlines()
-
 def authenticate_user(username, password):
     conn = get_connection()
     curr = conn.cursor()
