@@ -43,6 +43,7 @@ function SessionContent() {
 
   const {
     characters,
+    currentCurriculumId,
     currentIndex,
     currentSimplified,
     currentTraditional,
@@ -54,7 +55,7 @@ function SessionContent() {
 
   const { referenceAudioPath, referencePitch } = useReferenceAudio(
     test!,
-    currentIndex
+    currentCurriculumId
   );
 
   const {
@@ -83,7 +84,7 @@ function SessionContent() {
   const { transcribedWords } = useAudioTranscriber(
     userBlob,
     referenceAudioPath,
-    currentIndex
+    currentCurriculumId
   );
 
   const {
@@ -93,7 +94,13 @@ function SessionContent() {
     errorDTW,
     setErrorDTW,
     clearGraphData,
-  } = useDtw(userPitch, referencePitch, test!, transcribedWords, currentIndex);
+  } = useDtw(
+    userPitch,
+    referencePitch,
+    test!,
+    transcribedWords,
+    currentCurriculumId
+  );
 
   useAccuracy(accuracy, name!, test!, group!, currentSimplified, currentIndex);
 

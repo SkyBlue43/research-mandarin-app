@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { fetchCharacters } from "../services/api";
 
 export type Character = {
+  curriculumId: string;
   simplified: string;
   traditional: string;
   pinyin: string;
@@ -16,6 +17,7 @@ export function useCharacters(test: string | null, currentPhrase: number) {
   const [currentPinyin, setCurrentPinyin] = useState("");
   const [currentIndex, setCurrentIndex] = useState("1");
   const [currentHint, setCurrentHint] = useState("");
+  const [currentCurriculumId, setCurrentCurriculumId] = useState("1");
 
   const [charError, setCharError] = useState<string | null>(null);
   const [charLoading, setCharLoading] = useState(true);
@@ -31,6 +33,7 @@ export function useCharacters(test: string | null, currentPhrase: number) {
 
         const curr = data.characters[currentPhrase];
         if (curr) {
+          setCurrentCurriculumId(curr.curriculumId);
           setCurrentSimplified(curr.simplified);
           setCurrentTraditional(curr.traditional);
           setCurrentPinyin(curr.pinyin);
@@ -50,6 +53,7 @@ export function useCharacters(test: string | null, currentPhrase: number) {
 
   return {
     characters,
+    currentCurriculumId,
     currentIndex,
     currentSimplified,
     currentTraditional,

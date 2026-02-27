@@ -19,18 +19,19 @@ def seed_words():
 
             print(f"Importing {stem}...")
 
-            with open(file_path, newline="", encoding="utf-8") as f:
+            with open(file_path, newline="", encoding="utf-8-sig") as f:
                 reader = csv.DictReader(f)
 
                 for row in reader:
                     count += 1
                     cur.execute("""
                         INSERT INTO characters
-                        (id, test, simplified, traditional, pinyin, english, hint)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s)
+                        (id, curriculum_id, test, simplified, traditional, pinyin, english, hint)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                         ON CONFLICT (id) DO NOTHING
                     """, (
                         count,
+                        row["Index"],
                         stem,  # test column from filename
                         row["Simplified"],
                         row["Traditional"],

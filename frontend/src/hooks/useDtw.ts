@@ -28,6 +28,7 @@ export function useDtw(
   useEffect(() => {
     const dtw = async () => {
       try {
+        console.log(currentIndex);
         const [aligned_graph_data, total_accuracy, ref_characters] = await DTW(
           userPitch!,
           referencePitch,

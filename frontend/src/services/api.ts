@@ -18,6 +18,11 @@ export const DTW = async (
   userWordArray: TranscribedPoint[],
   currentIndex: string
 ) => {
+  console.log(userPitch);
+  console.log(referencePitch);
+  console.log(test);
+  console.log(userWordArray);
+  console.log(typeof currentIndex);
   const body = {
     reference_pitch: {
       frequency: referencePitch.map((p) => p.frequency),
@@ -65,7 +70,7 @@ export const transcribeAudio = async (
   formData.append("data", currentPhrase);
 
   try {
-    const result = await fetch(`${BASE}/api/transcribe`, {
+    const result = await fetch(`${BASE}/transcribe`, {
       method: "POST",
       body: formData,
     });

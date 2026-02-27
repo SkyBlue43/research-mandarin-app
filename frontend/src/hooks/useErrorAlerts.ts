@@ -11,9 +11,7 @@ export function useErrorAlerts(props: Props) {
   useEffect(() => {
     const handleError = () => {
       if (props.errorDTW) {
-        console.log("second here");
         alert(props.errorDTW);
-        console.log(props.pageState);
         if (props.pageState !== "moveOn") {
           props.clearAllData();
         }
