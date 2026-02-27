@@ -28,10 +28,7 @@ class Highest_Accuracy(BaseModel):
 
 class Accuracy(BaseModel):
     name: str
-    test: str
     accuracy: float
-    group: str
-    phrase: str
     array_number: str
 
 class User(BaseModel):

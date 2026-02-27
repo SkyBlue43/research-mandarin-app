@@ -77,7 +77,7 @@ def update_test(data: User):
 @app.post("/save-accuracy")
 def save_accuracy(data: Accuracy):
     try: 
-        save_pitch_accuracy(data.name, data.test, data.group, data.phrase, data.array_number, data.accuracy)
+        save_pitch_accuracy(data.name, data.array_number, data.accuracy)
     except FileNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
     except IndexError as e:

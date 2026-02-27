@@ -18,11 +18,6 @@ export const DTW = async (
   userWordArray: TranscribedPoint[],
   currentIndex: string
 ) => {
-  console.log(userPitch);
-  console.log(referencePitch);
-  console.log(test);
-  console.log(userWordArray);
-  console.log(typeof currentIndex);
   const body = {
     reference_pitch: {
       frequency: referencePitch.map((p) => p.frequency),
@@ -139,17 +134,11 @@ export const shiftAudio = async (referenceBlob: Blob, userBlob: Blob) => {
 export const saveAccuracyData = async (
   accuracy: number,
   name: string,
-  test: string,
-  group: string,
-  phrase: string,
   array_number: string
 ) => {
   const payload = {
     name,
-    test,
     accuracy,
-    group,
-    phrase,
     array_number,
   };
   await fetch(`${BASE}/save-accuracy`, {

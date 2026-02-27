@@ -1,7 +1,4 @@
-import csv
-
 from database import get_connection
-
 
 
 def get_characters_from_curriculum(test_number):
@@ -18,7 +15,7 @@ def get_characters_from_curriculum(test_number):
     character_list = []
     for char in characters:
         character_list.append({
-            'index': char[0],
+            'index': str(char[0]),
             'curriculumId': str(char[1]),
             'simplified': char[2],
             'traditional': char[3],
@@ -32,25 +29,3 @@ def get_characters_from_curriculum(test_number):
     conn.close()
 
     return {'characters': character_list}
-
-    # file_path = f'curriculum/{test_number}.csv'
-
-    # try:
-    #     character_list = []
-    #     with open(file_path, newline='', encoding="utf-8") as csvfile:
-    #         reader = csv.reader(csvfile, delimiter=',', quotechar='"')
-    #         # skips the header row
-    #         next(reader)
-    #         for row in reader:
-    #             character_list.append({
-    #                 'index': row[0],
-    #                 'simplified': row[1],
-    #                 'traditional': row[2],
-    #                 'pinyin': row[3],
-    #                 'english': row[4],
-    #                 'hint': row[5]
-    #             })
-    # except FileNotFoundError:
-    #     raise FileNotFoundError("File not found")
-
-    # return {'characters': character_list}
