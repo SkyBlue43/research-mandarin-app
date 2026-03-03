@@ -1,42 +1,40 @@
-def read_lines(infile):
-    with open(infile) as file:
-        return file.readlines()
-    
-def write_lines(outfile, lines):
-    with open(outfile, 'w') as file:
-        file.writelines(lines)
+from database import get_connection
 
 def update_users_test(username):
-    try:
-        lines = read_lines('students.csv')
-    except FileNotFoundError:
-        raise FileNotFoundError("File not found")
 
-    new_lines = []
-    for line in lines:
-        split_line = line.strip().split(',')
-        if len(split_line) < 5:
-            continue 
-        if split_line[0] == username:
-            try:
-                if split_line[4] == 'pre':
-                    new_test = '1'
-                elif split_line[4] == '16':
-                    new_test = 'post'
-                elif split_line[4] == "post":
-                    new_test = "DONE"
-                else:
-                    new_test = str(int(split_line[4]) + 1)
-            except ValueError:
-                raise ValueError(f"Invalid test number for user {split_line[0]}")
-            
-            new_lines.append(f'{split_line[0]},{split_line[1]},{split_line[2]},{split_line[3]},{new_test}\n')
+    conn = get_connection()
+    cur = conn.cursor()
+
+    try:
+        cur.execute("""
+                    SELECT test
+                    FROM users
+                    WHERE id = %s;
+                    """, (username, ))
+
+        result = cur.fetchone()
+        if result is None:
+            return
+        test = result[0]
+        
+        if test == 'pre':
+            new_test = '1'
+        elif test == '16':
+            new_test = 'post'
+        elif test == 'post':
+            new_test = 'done'
+        elif test == 'done':
+            return
         else:
-            new_lines.append(line)
-
-    try:
-        write_lines('students.csv', new_lines)
-    except PermissionError:
-        raise PermissionError("Cannot write to students.csv")
-
-    return
+            new_test = str(int(test) + 1)
+        
+        cur.execute("""
+                    UPDATE users
+                    SET test = %s
+                    WHERE username = %s;
+                    """, (new_test, username))
+    
+        conn.commit()
+    finally:
+        cur.close()
+        conn.close()

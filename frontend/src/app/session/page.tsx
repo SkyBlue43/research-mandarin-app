@@ -20,6 +20,7 @@ import { useErrorAlerts } from "src/hooks/useErrorAlerts";
 import usePageState from "src/hooks/usePageState";
 import { useReferenceAudio } from "src/hooks/useReferenceAudio";
 import Score from "src/components/Score";
+import { useAccuracy } from "src/hooks/useAccuracy";
 
 export type PageState =
   | "none"
@@ -98,6 +99,8 @@ function SessionContent() {
     transcribedWords,
     currentCurriculumId
   );
+
+  useAccuracy(accuracy, name!, currentIndex);
 
   const memoizedReferencePitch = useMemo(
     () => referencePitch,
