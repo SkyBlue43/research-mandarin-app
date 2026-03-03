@@ -133,11 +133,13 @@ export const shiftAudio = async (referenceBlob: Blob, userBlob: Blob) => {
 
 export const saveAccuracyData = async (
   accuracy: number,
+  test: string,
   name: string,
   array_number: string
 ) => {
   const payload = {
     name,
+    test,
     accuracy,
     array_number,
   };

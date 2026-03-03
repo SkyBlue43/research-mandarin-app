@@ -28,6 +28,7 @@ class Highest_Accuracy(BaseModel):
 
 class Accuracy(BaseModel):
     name: str
+    test: str
     accuracy: float
     array_number: str
 

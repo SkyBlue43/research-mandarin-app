@@ -6,7 +6,7 @@ def read_lines(infile):
         reader = csv.reader(file)
         return list(reader)
 
-async def get_highest_accuracies_for_user(name, test, group):
+async def get_highest_accuracies_for_user(user_id, test, group):
 
     try: 
         base_dir = os.path.join(os.getcwd(), "data")

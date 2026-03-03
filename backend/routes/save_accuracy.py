@@ -2,7 +2,7 @@
 from database import get_connection
 
 
-def save_pitch_accuracy(user_id, char_id, accuracy):
+def save_pitch_accuracy(user_id, test, char_id, accuracy):
     if accuracy == 0 or accuracy is None:
         return
     
@@ -12,11 +12,12 @@ def save_pitch_accuracy(user_id, char_id, accuracy):
 
     cur.execute("""
                 INSERT INTO attempts
-                (user_id, character_id, accuracy)
-                VALUES (%s, %s, %s);
+                (user_id, character_id, test, accuracy)
+                VALUES (%s, %s, %s, %s);
                 """, (
                     int(user_id),
                     int(char_id),
+                    test,
                     accuracy
                 ))
     

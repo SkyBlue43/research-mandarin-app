@@ -102,7 +102,7 @@ function SessionContent() {
     currentCurriculumId
   );
 
-  useAccuracy(accuracy, name!, currentIndex);
+  useAccuracy(accuracy, test!, name!, currentIndex);
 
   const memoizedReferencePitch = useMemo(
     () => referencePitch,
