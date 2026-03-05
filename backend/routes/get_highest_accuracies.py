@@ -1,6 +1,6 @@
 from database import get_connection
 
-async def get_highest_accuracies_for_user(name, test, group):
+def get_highest_accuracies_for_user(user_id, test, group):
     conn = get_connection()
     cur = conn.cursor()
 
@@ -9,8 +9,9 @@ async def get_highest_accuracies_for_user(name, test, group):
                 FROM attempts
                 WHERE user_id = %s
                 AND test = %s
-                GROUP BY character_id;
-                """, (name, test))
+                GROUP BY character_id
+                ORDER BY character_id;
+                """, (user_id, test))
     
     rows = cur.fetchall()
 

@@ -134,11 +134,11 @@ export const shiftAudio = async (referenceBlob: Blob, userBlob: Blob) => {
 export const saveAccuracyData = async (
   accuracy: number,
   test: string,
-  name: string,
+  userId: number,
   array_number: string
 ) => {
   const payload = {
-    name,
+    user_id: userId,
     test,
     accuracy,
     array_number,
@@ -153,7 +153,7 @@ export const saveAccuracyData = async (
 };
 
 export const getHighestAccuracies = async (
-  name: string,
+  userId: number,
   group: string,
   test: string
 ) => {
@@ -164,7 +164,7 @@ export const getHighestAccuracies = async (
     },
     body: JSON.stringify({
       test: test,
-      name: name,
+      user_id: userId,
       group: group,
     }),
   });
@@ -172,14 +172,14 @@ export const getHighestAccuracies = async (
   return data.accuracies;
 };
 
-export const updateTest = async (username: string | null) => {
+export const updateTest = async (userId: string | null) => {
   await fetch(`${BASE}/update-test`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      username: username,
+      user_id: userId,
     }),
   });
 };

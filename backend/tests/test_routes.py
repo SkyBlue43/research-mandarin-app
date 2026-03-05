@@ -31,7 +31,7 @@ def test_check_password_works():
     response = client.post("/check-password", json=payload)
 
     assert response.status_code == 200
-    assert response.json() == {"name": "test_person", "group": "a", "test": "pre"}
+    assert response.json() == {"user_id": "test_person", "group": "a", "test": "pre"}
 
 
 def test_check_username_and_password_is_invalid():
@@ -49,5 +49,4 @@ def test_check_username_and_password_is_invalid():
 
 def test_update_users():
     pass
-
 

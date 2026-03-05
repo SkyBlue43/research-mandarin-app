@@ -65,7 +65,7 @@ def check_password(data: Auth):
 @app.post("/update-test")
 def update_test(data: User):
     try:
-        update_users_test(data.username)
+        update_users_test(data.user_id)
     except FileNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
     except PermissionError as e:
@@ -77,7 +77,7 @@ def update_test(data: User):
 @app.post("/save-accuracy")
 def save_accuracy(data: Accuracy):
     try: 
-        save_pitch_accuracy(data.name, data.test, data.array_number, data.accuracy)
+        save_pitch_accuracy(data.user_id, data.test, data.array_number, data.accuracy)
     except FileNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
     except IndexError as e:
@@ -87,7 +87,7 @@ def save_accuracy(data: Accuracy):
 @app.post("/get-highest-accuracies")
 def get_highest_accuracies(data: Highest_Accuracy):
     try:
-        accuracies = get_highest_accuracies_for_user(data.name, data.test, data.group)
+        accuracies = get_highest_accuracies_for_user(data.user_id, data.test, data.group)
         return accuracies
     except FileNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))

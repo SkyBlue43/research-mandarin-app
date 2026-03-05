@@ -22,18 +22,18 @@ class DTWRequest(BaseModel):
     words_user: List[WordData]
 
 class Highest_Accuracy(BaseModel):
-    name: str
+    user_id: int
     test: str
     group: str
 
 class Accuracy(BaseModel):
-    name: str
+    user_id: int
     test: str
     accuracy: float
     array_number: str
 
 class User(BaseModel):
-    username: str
+    user_id: int
 
 class Auth(BaseModel):
     username: str

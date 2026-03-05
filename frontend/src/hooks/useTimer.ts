@@ -4,7 +4,7 @@ import { updateTest } from "../services/api";
 
 export function useTimer(
   durationInSeconds: number,
-  userName: string | null,
+  userId: string | null,
   redirectPath?: string
 ) {
   const [timeLeft, setTimeLeft] = useState(0);
@@ -27,7 +27,7 @@ export function useTimer(
       if (remaining === 0) {
         localStorage.removeItem("timerEnd");
         if (redirectPath) {
-          updateTest(userName);
+          updateTest(userId);
           router.push(redirectPath);
         }
       }

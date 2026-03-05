@@ -1,6 +1,6 @@
 from database import get_connection
 
-def update_users_test(username):
+def update_users_test(user_id):
 
     conn = get_connection()
     cur = conn.cursor()
@@ -10,7 +10,7 @@ def update_users_test(username):
                     SELECT test
                     FROM users
                     WHERE id = %s;
-                    """, (username, ))
+                    """, (user_id, ))
 
         result = cur.fetchone()
         if result is None:
@@ -31,8 +31,8 @@ def update_users_test(username):
         cur.execute("""
                     UPDATE users
                     SET test = %s
-                    WHERE username = %s;
-                    """, (new_test, username))
+                    WHERE id = %s;
+                    """, (new_test, user_id))
     
         conn.commit()
     finally:

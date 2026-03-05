@@ -34,7 +34,7 @@ function SessionContent() {
   const searchParams = useSearchParams();
   const test = searchParams.get("test");
   const group = searchParams.get("group");
-  const name = searchParams.get("name");
+  const userId = searchParams.get("userId");
   const isTest = searchParams.get("isTest") === "true";
   let currentPhraseIndex = Number(searchParams.get("currentPhrase")!);
   const [currentPhrase, setCurrentPhrase] = useState(currentPhraseIndex);
@@ -102,7 +102,7 @@ function SessionContent() {
     currentCurriculumId
   );
 
-  useAccuracy(accuracy, test!, name!, currentIndex);
+  useAccuracy(accuracy, test!, Number(userId), currentIndex);
 
   const memoizedReferencePitch = useMemo(
     () => referencePitch,
@@ -132,7 +132,7 @@ function SessionContent() {
   return (
     <div className="h-screen flex flex-col items-center text-center">
       <header className="m-8 w-screen">
-        {!isTest && <Timer username={name} />}
+        {!isTest && <Timer userId={userId} />}
         <CharacterDisplay
           currentTraditional={currentTraditional}
           currentSimplified={currentSimplified}
@@ -249,7 +249,7 @@ function SessionContent() {
         />
         {pageState === "moveOn" && (
           <NextPhrase
-            name={name!}
+            userId={userId!}
             test={test!}
             group={group!}
             currentPhrase={currentPhrase}

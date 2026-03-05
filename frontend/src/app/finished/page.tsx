@@ -13,7 +13,7 @@ interface AccuracyResult {
 
 function FinishedContent() {
   const searchParams = useSearchParams();
-  const name = searchParams.get("name");
+  const userId = searchParams.get("userId");
   const group = searchParams.get("group");
   const test = searchParams.get("test");
   const router = useRouter();
@@ -24,17 +24,17 @@ function FinishedContent() {
   const { characters } = useCharacters(test, arrayIndex);
 
   useEffect(() => {
-    if (name && group && test) {
-      getHighestAccuracies(name, group, test)
+    if (userId && group && test) {
+      getHighestAccuracies(Number(userId), group, test)
         .then((data) => setAccuracyArray(data))
         .catch((err) => console.error("Failed to fetch accuracies:", err));
     }
-  }, [name, group, test]);
+  }, [userId, group, test]);
 
   return (
     <div className="h-screen flex flex-col items-center text-center">
       <header className="m-8 w-screen">
-        <Timer username={name} />
+        <Timer userId={userId} />
       </header>
 
       <table className="border-collapse border border-white w-[600px] text-center">
@@ -67,7 +67,7 @@ function FinishedContent() {
                     className="border rounded bg-purple-500 hover:bg-purple-600 text-white p-1"
                     onClick={() =>
                       router.push(
-                        `/redo?name=${name}&group=${group}&test=${test}&currentPhrase=${
+                        `/redo?userId=${userId}&group=${group}&test=${test}&currentPhrase=${
                           Number(char.index) - 1
                         }`
                       )

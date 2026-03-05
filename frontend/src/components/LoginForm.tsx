@@ -17,14 +17,14 @@ export default function LoginForm() {
 
       if (data.test === "pre" || data.test === "post") {
         router.push(
-          `/testBranch?test=${data.test}&group=${data.group}&name=${
-            data.name
+          `/testBranch?test=${data.test}&group=${data.group}&userId=${
+            data.user_id
           }&currentPhrase=${0}&isTest=${true}`
         );
       } else {
         router.push(
-          `/session?test=${data.test}&group=${data.group}&name=${
-            data.name
+          `/session?test=${data.test}&group=${data.group}&userId=${
+            data.user_id
           }&currentPhrase=${0}`
         );
       }

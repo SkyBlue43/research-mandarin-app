@@ -1,7 +1,7 @@
 import { useTimer } from "../../hooks/useTimer";
 
-const Timer = ({ username }: { username: string | null }) => {
-  const timeLeft = useTimer(9000, username, "/");
+const Timer = ({ userId }: { userId: string | null }) => {
+  const timeLeft = useTimer(9000, userId, "/");
 
   return (
     <div className="text-3xl font-bold bg-purple-500 p-3 rounded-xl border border-[#ffffff] mb-5">

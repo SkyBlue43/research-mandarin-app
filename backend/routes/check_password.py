@@ -12,8 +12,8 @@ def authenticate_user(username, password):
     if not user:
         raise PermissionError("Invalid username or password")
 
-    name, user_password, group, test = user
+    user_id, user_password, group, test = user
     if password != user_password:
         raise PermissionError("Invalid username or password")
     
-    return {'name': name, 'group': group, 'test': test}
+    return {'user_id': user_id, 'group': group, 'test': test}

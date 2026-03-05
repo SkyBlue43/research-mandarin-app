@@ -3,7 +3,7 @@ import { GraphState, PageState } from "src/app/session/page";
 import { Character } from "src/hooks/useCharacters";
 
 type Props = {
-  name: string;
+  userId: string;
   test: string;
   group: string;
   currentPhrase: number;
@@ -28,7 +28,7 @@ export default function NextPhrase(props: Props) {
       }
       props.setCurrentPhrase(() => 0);
       router.push(
-        `finished?name=${props.name}&test=${props.test}&group=${props.group}`
+        `finished?userId=${props.userId}&test=${props.test}&group=${props.group}`
       );
     } else {
       props.setCurrentPhrase((prev) => prev + 1);
