@@ -132,7 +132,14 @@ function SessionContent() {
   return (
     <div className="h-screen flex flex-col items-center text-center">
       <header className="m-8 w-screen">
-        {!isTest && <Timer userId={userId} />}
+        {!isTest && (
+          <Timer
+            userId={userId}
+            test={test}
+            redirectPath="/"
+            advanceTestOnExpire={true}
+          />
+        )}
         <CharacterDisplay
           currentTraditional={currentTraditional}
           currentSimplified={currentSimplified}

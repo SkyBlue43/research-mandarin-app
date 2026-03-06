@@ -34,7 +34,7 @@ function FinishedContent() {
   return (
     <div className="h-screen flex flex-col items-center text-center">
       <header className="m-8 w-screen">
-        <Timer userId={userId} />
+        <Timer userId={userId} test={test} />
       </header>
 
       <table className="border-collapse border border-white w-[600px] text-center">

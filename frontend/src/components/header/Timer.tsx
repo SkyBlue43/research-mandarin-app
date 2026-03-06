@@ -1,7 +1,25 @@
 import { useTimer } from "../../hooks/useTimer";
 
-const Timer = ({ userId }: { userId: string | null }) => {
-  const timeLeft = useTimer(9000, userId, "/");
+type TimerProps = {
+  userId: string | null;
+  test: string | null;
+  redirectPath?: string;
+  advanceTestOnExpire?: boolean;
+};
+
+const Timer = ({
+  userId,
+  test,
+  redirectPath,
+  advanceTestOnExpire = false,
+}: TimerProps) => {
+  const timeLeft = useTimer(
+    9000,
+    userId,
+    test,
+    redirectPath,
+    advanceTestOnExpire
+  );
 
   return (
     <div className="text-3xl font-bold bg-purple-500 p-3 rounded-xl border border-[#ffffff] mb-5">
