@@ -1,7 +1,6 @@
 import subprocess
 import wave
 from vosk import Model, KaldiRecognizer, SetLogLevel
-from fastapi.responses import JSONResponse
 import tempfile
 import os
 import json
@@ -60,7 +59,9 @@ def get_model():
 # --------------------------------------------------------
 def convert_to_wav(input_path, output_path):
     cmd = ["ffmpeg", "-y", "-i", input_path, "-ar", "16000", "-ac", "1", output_path]
-    subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if result.returncode != 0:
+        raise RuntimeError("Unable to convert audio to WAV.")
 
 # --------------------------------------------------------
 # Char-level transcription with Vosk
@@ -107,6 +108,9 @@ def transcribe_with_vosk(audio_path, phrase_list):
 # Public transcribe function
 # --------------------------------------------------------
 async def transcribe_audio(file, current_phrase):
+    if not current_phrase or not current_phrase.strip():
+        raise ValueError("Phrase is required for transcription.")
+
     # Save MP3
     with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as temp_mp3:
         mp3_path = temp_mp3.name
@@ -119,12 +123,10 @@ async def transcribe_audio(file, current_phrase):
     try:
         phrase_list = current_phrase.strip().split()
         result = transcribe_with_vosk(wav_path, phrase_list)
-
-    except Exception as e:
-        return JSONResponse(status_code=500, content={"error": str(e)})
-
     finally:
-        os.remove(mp3_path)
-        os.remove(wav_path)
+        if os.path.exists(mp3_path):
+            os.remove(mp3_path)
+        if os.path.exists(wav_path):
+            os.remove(wav_path)
 
-    return JSONResponse(content=result)
+    return result

@@ -47,8 +47,8 @@ def get_characters(data: Test):
     try:
         result = get_characters_from_curriculum(data.test_number)
         return result
-    except FileNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
     
 
 @app.post("/check-password")
@@ -56,32 +56,30 @@ def check_password(data: Auth):
     try:
         result = authenticate_user(data.username, data.password)
         return result
-    except FileNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
     except PermissionError as e:
         raise HTTPException(status_code=401, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.post("/update-test")
 def update_test(data: User):
     try:
         update_users_test(data.user_id)
-    except FileNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
-    except PermissionError as e:
-        raise HTTPException(status_code=403, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=str(e))
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e))
     
     
 @app.post("/save-accuracy")
 def save_accuracy(data: Accuracy):
     try: 
         save_pitch_accuracy(data.user_id, data.test, data.array_number, data.accuracy)
-    except FileNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
-    except IndexError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.post("/get-highest-accuracies")
@@ -89,12 +87,8 @@ def get_highest_accuracies(data: Highest_Accuracy):
     try:
         accuracies = get_highest_accuracies_for_user(data.user_id, data.test, data.group)
         return accuracies
-    except FileNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
-    except PermissionError as e:
-        raise HTTPException(status_code=403, detail=str(e))
-    except IndexError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
         
 
 @app.post("/dtw-characters")
@@ -106,6 +100,8 @@ def dtw_characters(data: DTWRequest):
         raise HTTPException(status_code=404, detail=str(e))
     except ValueError as e:
         raise HTTPException(status_code=422, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.post("/analyze-audio")
@@ -113,8 +109,10 @@ def analyze_audio(file: UploadFile = File(...)):
     try:
         pitch_values = analyze_given_audio(file)
         return pitch_values
-    except:
-        pass
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.post("/transcribe")
@@ -122,15 +120,21 @@ async def transcribe(file: UploadFile = File(...), data: str = Form(...)):
     try:
         data = Phrase(phrase=data)
         return await transcribe_audio(file, data.phrase)
-    except:
-        pass
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=str(e))
+    except RuntimeError as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.post("/clone")
 async def clone(reference: UploadFile = File(...), user: UploadFile = File(...)):
     try:
         return await shift_audio(reference, user)
-    except:
-        pass
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 app.mount("/sounds", StaticFiles(directory="sounds"), name="sounds")

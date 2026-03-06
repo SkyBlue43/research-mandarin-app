@@ -135,6 +135,9 @@ from pydub import AudioSegment
 import tempfile, shutil, os
 
 async def shift_audio(reference, user):
+    if reference is None or user is None or reference.file is None or user.file is None:
+        raise ValueError("Both reference and user audio files are required.")
+
     # Save reference
     with tempfile.NamedTemporaryFile(delete=False) as ref_tmp:
         shutil.copyfileobj(reference.file, ref_tmp)

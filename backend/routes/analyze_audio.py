@@ -22,6 +22,9 @@ def clean_audio(pitch):
 
 
 def analyze_given_audio(infile):
+    if infile is None or infile.file is None:
+        raise ValueError("No audio file provided.")
+
     input_path = "temp_input"
     output_path = "temp.wav"
 
@@ -62,11 +65,17 @@ def analyze_given_audio(infile):
 
     pitch_values = clean_audio(pitch_values)
 
+    if min_freq == float('inf'):
+        raise ValueError("Unable to detect pitch from audio. Try recording again.")
+
     norm_pitch_values = []
     for pitch in pitch_values:
         freq = pitch['frequency']
         if freq is not None:
-            freq = (pitch['frequency'] - min_freq) / (max_freq - min_freq)
+            if max_freq == min_freq:
+                freq = 0.5
+            else:
+                freq = (pitch['frequency'] - min_freq) / (max_freq - min_freq)
         norm_pitch_values.append({"time": pitch['time'], 'frequency': freq})
 
     os.remove(input_path)
