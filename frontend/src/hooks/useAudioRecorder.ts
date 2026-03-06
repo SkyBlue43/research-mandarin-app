@@ -47,6 +47,13 @@ export function useAudioRecorder(props: Props) {
       const userAudioURL = URL.createObjectURL(audioBlob);
       setUserAudioPath(userAudioURL);
       const data = await analyzeAudio(audioBlob, "recording" + userAudioURL);
+      if (!data?.pitch) {
+        props.setPageState("none");
+        props.setGraphState("none");
+        mediaRecorder.stream.getTracks().forEach((track) => track.stop());
+        return;
+      }
+
       setUserPitch(data.pitch);
       mediaRecorder.stream.getTracks().forEach((track) => track.stop());
       //This allows the state to start changing if it is not a test

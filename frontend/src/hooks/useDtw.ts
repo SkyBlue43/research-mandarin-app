@@ -23,12 +23,11 @@ export function useDtw(
   const [accuracy, setAccuracy] = useState(0);
   const [refWordsArray, setRefWordsArray] = useState<any[]>([]);
   const [errorDTW, setErrorDTW] = useState<string | null>(null);
-  const [tick, setTick] = useState(0);
 
   useEffect(() => {
     const dtw = async () => {
       try {
-        console.log(currentIndex);
+        setErrorDTW(null);
         const [aligned_graph_data, total_accuracy, ref_characters] = await DTW(
           userPitch!,
           referencePitch,
@@ -41,16 +40,18 @@ export function useDtw(
         setRefWordsArray(ref_characters);
       } catch (err: any) {
         setErrorDTW(err.message || "Unknown error");
-        //setTick((x) => x + 1);
       }
     };
     if (userPitch.length > 0) {
       dtw();
     }
-  }, [transcribedWords]);
+  }, [transcribedWords, userPitch, referencePitch, test, currentIndex]);
 
   const clearGraphData = () => {
     setAlignedGraphData([]);
+    setRefWordsArray([]);
+    setAccuracy(0);
+    setErrorDTW(null);
   };
 
   return {

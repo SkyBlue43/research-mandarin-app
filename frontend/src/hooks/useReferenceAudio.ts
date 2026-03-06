@@ -24,7 +24,7 @@ export function useReferenceAudio(test: string, currentCurriculumId: string) {
       }
     };
     getReferenceAudio();
-  }, [currentCurriculumId]);
+  }, [test, currentCurriculumId]);
 
   return { referenceAudioPath, referencePitch };
 }

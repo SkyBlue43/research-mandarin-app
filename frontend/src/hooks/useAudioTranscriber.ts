@@ -4,7 +4,7 @@ import { transcribeAudio } from "src/services/api";
 export function useAudioTranscriber(
   userBlob: Blob | null,
   referenceAudioPath: string,
-  currentIndex: string
+  currentPhrase: string
 ) {
   const [transcribedWords, setTranscribedWords] = useState<any[]>([]);
 
@@ -13,13 +13,15 @@ export function useAudioTranscriber(
       const words = await transcribeAudio(
         userBlob,
         "recording" + referenceAudioPath,
-        currentIndex
+        currentPhrase
       );
-      setTranscribedWords(words);
+      setTranscribedWords(words ?? []);
     };
 
     if (userBlob) {
       transcriber();
+    } else {
+      setTranscribedWords([]);
     }
   }, [userBlob]);
 

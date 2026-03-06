@@ -84,7 +84,7 @@ function SessionContent() {
   const { transcribedWords } = useAudioTranscriber(
     userBlob,
     referenceAudioPath,
-    currentCurriculumId
+    currentSimplified
   );
 
   const {

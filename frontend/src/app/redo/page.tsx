@@ -80,7 +80,7 @@ function RedoContent() {
   const { transcribedWords } = useAudioTranscriber(
     userBlob,
     referenceAudioPath,
-    currentIndex
+    currentSimplified
   );
 
   const {
