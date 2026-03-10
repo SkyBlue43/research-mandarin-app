@@ -130,8 +130,18 @@ function SessionContent() {
   });
 
   return (
-    <div className="h-screen flex flex-col items-center text-center">
-      <header className="m-8 w-screen">
+    <div className="app-shell min-h-screen flex flex-col items-center text-center relative">
+      {!isTest &&
+        pageState !== "none" &&
+        pageState !== "playingReferenceAudio" &&
+        pageState !== "playingUserAudio" &&
+        alignedGraphData && (
+          <div className="absolute top-3 right-3 md:top-4 md:right-4 z-20">
+            <Score accuracy={accuracy} />
+          </div>
+        )}
+
+      <header className="w-full flex flex-col items-center gap-4 pt-3">
         {!isTest && (
           <Timer
             userId={userId}
@@ -150,8 +160,8 @@ function SessionContent() {
         />
       </header>
 
-      <div className="grid [grid-template-columns:1fr_4fr_1fr] w-screen h-100">
-        <div>
+      <div className="w-full min-w-0 mt-3 grid grid-cols-1 lg:[grid-template-columns:220px_minmax(0,1fr)] gap-4 items-stretch">
+        <div className="surface p-3 w-full min-w-0 flex flex-col items-center justify-evenly lg:min-h-[430px]">
           {!isTest && pageState !== "none" && (
             <PlayUserAudio
               userPitchLength={userPitch.length}
@@ -176,78 +186,54 @@ function SessionContent() {
             )}
         </div>
 
-        {!isTest && group === "a" && graphState === "reference" && (
-          <div className="flex items-center justify-center mr-4 ml-4 text-black">
-            {referencePitch.length > 0 && (
-              <PitchChart data={memoizedReferencePitch} color="#B0B0B0" />
-            )}
-          </div>
-        )}
+        <div className="surface p-3 w-full min-w-0 flex items-center justify-center">
+          <div className="w-full min-w-0">
+            {!isTest &&
+              group === "a" &&
+              graphState === "reference" &&
+              referencePitch.length > 0 && (
+                <PitchChart data={memoizedReferencePitch} color="#B0B0B0" />
+              )}
 
-        {!isTest && group === "a" && graphState === "user" && (
-          <div className="flex flex-col items-center justify-center ml-4 mr-4 text-white">
-            {userPitch.length > 0 && (
+            {!isTest && group === "a" && graphState === "user" && userPitch.length > 0 && (
               <PitchChart data={memoizedUserPitch} color="#4682B4" />
             )}
-          </div>
-        )}
 
-        {!isTest && group === "a" && graphState === "both" && (
-          <div className="flex flex-col items-center justify-center ml-4 mr-4 text-white">
-            {alignedGraphData.length > 0 && (
-              <>
+            {!isTest && group === "a" && graphState === "both" && alignedGraphData.length > 0 && (
+              <div className="w-full min-w-0">
                 <AlignedPitchChart data={memoizedAlignedPitch} />
-                <div
-                  style={{
-                    position: "relative",
-                    width: "100%",
-                    height: "2rem",
-                    marginTop: "1rem",
-                  }}
-                >
-                  {refWordsArray.map((word, i) => {
-                    const firstStart = refWordsArray[0].start;
-                    const totalDuration =
-                      refWordsArray[refWordsArray.length - 1].end - firstStart;
-                    const chartLeftPadding = 8;
-                    const chartRightPadding = 38;
-                    const usableWidth =
-                      140 - chartLeftPadding - chartRightPadding;
+                <div className="relative w-full h-8 mt-3 overflow-hidden text-stone-700 text-sm">
+                  {refWordsArray.length > 0 &&
+                    refWordsArray.map((word, i) => {
+                      const firstStart = refWordsArray[0].start;
+                      const totalDuration =
+                        refWordsArray[refWordsArray.length - 1].end - firstStart || 1;
+                      const left = ((word.start - firstStart) / totalDuration) * 100;
+                      const width = ((word.end - word.start) / totalDuration) * 100;
 
-                    const left =
-                      chartLeftPadding +
-                      ((word.start - firstStart) / totalDuration) * usableWidth;
-                    const width =
-                      ((word.end - word.start) / totalDuration) * usableWidth;
-
-                    return (
-                      <span
-                        key={i}
-                        style={{
-                          position: "absolute",
-                          left: `${left}%`,
-                          width: `${width}%`,
-                          textAlign: "center",
-                        }}
-                      >
-                        {word.char}
-                      </span>
-                    );
-                  })}
+                      return (
+                        <span
+                          key={i}
+                          style={{
+                            position: "absolute",
+                            left: `${left}%`,
+                            width: `${width}%`,
+                            textAlign: "center",
+                            fontWeight: 700,
+                          }}
+                        >
+                          {word.char}
+                        </span>
+                      );
+                    })}
                 </div>
-              </>
+              </div>
             )}
           </div>
-        )}
-
-        {!isTest &&
-          pageState !== "none" &&
-          pageState !== "playingReferenceAudio" &&
-          pageState !== "playingUserAudio" &&
-          alignedGraphData && <Score accuracy={accuracy} />}
+        </div>
       </div>
 
-      <footer className="grid grid-cols-3 w-screen p-8 pt-20">
+      <footer className="surface mt-4 w-full grid grid-cols-3 items-center p-4 md:p-5">
         <div></div>
         <Record
           recording={recording}

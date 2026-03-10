@@ -26,12 +26,12 @@ export default function PlayUserAudio(props: Props) {
     <>
       <div>
         <button
-          className="p-4 rounded-full bg-green-500 text-white hover:bg-green-600"
+          className="control-btn p-3 bg-emerald-600 text-emerald-50 hover:bg-emerald-700"
           onClick={() => handleShowGraphs()}
         >
           <MousePointerClick />
         </button>
-        <div className="mb-8">See Both</div>
+        <div className="control-label">See Both</div>
       </div>
     </>
   );

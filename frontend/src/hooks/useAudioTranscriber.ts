@@ -1,12 +1,20 @@
 import { useEffect, useState } from "react";
 import { transcribeAudio } from "src/services/api";
 
+type TranscribedWord = {
+  char: string;
+  start: number;
+  end: number;
+};
+
 export function useAudioTranscriber(
   userBlob: Blob | null,
   referenceAudioPath: string,
   currentPhrase: string
 ) {
-  const [transcribedWords, setTranscribedWords] = useState<any[]>([]);
+  const [transcribedWords, setTranscribedWords] = useState<TranscribedWord[]>(
+    []
+  );
 
   useEffect(() => {
     const transcriber = async () => {
@@ -23,7 +31,7 @@ export function useAudioTranscriber(
     } else {
       setTranscribedWords([]);
     }
-  }, [userBlob]);
+  }, [userBlob, referenceAudioPath, currentPhrase]);
 
   return { transcribedWords };
 }

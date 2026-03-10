@@ -39,12 +39,12 @@ export default function PlayReferenceAudio(props: Props) {
       {props.referencePitchLength > 0 && (
         <div>
           <button
-            className="p-4 rounded-full bg-[#B0B0B0] text-white hover:bg-[#808080]"
+            className="control-btn p-3 bg-stone-400 text-stone-50 hover:bg-stone-500"
             onClick={() => handlePlayAudio(props.referenceAudioPath)}
           >
             <Play />
           </button>
-          <div className="mb-8">Correct Audio</div>
+          <div className="control-label">Correct Audio</div>
         </div>
       )}
     </>

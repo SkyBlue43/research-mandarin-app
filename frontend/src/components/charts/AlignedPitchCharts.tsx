@@ -1,4 +1,4 @@
-import { LineChart, Line, XAxis, YAxis } from "recharts";
+import { LineChart, Line, XAxis, YAxis, ResponsiveContainer } from "recharts";
 import React from "react";
 
 type AlignedPoint = {
@@ -18,45 +18,49 @@ const AlignedPitchChart = React.memo(({ data }: { data: AlignedPoint[] }) => {
   }));
 
   return (
-    <LineChart width={1200} height={400} data={processedData}>
-      <XAxis tick={false} dataKey="time" />
-      <YAxis
-        tick={false}
-        domain={["dataMin - 0.5", "dataMax + 0.5"]}
-        tickFormatter={(value) => value.toFixed(1)}
-      />
-      <Line
-        type="monotone"
-        dataKey="reference"
-        stroke="#B0B0B0"
-        dot={false}
-        strokeWidth={5}
-      />
-      <Line
-        type="monotone"
-        dataKey="userGood"
-        stroke="#008000"
-        dot={false}
-        strokeWidth={5}
-        connectNulls={false}
-      />
-      <Line
-        type="monotone"
-        dataKey="userMid"
-        stroke="#FFD700"
-        dot={false}
-        strokeWidth={5}
-        connectNulls={false}
-      />
-      <Line
-        type="monotone"
-        dataKey="userPoor"
-        stroke="#FF0000"
-        dot={false}
-        strokeWidth={5}
-        connectNulls={false}
-      />
-    </LineChart>
+    <div className="w-full min-w-0 h-[42vh] min-h-[260px] max-h-[400px]">
+      <ResponsiveContainer width="100%" height="100%">
+        <LineChart data={processedData}>
+          <XAxis tick={false} dataKey="time" />
+          <YAxis
+            tick={false}
+            domain={["dataMin - 0.5", "dataMax + 0.5"]}
+            tickFormatter={(value) => value.toFixed(1)}
+          />
+          <Line
+            type="monotone"
+            dataKey="reference"
+            stroke="#B0B0B0"
+            dot={false}
+            strokeWidth={5}
+          />
+          <Line
+            type="monotone"
+            dataKey="userGood"
+            stroke="#008000"
+            dot={false}
+            strokeWidth={5}
+            connectNulls={false}
+          />
+          <Line
+            type="monotone"
+            dataKey="userMid"
+            stroke="#FFD700"
+            dot={false}
+            strokeWidth={5}
+            connectNulls={false}
+          />
+          <Line
+            type="monotone"
+            dataKey="userPoor"
+            stroke="#FF0000"
+            dot={false}
+            strokeWidth={5}
+            connectNulls={false}
+          />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
   );
 });
 

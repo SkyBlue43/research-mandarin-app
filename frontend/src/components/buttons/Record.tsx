@@ -18,10 +18,10 @@ export default function Record(props: Props) {
   return (
     <div>
       <button
-        className={`p-4 rounded-full text-white ${
+        className={`control-btn p-4 text-white ${
           props.recording
-            ? "bg-red-500 hover:bg-red-600"
-            : "bg-green-500 hover:bg-green-600"
+            ? "bg-red-700 hover:bg-red-800"
+            : "control-btn-primary"
         }`}
         onClick={handleRecording}
       >

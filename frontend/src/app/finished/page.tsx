@@ -32,55 +32,58 @@ function FinishedContent() {
   }, [userId, group, test]);
 
   return (
-    <div className="h-screen flex flex-col items-center text-center">
-      <header className="m-8 w-screen">
+    <div className="app-shell min-h-screen flex flex-col items-center text-center">
+      <header className="w-full flex justify-center pt-3 mb-4">
         <Timer userId={userId} test={test} />
       </header>
 
-      <table className="border-collapse border border-white w-[600px] text-center">
-        <thead>
-          <tr className="border border-white">
-            <th className="p-1">Chinese</th>
-            <th className="p-1">Accuracy</th>
-            <th className="p-1">Retry?</th>
-          </tr>
-        </thead>
-        <tbody>
-          {characters.map((char, i) => {
-            const accuracy = accuracyArray[i]?.accuracy ?? null;
+      <div className="surface w-full max-w-3xl p-4 md:p-6 overflow-x-auto">
+        <h2 className="text-xl md:text-2xl font-bold mb-4">Session Results</h2>
+        <table className="w-full min-w-[520px] text-center border-collapse">
+          <thead>
+            <tr className="border-b border-stone-300 text-stone-600 text-sm uppercase tracking-[0.12em]">
+              <th className="p-2">Character</th>
+              <th className="p-2">Accuracy</th>
+              <th className="p-2">Retry</th>
+            </tr>
+          </thead>
+          <tbody>
+            {characters.map((char, i) => {
+              const accuracy = accuracyArray[i]?.accuracy ?? null;
 
-            let accuracyColor = "text-gray-400";
-            if (accuracy !== null) {
-              if (accuracy < 60) accuracyColor = "text-red-500";
-              else if (accuracy > 80) accuracyColor = "text-green-500";
-              else accuracyColor = "text-yellow-500";
-            }
+              let accuracyColor = "text-stone-400";
+              if (accuracy !== null) {
+                if (accuracy < 60) accuracyColor = "text-red-700";
+                else if (accuracy > 80) accuracyColor = "text-emerald-700";
+                else accuracyColor = "text-amber-700";
+              }
 
-            return (
-              <tr key={char.index} className="border border-white">
-                <td className="p-2 text-xl font-bold">{char.simplified}</td>
-                <td className={`p-2 text-xl ${accuracyColor}`}>
-                  {accuracy !== null ? `${accuracy}%` : "—"}
-                </td>
-                <td className="p-2">
-                  <button
-                    className="border rounded bg-purple-500 hover:bg-purple-600 text-white p-1"
-                    onClick={() =>
-                      router.push(
-                        `/redo?userId=${userId}&group=${group}&test=${test}&currentPhrase=${
-                          Number(char.index) - 1
-                        }`
-                      )
-                    }
-                  >
-                    Yes!
-                  </button>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+              return (
+                <tr key={char.index} className="border-b border-stone-200">
+                  <td className="p-3 text-2xl font-bold">{char.simplified}</td>
+                  <td className={`p-3 text-lg font-semibold ${accuracyColor}`}>
+                    {accuracy !== null ? `${accuracy}%` : "—"}
+                  </td>
+                  <td className="p-3">
+                    <button
+                      className="control-btn control-btn-primary text-sm px-3 py-2"
+                      onClick={() =>
+                        router.push(
+                          `/redo?userId=${userId}&group=${group}&test=${test}&currentPhrase=${
+                            Number(char.index) - 1
+                          }`
+                        )
+                      }
+                    >
+                      Retry
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

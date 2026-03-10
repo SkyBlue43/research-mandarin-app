@@ -9,5 +9,5 @@ export function useAccuracy(
 ) {
   useEffect(() => {
     saveAccuracyData(accuracy, test, userId, array_index);
-  }, [accuracy]);
+  }, [accuracy, test, userId, array_index]);
 }

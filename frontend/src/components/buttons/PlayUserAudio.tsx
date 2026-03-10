@@ -39,12 +39,12 @@ export default function PlayUserAudio(props: Props) {
       {props.userPitchLength > 0 && (
         <div>
           <button
-            className="p-4 rounded-full bg-blue-500 text-white hover:bg-blue-600"
+            className="control-btn control-btn-primary p-3"
             onClick={() => handlePlayAudio(props.userAudioPath)}
           >
             <Play />
           </button>
-          <div className="mb-8">Your Audio</div>
+          <div className="control-label">Your Audio</div>
         </div>
       )}
     </>

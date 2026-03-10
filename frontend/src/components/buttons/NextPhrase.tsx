@@ -38,7 +38,7 @@ export default function NextPhrase(props: Props) {
   return (
     <div>
       <button
-        className="text-md p-4 rounded-full bg-purple-500 text-white hover:bg-purple-600"
+        className="control-btn control-btn-primary text-sm md:text-base px-5 py-3"
         onClick={handleRightClick}
       >
         Next Phrase

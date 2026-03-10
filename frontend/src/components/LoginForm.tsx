@@ -35,10 +35,15 @@ export default function LoginForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
+    <form onSubmit={handleSubmit} className="surface w-[92vw] max-w-md p-6 md:p-8">
+      <h1 className="text-2xl md:text-3xl font-bold mb-2">Mandarin Tone Lab</h1>
+      <p className="text-stone-600 text-sm mb-6">
+        Sign in to begin your pronunciation session.
+      </p>
+
+      <div className="mb-4">
         <input
-          className="text-white p-2 border-blue-500 border-2 m-4 focus:ring-gray-500 focus:border-gray-500"
+          className="w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-stone-900 focus:outline-none focus:ring-2 focus:ring-teal-700"
           placeholder="Username"
           type="text"
           value={username}
@@ -46,9 +51,9 @@ export default function LoginForm() {
         />
       </div>
 
-      <div>
+      <div className="mb-5">
         <input
-          className="text-white p-2 border-blue-500 border-2 m-4 focus:ring-gray-500 focus:border-gray-500"
+          className="w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-stone-900 focus:outline-none focus:ring-2 focus:ring-teal-700"
           placeholder="Password"
           type="password"
           value={password}
@@ -57,10 +62,10 @@ export default function LoginForm() {
       </div>
 
       <button
-        className="m-2 p-2 bg-blue-500 text-lg text-black rounded hover:bg-gray-500"
+        className="control-btn control-btn-primary w-full text-base py-2.5"
         type="submit"
       >
-        Submit
+        Start Session
       </button>
     </form>
   );
