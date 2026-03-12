@@ -18,7 +18,7 @@ const AlignedPitchChart = React.memo(({ data }: { data: AlignedPoint[] }) => {
   }));
 
   return (
-    <div className="w-full min-w-0 h-[42vh] min-h-[260px] max-h-[400px]">
+    <div className="w-full min-w-0 h-[clamp(170px,34vh,360px)]">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={processedData}>
           <XAxis tick={false} dataKey="time" />
@@ -63,5 +63,7 @@ const AlignedPitchChart = React.memo(({ data }: { data: AlignedPoint[] }) => {
     </div>
   );
 });
+
+AlignedPitchChart.displayName = "AlignedPitchChart";
 
 export default AlignedPitchChart;

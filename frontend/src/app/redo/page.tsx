@@ -34,7 +34,7 @@ function RedoContent() {
   const test = searchParams.get("test");
   const group = searchParams.get("group");
   const userId = searchParams.get("userId");
-  let currentPhraseIndex = Number(searchParams.get("currentPhrase")!);
+  const currentPhraseIndex = Number(searchParams.get("currentPhrase")!);
   const [currentPhrase, setCurrentPhrase] = useState(currentPhraseIndex);
   const [pageState, setPageState] = useState<PageState>("none");
   const [graphState, setGraphState] = useState<GraphState>("none");
@@ -46,8 +46,6 @@ function RedoContent() {
     currentTraditional,
     currentPinyin,
     currentHint,
-    charError,
-    charLoading,
   } = useCharacters(test, currentPhrase);
 
   const { referenceAudioPath, referencePitch } = useReferenceAudio(

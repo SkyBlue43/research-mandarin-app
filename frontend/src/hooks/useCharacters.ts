@@ -40,9 +40,11 @@ export function useCharacters(test: string | null, currentPhrase: number) {
           setCurrentIndex(curr.index);
           setCurrentHint(curr.hint);
         }
-      } catch (err: any) {
-        console.error("Error loading characters:", err);
-        setCharError(err.message || "Failed to load characters");
+      } catch (err: unknown) {
+        const message =
+          err instanceof Error ? err.message : "Failed to load characters";
+        console.error("Error loading characters:", message);
+        setCharError(message);
       } finally {
         setCharLoading(false);
       }

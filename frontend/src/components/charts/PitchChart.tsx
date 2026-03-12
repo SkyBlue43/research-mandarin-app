@@ -10,7 +10,7 @@ import React from "react";
 const PitchChart = React.memo(
   ({ data, color }: { data: PitchPoint[]; color: string }) => {
     return (
-      <div className="w-full min-w-0 h-[42vh] min-h-[260px] max-h-[400px]">
+      <div className="w-full min-w-0 h-[clamp(170px,34vh,360px)]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data}>
             <XAxis tick={false} dataKey="time" />
@@ -32,5 +32,7 @@ const PitchChart = React.memo(
     );
   }
 );
+
+PitchChart.displayName = "PitchChart";
 
 export default PitchChart;

@@ -16,16 +16,20 @@ export default function Record(props: Props) {
     }
   };
   return (
-    <div>
+    <div className="flex items-center justify-center">
       <button
-        className={`control-btn p-4 text-white ${
+        className={`control-btn p-[clamp(0.6rem,3vw,1rem)] text-white ${
           props.recording
             ? "bg-red-700 hover:bg-red-800"
             : "control-btn-primary"
         }`}
         onClick={handleRecording}
       >
-        {props.recording ? <Square /> : <Mic />}
+        {props.recording ? (
+          <Square className="h-[clamp(1rem,4vw,1.5rem)] w-[clamp(1rem,4vw,1.5rem)]" />
+        ) : (
+          <Mic className="h-[clamp(1rem,4vw,1.5rem)] w-[clamp(1rem,4vw,1.5rem)]" />
+        )}
       </button>
     </div>
   );

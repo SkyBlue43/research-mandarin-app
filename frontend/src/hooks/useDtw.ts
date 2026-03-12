@@ -12,6 +12,19 @@ type TranscribedPoint = {
   end: number;
 };
 
+type AlignedGraphPoint = {
+  time: number;
+  reference: number;
+  user: number;
+  accuracy: number;
+};
+
+type RefWord = {
+  char: string;
+  start: number;
+  end: number;
+};
+
 export function useDtw(
   userPitch: PitchPoint[],
   referencePitch: PitchPoint[],
@@ -19,9 +32,11 @@ export function useDtw(
   transcribedWords: TranscribedPoint[],
   currentIndex: string
 ) {
-  const [alignedGraphData, setAlignedGraphData] = useState<any[]>([]);
+  const [alignedGraphData, setAlignedGraphData] = useState<AlignedGraphPoint[]>(
+    []
+  );
   const [accuracy, setAccuracy] = useState(0);
-  const [refWordsArray, setRefWordsArray] = useState<any[]>([]);
+  const [refWordsArray, setRefWordsArray] = useState<RefWord[]>([]);
   const [errorDTW, setErrorDTW] = useState<string | null>(null);
 
   useEffect(() => {
@@ -38,8 +53,9 @@ export function useDtw(
         setAlignedGraphData(aligned_graph_data);
         setAccuracy(total_accuracy);
         setRefWordsArray(ref_characters);
-      } catch (err: any) {
-        setErrorDTW(err.message || "Unknown error");
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : "Unknown error";
+        setErrorDTW(message);
       }
     };
     if (userPitch.length > 0) {

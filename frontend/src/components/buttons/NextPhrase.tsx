@@ -1,5 +1,4 @@
 import { useRouter } from "next/navigation";
-import { GraphState, PageState } from "src/app/session/page";
 import { Character } from "src/hooks/useCharacters";
 
 type Props = {
@@ -10,8 +9,8 @@ type Props = {
   characters: Character[];
   setCurrentPhrase: (value: number | ((prev: number) => number)) => void;
   clearAllData: () => void;
-  sendBackToFinished?: Boolean;
-  isTest?: Boolean;
+  sendBackToFinished?: boolean;
+  isTest?: boolean;
 };
 
 export default function NextPhrase(props: Props) {

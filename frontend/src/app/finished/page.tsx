@@ -18,7 +18,7 @@ function FinishedContent() {
   const test = searchParams.get("test");
   const router = useRouter();
 
-  const [arrayIndex, setArrayIndex] = useState(0);
+  const arrayIndex = 0;
   const [accuracyArray, setAccuracyArray] = useState<AccuracyResult[]>([]);
 
   const { characters } = useCharacters(test, arrayIndex);

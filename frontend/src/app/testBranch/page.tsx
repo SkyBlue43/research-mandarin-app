@@ -36,7 +36,7 @@ function SessionContent() {
   const group = searchParams.get("group");
   const userId = searchParams.get("userId");
   const isTest = searchParams.get("isTest") === "true";
-  let currentPhraseIndex = Number(searchParams.get("currentPhrase")!);
+  const currentPhraseIndex = Number(searchParams.get("currentPhrase")!);
   const [currentPhrase, setCurrentPhrase] = useState(currentPhraseIndex);
   const [pageState, setPageState] = useState<PageState>("none");
   const [graphState, setGraphState] = useState<GraphState>("none");
@@ -49,8 +49,6 @@ function SessionContent() {
     currentTraditional,
     currentPinyin,
     currentHint,
-    charError,
-    charLoading,
   } = useCharacters(test, currentPhrase);
 
   const { referenceAudioPath, referencePitch } = useReferenceAudio(
@@ -130,7 +128,7 @@ function SessionContent() {
   });
 
   return (
-    <div className="app-shell min-h-screen flex flex-col items-center text-center relative">
+    <div className="app-shell min-h-[100svh] max-h-[100svh] grid grid-rows-[auto_minmax(0,1fr)_auto] gap-[clamp(0.4rem,1.6vh,0.9rem)] justify-items-center text-center relative px-3 pt-2 pb-3 sm:px-4 sm:pt-3 sm:pb-4 overflow-hidden">
       {!isTest &&
         pageState !== "none" &&
         pageState !== "playingReferenceAudio" &&
@@ -141,7 +139,7 @@ function SessionContent() {
           </div>
         )}
 
-      <header className="w-full flex flex-col items-center gap-4 pt-3">
+      <header className="w-full flex flex-col items-center gap-[clamp(0.5rem,2vh,1rem)] pt-1 sm:pt-2">
         {!isTest && (
           <Timer
             userId={userId}
@@ -160,8 +158,8 @@ function SessionContent() {
         />
       </header>
 
-      <div className="w-full min-w-0 mt-3 grid grid-cols-1 lg:[grid-template-columns:220px_minmax(0,1fr)] gap-4 items-stretch">
-        <div className="surface p-3 w-full min-w-0 flex flex-col items-center justify-evenly lg:min-h-[430px]">
+      <div className="min-h-0 w-full min-w-0 grid grid-cols-1 lg:[grid-template-columns:200px_minmax(0,1fr)] gap-3 sm:gap-4 items-stretch overflow-hidden">
+        <div className="surface p-2 sm:p-3 w-full min-w-0 flex flex-col items-center justify-evenly lg:min-h-[360px]">
           {!isTest && pageState !== "none" && (
             <PlayUserAudio
               userPitchLength={userPitch.length}
@@ -186,7 +184,7 @@ function SessionContent() {
             )}
         </div>
 
-        <div className="surface p-3 w-full min-w-0 flex items-center justify-center">
+        <div className="surface p-2 sm:p-3 w-full min-w-0 flex items-center justify-center">
           <div className="w-full min-w-0">
             {!isTest &&
               group === "a" &&
@@ -202,7 +200,7 @@ function SessionContent() {
             {!isTest && group === "a" && graphState === "both" && alignedGraphData.length > 0 && (
               <div className="w-full min-w-0">
                 <AlignedPitchChart data={memoizedAlignedPitch} />
-                <div className="relative w-full h-8 mt-3 overflow-hidden text-stone-700 text-sm">
+                <div className="relative w-full h-7 sm:h-8 mt-2 sm:mt-3 overflow-hidden text-stone-700 text-[clamp(0.7rem,2.6vw,0.9rem)]">
                   {refWordsArray.length > 0 &&
                     refWordsArray.map((word, i) => {
                       const firstStart = refWordsArray[0].start;
@@ -233,7 +231,7 @@ function SessionContent() {
         </div>
       </div>
 
-      <footer className="surface mt-4 w-full grid grid-cols-3 items-center p-4 md:p-5">
+      <footer className="surface w-full grid grid-cols-[1fr_auto_1fr] items-center px-[clamp(0.6rem,3vw,1rem)] py-[clamp(0.5rem,2.5vw,0.9rem)]">
         <div></div>
         <Record
           recording={recording}

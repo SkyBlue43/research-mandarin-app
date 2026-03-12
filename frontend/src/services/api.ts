@@ -110,8 +110,10 @@ export const fetchCharacters = async (test: string | null) => {
     });
     const data = await result.json();
     return data;
-  } catch (err: any) {
-    throw new Error(err.message);
+  } catch (err: unknown) {
+    const message =
+      err instanceof Error ? err.message : "Failed to fetch characters";
+    throw new Error(message);
   }
 };
 

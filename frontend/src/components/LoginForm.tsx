@@ -28,9 +28,11 @@ export default function LoginForm() {
           }&currentPhrase=${0}`
         );
       }
-    } catch (error: any) {
-      console.error("Login error:", error.message);
-      alert(error.message);
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : "An unexpected error occurred.";
+      console.error("Login error:", message);
+      alert(message);
     }
   };
 

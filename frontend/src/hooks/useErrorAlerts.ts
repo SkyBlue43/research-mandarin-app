@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { GraphState, PageState } from "src/app/session/page";
+import { PageState } from "src/app/session/page";
 
 type Props = {
   errorDTW: string | null;
@@ -8,15 +8,17 @@ type Props = {
 };
 
 export function useErrorAlerts(props: Props) {
+  const { errorDTW, pageState, clearAllData } = props;
+
   useEffect(() => {
     const handleError = () => {
-      if (props.errorDTW) {
-        alert(props.errorDTW);
-        if (props.pageState !== "moveOn") {
-          props.clearAllData();
+      if (errorDTW) {
+        alert(errorDTW);
+        if (pageState !== "moveOn") {
+          clearAllData();
         }
       }
     };
     handleError();
-  }, [props.errorDTW]);
+  }, [errorDTW, pageState, clearAllData]);
 }

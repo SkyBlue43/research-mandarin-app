@@ -15,7 +15,7 @@ export function useShiftedAudio(
       };
       getCorrectAudio();
     }
-  }, [userBlob]);
+  }, [referenceBlob, userBlob]);
 
   return { correctedAudio };
 }

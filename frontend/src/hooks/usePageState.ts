@@ -20,17 +20,24 @@ function waitForAudioEnd(audio: HTMLAudioElement) {
 
 export default function usePageState(props: Props) {
   const { showAlert, closeAlert } = useAlert();
+  const {
+    pageState,
+    setPageState,
+    setGraphState,
+    userAudioPath,
+    referenceAudioPath,
+  } = props;
 
   useEffect(() => {
     let cancelled = false;
 
     const run = async () => {
-      if (props.pageState === "playingUserAudio") {
+      if (pageState === "playingUserAudio") {
         if (cancelled) return;
         showAlert("Playing your audio", "#3b82f6");
 
         if (cancelled) return;
-        const audio = new Audio(props.userAudioPath);
+        const audio = new Audio(userAudioPath);
         if (cancelled) return;
         audio.play().catch(console.error);
         if (cancelled) return;
@@ -42,12 +49,12 @@ export default function usePageState(props: Props) {
         if (cancelled) return;
 
         closeAlert();
-        props.setPageState("playingReferenceAudio");
-        props.setGraphState("reference");
-      } else if (props.pageState === "playingReferenceAudio") {
+        setPageState("playingReferenceAudio");
+        setGraphState("reference");
+      } else if (pageState === "playingReferenceAudio") {
         showAlert("Playing the correct audio", "#d1d5db");
 
-        const audio = new Audio(props.referenceAudioPath);
+        const audio = new Audio(referenceAudioPath);
         audio.play().catch(console.error);
 
         await waitForAudioEnd(audio);
@@ -57,9 +64,9 @@ export default function usePageState(props: Props) {
         if (cancelled) return;
 
         closeAlert();
-        props.setPageState("moveOn");
-        props.setGraphState("both");
-      } else if (props.pageState === "moveOn") {
+        setPageState("moveOn");
+        setGraphState("both");
+      } else if (pageState === "moveOn") {
         showAlert("You may move on or retry", "#22c55e");
 
         await sleep(3000);
@@ -75,7 +82,15 @@ export default function usePageState(props: Props) {
       closeAlert();
       cancelled = true;
     };
-  }, [props.pageState]);
+  }, [
+    pageState,
+    referenceAudioPath,
+    userAudioPath,
+    setPageState,
+    setGraphState,
+    showAlert,
+    closeAlert,
+  ]);
 
   return;
 }
