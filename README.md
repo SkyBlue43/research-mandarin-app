@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mandarin Tone Lab (Research App)
 
-## Getting Started
+This repo contains a research app for Mandarin tone practice, split into a Next.js frontend and a Python backend.
 
-First, run the development server:
+## Project Layout
+
+- `frontend/`: Next.js app (UI, client-side logic)
+- `backend/`: Python API + processing (audio, scoring, curriculum)
+- `tempData.csv`, `temp_tones/`: local research artifacts (optional)
+
+## Requirements
+
+- Node.js + pnpm (frontend)
+- Python 3.10+ (backend)
+
+## Environment
+
+You will likely need:
+
+- `backend/.env` for backend secrets/config
+- `frontend/.env.local` for the frontend to point at the backend
+
+Example:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# backend/.env
+DATABASE_URL=...
+SECRET_KEY=...
+
+# frontend/.env.local
+NEXT_PUBLIC_BACKEND_URL=http://localhost:8000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Run Locally
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 1) Backend
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+cd backend
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python main.py
+```
 
-## Learn More
+### 2) Frontend
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+cd frontend
+pnpm install
+pnpm dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Then open `http://localhost:3000`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Tests
 
-## Deploy on Vercel
+### Backend
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+cd backend
+pytest
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Frontend
+
+```bash
+cd frontend
+pnpm lint
+pnpm test
+```
+
+## Notes
+
+- Curriculum CSVs live in `backend/curriculum/`.
+- Audio and alignment logic runs in the backend.

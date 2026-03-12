@@ -15,6 +15,9 @@
 /frontend/out/
 /frontend/build
 /frontend/coverage
+/frontend/.pytest_cache/
+/frontend/test-results/
+/frontend/playwright-report/
 
 # Frontend misc
 /frontend/.vercel
@@ -26,6 +29,7 @@
 # =========================
 __pycache__/
 *.pyc
+backend/.pytest_cache/
 backend/vosk-model-cn-0.22/
 backend/MFA/pretrained_models/
 backend/models/
