@@ -13,3 +13,4 @@ pydub
 zhon
 biopython
 fastdtw
+psycopg2-binary
