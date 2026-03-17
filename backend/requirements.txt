@@ -14,3 +14,4 @@ zhon
 biopython
 fastdtw
 psycopg2-binary
+python-dotenv
