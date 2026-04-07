@@ -6,7 +6,6 @@ This repo contains a research app for Mandarin tone practice, split into a Next.
 
 - `frontend/`: Next.js app (UI, client-side logic)
 - `backend/`: Python API + processing (audio, scoring, curriculum)
-- `tempData.csv`, `temp_tones/`: local research artifacts (optional)
 
 ## Requirements
 

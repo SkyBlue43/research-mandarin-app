@@ -5,7 +5,6 @@ from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 
 
 from models import Accuracy, Auth, DTWRequest, Highest_Accuracy, Phrase, Test, User
-from routes.clone_audio import shift_audio
 from routes.transcribe import transcribe_audio
 from routes.analyze_audio import analyze_given_audio
 from routes.get_highest_accuracies import get_highest_accuracies_for_user
@@ -124,16 +123,6 @@ async def transcribe(file: UploadFile = File(...), data: str = Form(...)):
         raise HTTPException(status_code=422, detail=str(e))
     except RuntimeError as e:
         raise HTTPException(status_code=500, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@app.post("/clone")
-async def clone(reference: UploadFile = File(...), user: UploadFile = File(...)):
-    try:
-        return await shift_audio(reference, user)
-    except ValueError as e:
-        raise HTTPException(status_code=422, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
