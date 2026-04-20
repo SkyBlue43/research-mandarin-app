@@ -8,13 +8,13 @@ type PitchPoint = {
   frequency: number;
 };
 
-export function useReferenceAudio(test: string, currentCurriculumId: string) {
+export function useReferenceAudio(lessonId: string, currentCurriculumId: string) {
   const [referenceAudioPath, setReferenceAudioPath] = useState("");
   const [referencePitch, setReferencePitch] = useState<PitchPoint[]>([]);
 
   useEffect(() => {
     const getReferenceAudio = async () => {
-      const path = `${BASE}/sounds/${test}/${currentCurriculumId}.mp3`;
+      const path = `${BASE}/sounds/${lessonId}/${currentCurriculumId}.mp3`;
       setReferenceAudioPath(path);
       const response = await fetch(path);
       const blob = await response.blob();
@@ -24,7 +24,7 @@ export function useReferenceAudio(test: string, currentCurriculumId: string) {
       }
     };
     getReferenceAudio();
-  }, [test, currentCurriculumId]);
+  }, [lessonId, currentCurriculumId]);
 
   return { referenceAudioPath, referencePitch };
 }

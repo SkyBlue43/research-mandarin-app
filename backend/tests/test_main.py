@@ -18,17 +18,17 @@ def test_root_returns_welcome_message():
     response = client.get("/")
 
     assert response.status_code == 200
-    assert response.json() == {"message": "Welcome to the Mandarin Research API!"}
+    assert response.json() == {"message": "Welcome to the Mandarin Tone Practice API!"}
 
 
 def test_get_characters_success(monkeypatch):
     monkeypatch.setattr(
         main_module,
         "get_characters_from_curriculum",
-        lambda test_number: {"characters": [{"index": "1", "simplified": "八"}]},
+        lambda lesson_id: {"characters": [{"index": "1", "simplified": "八"}]},
     )
 
-    response = client.post("/get-characters", json={"test_number": "1"})
+    response = client.post("/get-characters", json={"lesson_id": "1"})
 
     assert response.status_code == 200
     assert response.json() == {"characters": [{"index": "1", "simplified": "八"}]}
@@ -40,37 +40,17 @@ def test_get_characters_returns_404_when_missing(monkeypatch):
 
     monkeypatch.setattr(main_module, "get_characters_from_curriculum", _raise)
 
-    response = client.post("/get-characters", json={"test_number": "404"})
+    response = client.post("/get-characters", json={"lesson_id": "404"})
 
     assert response.status_code == 404
     assert response.json()["detail"] == "File not found"
 
 
-def test_check_password_returns_401_for_invalid_credentials(monkeypatch):
-    def _raise(_, __):
-        raise PermissionError("Invalid username or password")
-
-    monkeypatch.setattr(main_module, "authenticate_user", _raise)
-
-    response = client.post("/check-password", json={"username": "u", "password": "p"})
-
-    assert response.status_code == 401
-    assert response.json()["detail"] == "Invalid username or password"
-
-
-def test_save_accuracy_returns_422_on_value_error(monkeypatch):
-    def _raise(*_):
-        raise ValueError("Accuracy must be between 0 and 100")
-
-    monkeypatch.setattr(main_module, "save_pitch_accuracy", _raise)
-
-    response = client.post(
-        "/save-accuracy",
-        json={"user_id": 1, "test": "1", "accuracy": 101, "array_number": "1"},
-    )
+def test_get_characters_requires_lesson_id():
+    response = client.post("/get-characters", json={})
 
     assert response.status_code == 422
-    assert response.json()["detail"] == "Accuracy must be between 0 and 100"
+    assert response.json()["detail"] == "Lesson ID is required."
 
 
 def test_dtw_returns_422_on_validation_error(monkeypatch):
@@ -82,7 +62,7 @@ def test_dtw_returns_422_on_validation_error(monkeypatch):
     payload = {
         "reference_pitch": {"frequency": [0.1, 0.2], "time": [0.1, 0.2]},
         "user_pitch": {"frequency": [0.1, 0.2], "time": [0.1, 0.2]},
-        "test": "1",
+        "lesson_id": "1",
         "currentIndex": "1",
         "words_user": [{"char": "八", "start": 0.1, "end": 0.2}],
     }
@@ -150,21 +130,3 @@ def test_transcribe_returns_500_for_runtime_error(monkeypatch):
 
     assert response.status_code == 500
     assert response.json()["detail"] == "Unable to convert audio to WAV."
-
-
-def test_clone_returns_422_on_value_error(monkeypatch):
-    async def _raise(*_):
-        raise ValueError("Audio files are required")
-
-    monkeypatch.setattr(main_module, "shift_audio", _raise)
-
-    response = client.post(
-        "/clone",
-        files={
-            "reference": ("ref.wav", b"ref", "audio/wav"),
-            "user": ("user.wav", b"user", "audio/wav"),
-        },
-    )
-
-    assert response.status_code == 422
-    assert response.json()["detail"] == "Audio files are required"

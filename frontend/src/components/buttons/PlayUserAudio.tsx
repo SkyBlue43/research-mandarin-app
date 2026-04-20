@@ -1,5 +1,5 @@
 import { Play } from "lucide-react";
-import { GraphState } from "src/app/session/page";
+import { GraphState } from "src/components/session/sessionTypes";
 import { useAlert } from "../../hooks/useAlert";
 
 type Props = {

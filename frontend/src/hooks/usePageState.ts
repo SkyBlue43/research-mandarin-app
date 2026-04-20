@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useAlert } from "./useAlert";
-import { GraphState, PageState } from "src/app/session/page";
+import { GraphState, PageState } from "src/components/session/sessionTypes";
 
 type Props = {
   pageState: PageState;
@@ -8,6 +8,7 @@ type Props = {
   setGraphState: (graphState: GraphState) => void;
   userAudioPath: string;
   referenceAudioPath: string;
+  enabled?: boolean;
 };
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -26,9 +27,14 @@ export default function usePageState(props: Props) {
     setGraphState,
     userAudioPath,
     referenceAudioPath,
+    enabled = true,
   } = props;
 
   useEffect(() => {
+    if (!enabled) {
+      return;
+    }
+
     let cancelled = false;
 
     const run = async () => {
@@ -90,6 +96,7 @@ export default function usePageState(props: Props) {
     setGraphState,
     showAlert,
     closeAlert,
+    enabled,
   ]);
 
   return;

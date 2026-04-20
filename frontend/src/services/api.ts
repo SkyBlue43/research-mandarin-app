@@ -14,7 +14,7 @@ type TranscribedPoint = {
 export const DTW = async (
   userPitch: PitchPoint[],
   referencePitch: PitchPoint[],
-  test: string | null,
+  lessonId: string | null,
   userWordArray: TranscribedPoint[],
   currentIndex: string
 ) => {
@@ -27,7 +27,7 @@ export const DTW = async (
       frequency: userPitch.map((p) => p.frequency),
       time: userPitch.map((p) => p.time),
     },
-    test,
+    lesson_id: lessonId,
     currentIndex,
     words_user: userWordArray,
   };
@@ -99,15 +99,21 @@ export const analyzeAudio = async (
   return data;
 };
 
-export const fetchCharacters = async (test: string | null) => {
+export const fetchCharacters = async (lessonId: string | null) => {
   try {
     const result = await fetch(`${BASE}/get-characters`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ test_number: test }),
+      body: JSON.stringify({ lesson_id: lessonId }),
     });
+
+    if (!result.ok) {
+      const error = await result.json();
+      throw new Error(error.detail || "Failed to fetch characters");
+    }
+
     const data = await result.json();
     return data;
   } catch (err: unknown) {
@@ -131,57 +137,4 @@ export const shiftAudio = async (referenceBlob: Blob, userBlob: Blob) => {
   );
 
   return correctedAudioUrl;
-};
-
-export const saveAccuracyData = async (
-  accuracy: number,
-  test: string,
-  userId: number,
-  array_number: string
-) => {
-  const payload = {
-    user_id: userId,
-    test,
-    accuracy,
-    array_number,
-  };
-  await fetch(`${BASE}/save-accuracy`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-  });
-};
-
-export const getHighestAccuracies = async (
-  userId: number,
-  group: string,
-  test: string
-) => {
-  const result = await fetch(`${BASE}/get-highest-accuracies`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      test: test,
-      user_id: userId,
-      group: group,
-    }),
-  });
-  const data = await result.json();
-  return data.accuracies;
-};
-
-export const updateTest = async (userId: string | null) => {
-  await fetch(`${BASE}/update-test`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      user_id: userId,
-    }),
-  });
 };

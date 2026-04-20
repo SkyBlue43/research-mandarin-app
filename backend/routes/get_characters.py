@@ -1,31 +1,29 @@
-from database import get_connection
+import csv
+from pathlib import Path
+
+CURRICULUM_DIR = Path(__file__).resolve().parent.parent / "curriculum"
 
 
-def get_characters_from_curriculum(test_number):
-    conn = get_connection()
-    cur = conn.cursor()
+def get_characters_from_curriculum(content_id):
+    csv_path = CURRICULUM_DIR / f"{content_id}.csv"
+    if not csv_path.exists():
+        raise FileNotFoundError("File not found")
 
-    cur.execute("""
-                SELECT id, curriculum_id, simplified, traditional, pinyin, english, hint
-                FROM characters
-                WHERE test = %s
-                ORDER BY id;
-                """, (test_number, ))
-    characters = cur.fetchall()
     character_list = []
-    for char in characters:
-        character_list.append({
-            'index': str(char[0]),
-            'curriculumId': str(char[1]),
-            'simplified': char[2],
-            'traditional': char[3],
-            'pinyin': char[4],
-            'english': char[5],
-            'hint': char[6]
-        })
-    
-    
-    cur.close()
-    conn.close()
+    with csv_path.open(newline="", encoding="utf-8-sig") as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            index = str(row["Index"])
+            character_list.append(
+                {
+                    "index": index,
+                    "curriculumId": index,
+                    "simplified": row["Simplified"],
+                    "traditional": row["Traditional"],
+                    "pinyin": row["Pinyin"],
+                    "english": row["English"],
+                    "hint": row["Hint"],
+                }
+            )
 
-    return {'characters': character_list}
+    return {"characters": character_list}

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { PageState } from "src/app/session/page";
+import { PageState } from "src/components/session/sessionTypes";
 
 type Props = {
   errorDTW: string | null;

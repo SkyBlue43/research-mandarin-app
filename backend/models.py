@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel
 
 
@@ -17,27 +17,9 @@ class WordData(BaseModel):
 class DTWRequest(BaseModel):
     reference_pitch: PitchData
     user_pitch: PitchData
-    test: str
+    lesson_id: Optional[str] = None
     currentIndex: str
     words_user: List[WordData]
 
-class Highest_Accuracy(BaseModel):
-    user_id: int
-    test: str
-    group: str
-
-class Accuracy(BaseModel):
-    user_id: int
-    test: str
-    accuracy: float
-    array_number: str
-
-class User(BaseModel):
-    user_id: int
-
-class Auth(BaseModel):
-    username: str
-    password: str
-
 class Test(BaseModel):
-    test_number: str
+    lesson_id: Optional[str] = None

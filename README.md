@@ -1,6 +1,6 @@
-# Mandarin Tone Lab (Research App)
+# Mandarin Tone Lab
 
-This repo contains a research app for Mandarin tone practice, split into a Next.js frontend and a Python backend.
+This repo contains a self-contained Mandarin tone practice app, split into a Next.js frontend and a Python backend. It is set up to run locally without a database or account system.
 
 ## Project Layout
 
@@ -14,18 +14,9 @@ This repo contains a research app for Mandarin tone practice, split into a Next.
 
 ## Environment
 
-You will likely need:
-
-- `backend/.env` for backend secrets/config
-- `frontend/.env.local` for the frontend to point at the backend
-
-Example:
+The only environment setting you typically need is the frontend backend URL:
 
 ```bash
-# backend/.env
-DATABASE_URL=...
-SECRET_KEY=...
-
 # frontend/.env.local
 NEXT_PUBLIC_BACKEND_URL=http://localhost:8000
 ```
@@ -73,3 +64,4 @@ pnpm test
 
 - Curriculum CSVs live in `backend/curriculum/`.
 - Audio and alignment logic runs in the backend.
+- Reference audio and transcript assets are bundled in the repo.

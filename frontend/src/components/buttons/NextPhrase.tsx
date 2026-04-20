@@ -2,46 +2,62 @@ import { useRouter } from "next/navigation";
 import { Character } from "src/hooks/useCharacters";
 
 type Props = {
-  userId: string;
-  test: string;
-  group: string;
+  direction: "previous" | "next";
+  lessonId: string;
   currentPhrase: number;
   characters: Character[];
   setCurrentPhrase: (value: number | ((prev: number) => number)) => void;
   clearAllData: () => void;
-  sendBackToFinished?: boolean;
-  isTest?: boolean;
+  completionPath?: string;
 };
 
 export default function NextPhrase(props: Props) {
   const router = useRouter();
-  const handleRightClick = () => {
-    props.clearAllData();
+  const isFirstPhrase = props.currentPhrase === 0;
+  const isLastPhrase = props.currentPhrase === props.characters.length - 1;
 
-    if (
-      props.currentPhrase === props.characters.length - 1 ||
-      props.sendBackToFinished
-    ) {
-      if (props.isTest) {
-        router.push("/");
-      }
+  const navigateToPhrase = (nextPhrase: number) => {
+    props.clearAllData();
+    props.setCurrentPhrase(() => nextPhrase);
+  };
+
+  const handlePreviousClick = () => {
+    if (isFirstPhrase) {
+      return;
+    }
+
+    navigateToPhrase(props.currentPhrase - 1);
+  };
+
+  const handleNextClick = () => {
+    if (isLastPhrase) {
       props.setCurrentPhrase(() => 0);
-      router.push(
-        `finished?userId=${props.userId}&test=${props.test}&group=${props.group}`
-      );
+      const params = new URLSearchParams({ lesson: props.lessonId });
+      router.push(`${props.completionPath ?? "/finished"}?${params.toString()}`);
     } else {
-      props.setCurrentPhrase((prev) => prev + 1);
+      navigateToPhrase(props.currentPhrase + 1);
     }
   };
 
-  return (
-    <div>
+  if (props.direction === "previous") {
+    return (
       <button
-        className="control-btn control-btn-primary text-sm md:text-base px-5 py-3"
-        onClick={handleRightClick}
+        className="control-btn control-btn-primary text-sm md:text-base px-4 py-2.5 disabled:cursor-not-allowed disabled:opacity-45"
+        onClick={handlePreviousClick}
+        disabled={isFirstPhrase}
       >
-        Next Phrase
+        Previous
       </button>
-    </div>
+    );
+  }
+
+  return (
+    <button
+      className="control-btn control-btn-primary text-sm md:text-base px-4 py-2.5 disabled:cursor-not-allowed disabled:opacity-45"
+      onClick={handleNextClick}
+      disabled={props.characters.length === 0}
+    >
+      {isLastPhrase ? "Finish Lesson" : "Next"}
+    </button>
   );
 }

@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
-import { GraphState, PageState } from "src/app/session/page";
 import { analyzeAudio } from "src/services/api";
+import { GraphState, PageState } from "src/components/session/sessionTypes";
 
 type PitchPoint = {
   time: number;
@@ -10,7 +10,7 @@ type PitchPoint = {
 type Props = {
   setPageState: (pageState: PageState) => void;
   setGraphState: (graphState: GraphState) => void;
-  isTest?: boolean;
+  autoPlayReview?: boolean;
 };
 
 export function useAudioRecorder(props: Props) {
@@ -56,12 +56,11 @@ export function useAudioRecorder(props: Props) {
 
       setUserPitch(data.pitch);
       mediaRecorder.stream.getTracks().forEach((track) => track.stop());
-      //This allows the state to start changing if it is not a test
-      if (!startPageTransition && !props.isTest) {
+      if (!startPageTransition && props.autoPlayReview !== false) {
         setStartPageTransition(true);
         props.setPageState("playingUserAudio");
         props.setGraphState("user");
-      } else if (props.isTest) {
+      } else {
         props.setPageState("moveOn");
       }
     };

@@ -10,7 +10,7 @@ export type Character = {
   hint: string;
 };
 
-export function useCharacters(test: string | null, currentPhrase: number) {
+export function useCharacters(lessonId: string | null, currentPhrase: number) {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [currentSimplified, setCurrentSimplified] = useState("");
   const [currentTraditional, setCurrentTraditional] = useState("");
@@ -28,7 +28,7 @@ export function useCharacters(test: string | null, currentPhrase: number) {
         setCharLoading(true);
         setCharError(null);
 
-        const data = await fetchCharacters(test);
+        const data = await fetchCharacters(lessonId);
         setCharacters(data.characters);
 
         const curr = data.characters[currentPhrase];
@@ -51,7 +51,7 @@ export function useCharacters(test: string | null, currentPhrase: number) {
     };
 
     loadCharacters();
-  }, [test, currentPhrase]);
+  }, [lessonId, currentPhrase]);
 
   return {
     characters,

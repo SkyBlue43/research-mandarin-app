@@ -128,7 +128,7 @@ def get_character_array(words_reference_data):
 def dtw(
     reference_pitch,
     user_pitch,
-    test,
+    lesson_id,
     current_index,
     words_user_data
 ):
@@ -141,7 +141,7 @@ def dtw(
             "end": word.end
         })
 
-    characters_ref = get_characters_from_csv(test, current_index)
+    characters_ref = get_characters_from_csv(lesson_id, current_index)
     
     if len(characters_user) != len(characters_ref):
         print("here")
@@ -277,9 +277,9 @@ def calculate_alignment(characters_user, characters_ref, char_amount, alignment_
     return {"alignment": modified_alignment, "accuracy": round((total_accuracy / char_amount) * 100, 2), 'ref_characters': characters_ref}
 
 
-def get_characters_from_csv(test, current_index):
+def get_characters_from_csv(lesson_id, current_index):
     try:
-        with open(f'transcripts/results_{test}/{current_index}.json') as file:
+        with open(f"transcripts/results_{lesson_id}/{current_index}.json") as file:
             characters = json.load(file)['alignment']
     except FileNotFoundError:
         raise FileNotFoundError("File not found")

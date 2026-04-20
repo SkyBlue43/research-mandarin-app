@@ -11,42 +11,31 @@ client = TestClient(app)
 
 
 def test_get_characters_works():
-    payload = {"test_number": "1"}
+    payload = {"lesson_id": "1"}
     response = client.post("/get-characters", json=payload)
 
     assert response.status_code == 200
-    assert response.json()['characters'][0] == {'index': '1', 'simplified': '八', 'traditional': '八', 'pinyin': 'bā', 'english': 'eight', 'hint': 'First tone'}
+    assert response.json()["characters"][0] == {
+        "index": "1",
+        "curriculumId": "1",
+        "simplified": "八",
+        "traditional": "八",
+        "pinyin": "bā",
+        "english": "eight",
+        "hint": "First tone",
+    }
 
 
 def test_file_not_found_get_characters():
-    payload = {"test_number": "17"}
+    payload = {"lesson_id": "17"}
     response = client.post("/get-characters", json=payload)
 
     assert response.status_code == 404
-    assert response.json()['detail'] == 'File not found'
+    assert response.json()["detail"] == "File not found"
 
 
-def test_check_password_works():
-    payload = {"username": "test", "password": "test"}
-    response = client.post("/check-password", json=payload)
+def test_missing_lesson_id_returns_422():
+    response = client.post("/get-characters", json={})
 
-    assert response.status_code == 200
-    assert response.json() == {"user_id": "test_person", "group": "a", "test": "pre"}
-
-
-def test_check_username_and_password_is_invalid():
-    payload = {"username": "test", "password": "none"}
-    response = client.post("/check-password", json=payload)
-
-    assert response.status_code == 401
-    assert response.json()["detail"] == 'Invalid username or password'
-
-    payload = {"username": "none", "password": "test"}
-    response = client.post("/check-password", json=payload)
-
-    assert response.status_code == 401
-    assert response.json()["detail"] == 'Invalid username or password'
-
-def test_update_users():
-    pass
-
+    assert response.status_code == 422
+    assert response.json()["detail"] == "Lesson ID is required."

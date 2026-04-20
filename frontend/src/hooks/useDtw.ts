@@ -28,7 +28,7 @@ type RefWord = {
 export function useDtw(
   userPitch: PitchPoint[],
   referencePitch: PitchPoint[],
-  test: string,
+  lessonId: string,
   transcribedWords: TranscribedPoint[],
   currentIndex: string
 ) {
@@ -46,7 +46,7 @@ export function useDtw(
         const [aligned_graph_data, total_accuracy, ref_characters] = await DTW(
           userPitch!,
           referencePitch,
-          test,
+          lessonId,
           transcribedWords,
           currentIndex
         );
@@ -61,7 +61,7 @@ export function useDtw(
     if (userPitch.length > 0) {
       dtw();
     }
-  }, [transcribedWords, userPitch, referencePitch, test, currentIndex]);
+  }, [transcribedWords, userPitch, referencePitch, lessonId, currentIndex]);
 
   const clearGraphData = () => {
     setAlignedGraphData([]);
