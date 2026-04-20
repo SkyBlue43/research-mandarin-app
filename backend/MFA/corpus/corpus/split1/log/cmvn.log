@@ -1,4 +1,0 @@
-2025-07-02 12:16:27,254 - kalpy.cmvn - INFO - Reading features from: /Users/sky43/Documents/MFA/corpus/corpus/feats.scp
-2025-07-02 12:16:27,254 - kalpy.cmvn - INFO - Reading spk2utt from: /Users/sky43/Documents/MFA/corpus/corpus/spk2utt.scp
-2025-07-02 12:16:27,254 - kalpy.cmvn - DEBUG - Writing to: ark,scp:/Users/sky43/Documents/MFA/corpus/corpus/cmvn.ark,/Users/sky43/Documents/MFA/corpus/corpus/cmvn.scp
-2025-07-02 12:16:27,254 - kalpy.cmvn - INFO - Processing speaker 1: 1 utterances

@@ -22,13 +22,13 @@ pnpm dev
 
 Then open `http://localhost:3000`.
 
-## Lint and Tests
+## Lint
 
 ```bash
 pnpm lint
-pnpm test
 ```
 
 ## Notes
 
 - Frontend expects `NEXT_PUBLIC_BACKEND_URL` in `frontend/.env.local`.
+- Reference audio is fetched from the backend `/sounds/*` endpoint, not from frontend static assets.

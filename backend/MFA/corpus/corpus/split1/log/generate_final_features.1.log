@@ -1,2 +1,0 @@
-2025-07-02 12:16:27,261 - kalpy.mfcc - 13455405056 - 1 - INFO - Processing 1-1: MFCC len = 286, Pitch len = 286, Combined len = 286
-2025-07-02 12:16:27,262 - kalpy.mfcc - 13455405056 - 1 - INFO - Done 1 utterances, errors on 0.

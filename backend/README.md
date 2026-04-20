@@ -9,6 +9,7 @@ This directory contains the Python backend for Mandarin Tone Lab.
 ## Requirements
 
 - Python 3.10+
+- `ffmpeg`
 
 ## Setup
 
@@ -22,7 +23,7 @@ pip install -r requirements.txt
 ## Run
 
 ```bash
-python main.py
+python -m uvicorn main:app --reload --port 8000
 ```
 
 ## Tests
@@ -35,3 +36,4 @@ pytest
 
 - Curriculum CSVs live in `backend/curriculum/`.
 - API routes live in `backend/routes/`.
+- The Vosk model is downloaded automatically the first time transcription is used.

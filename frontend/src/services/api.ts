@@ -1,4 +1,4 @@
-const BASE = process.env.NEXT_PUBLIC_BACKEND_URL;
+const BASE = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:8000";
 
 type PitchPoint = {
   time: number;
@@ -121,20 +121,4 @@ export const fetchCharacters = async (lessonId: string | null) => {
       err instanceof Error ? err.message : "Failed to fetch characters";
     throw new Error(message);
   }
-};
-
-export const shiftAudio = async (referenceBlob: Blob, userBlob: Blob) => {
-  const formData = new FormData();
-  formData.append("reference", referenceBlob);
-  formData.append("user", userBlob);
-  const result = await fetch(`${BASE}/clone`, {
-    method: "POST",
-    body: formData,
-  });
-  const blob = await result.blob();
-  const correctedAudioUrl = URL.createObjectURL(
-    new Blob([blob], { type: "audio/mp4" })
-  );
-
-  return correctedAudioUrl;
 };
