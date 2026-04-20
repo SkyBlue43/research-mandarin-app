@@ -2,6 +2,8 @@
 
 This directory contains the Python backend for Mandarin Tone Lab.
 
+For the simplest first-time setup, use the root [README](../README.md) and run the project from the repository root. This file is just a backend-specific reference.
+
 ## Main Entry
 
 - `backend/main.py` starts the API.
@@ -37,3 +39,4 @@ pytest
 - Curriculum CSVs live in `backend/curriculum/`.
 - API routes live in `backend/routes/`.
 - The Vosk model is downloaded automatically the first time transcription is used.
+- Reference lesson audio is served from `backend/sounds/`.

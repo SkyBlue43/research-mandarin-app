@@ -2,6 +2,8 @@
 
 This directory contains the Next.js UI for Mandarin Tone Lab.
 
+For most setup and run instructions, use the root [README](../README.md). This file is just a quick frontend-specific reference.
+
 ## Requirements
 
 - Node.js
@@ -30,5 +32,5 @@ pnpm lint
 
 ## Notes
 
-- Frontend expects `NEXT_PUBLIC_BACKEND_URL` in `frontend/.env.local`.
+- The frontend defaults to `http://localhost:8000`, so `frontend/.env.local` is only needed if your backend runs somewhere else.
 - Reference audio is fetched from the backend `/sounds/*` endpoint, not from frontend static assets.
