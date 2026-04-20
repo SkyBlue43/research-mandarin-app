@@ -4,6 +4,7 @@ type Props = {
   recording: boolean;
   onStart: () => void;
   onStop: () => void;
+  disabled?: boolean;
 };
 
 export default function Record(props: Props) {
@@ -22,8 +23,9 @@ export default function Record(props: Props) {
           props.recording
             ? "bg-red-700 hover:bg-red-800"
             : "control-btn-primary"
-        }`}
+        } disabled:cursor-not-allowed disabled:opacity-45`}
         onClick={handleRecording}
+        disabled={props.disabled}
       >
         {props.recording ? (
           <Square className="h-[clamp(1rem,4vw,1.5rem)] w-[clamp(1rem,4vw,1.5rem)]" />

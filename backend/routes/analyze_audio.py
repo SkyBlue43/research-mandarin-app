@@ -2,7 +2,11 @@ import parselmouth
 import numpy as np
 import shutil, os
 import tempfile
+from functools import lru_cache
+from pathlib import Path
 from pydub import AudioSegment
+
+SOUNDS_DIR = Path(__file__).resolve().parent.parent / "sounds"
 
 
 def clean_audio(pitch):
@@ -22,19 +26,10 @@ def clean_audio(pitch):
     return pitch
 
 
-def analyze_given_audio(infile):
-    if infile is None or infile.file is None:
-        raise ValueError("No audio file provided.")
-
-    input_tmp = tempfile.NamedTemporaryFile(delete=False, prefix="audio_", suffix=".in")
-    input_path = input_tmp.name
-    input_tmp.close()
+def analyze_audio_file(input_path, remove_input=False):
     output_path = tempfile.NamedTemporaryFile(delete=False, prefix="audio_", suffix=".wav").name
 
     try:
-        with open(input_path, "wb") as buffer:
-            shutil.copyfileobj(infile.file, buffer)
-
         audio = AudioSegment.from_file(input_path)
 
         #clean audio
@@ -83,9 +78,36 @@ def analyze_given_audio(infile):
             norm_pitch_values.append({"time": pitch['time'], 'frequency': freq})
 
     finally:
-        if input_path and os.path.exists(input_path):
+        if remove_input and input_path and os.path.exists(input_path):
             os.remove(input_path)
         if output_path and os.path.exists(output_path):
             os.remove(output_path)
 
     return {"pitch": norm_pitch_values}
+
+
+def analyze_given_audio(infile):
+    if infile is None or infile.file is None:
+        raise ValueError("No audio file provided.")
+
+    input_tmp = tempfile.NamedTemporaryFile(delete=False, prefix="audio_", suffix=".in")
+    input_path = input_tmp.name
+    input_tmp.close()
+
+    try:
+        with open(input_path, "wb") as buffer:
+            shutil.copyfileobj(infile.file, buffer)
+
+        return analyze_audio_file(input_path, remove_input=True)
+    finally:
+        if input_path and os.path.exists(input_path):
+            os.remove(input_path)
+
+
+@lru_cache(maxsize=512)
+def analyze_reference_audio(lesson_id, curriculum_id):
+    audio_path = SOUNDS_DIR / lesson_id / f"{curriculum_id}.mp3"
+    if not audio_path.exists():
+        raise FileNotFoundError("Reference audio not found")
+
+    return analyze_audio_file(str(audio_path))

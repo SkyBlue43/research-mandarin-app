@@ -3,7 +3,6 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { useCharacters } from "../../hooks/useCharacters";
-import { lessonOptions } from "src/lib/lessons";
 
 function FinishedContent() {
   const searchParams = useSearchParams();
@@ -65,11 +64,8 @@ function FinishedContent() {
             className="control-btn text-sm px-4 py-2"
             onClick={() => router.push("/")}
           >
-            Back To Lesson Picker
+            Back To Lessons
           </button>
-        </div>
-        <div className="mt-4 text-sm text-stone-500">
-          Available lessons: {lessonOptions.map((lesson) => lesson.label).join(", ")}
         </div>
       </div>
     </div>

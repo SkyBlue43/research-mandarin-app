@@ -4,6 +4,19 @@ from pathlib import Path
 CURRICULUM_DIR = Path(__file__).resolve().parent.parent / "curriculum"
 
 
+def get_available_lessons():
+    lesson_ids = sorted(
+        [path.stem for path in CURRICULUM_DIR.glob("*.csv") if path.stem.isdigit()],
+        key=lambda lesson_id: int(lesson_id),
+    )
+
+    return {
+        "lessons": [
+            {"id": lesson_id, "label": f"Lesson {lesson_id}"} for lesson_id in lesson_ids
+        ]
+    }
+
+
 def get_characters_from_curriculum(content_id):
     csv_path = CURRICULUM_DIR / f"{content_id}.csv"
     if not csv_path.exists():

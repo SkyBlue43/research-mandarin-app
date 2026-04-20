@@ -30,16 +30,6 @@ export function useCharacters(lessonId: string | null, currentPhrase: number) {
 
         const data = await fetchCharacters(lessonId);
         setCharacters(data.characters);
-
-        const curr = data.characters[currentPhrase];
-        if (curr) {
-          setCurrentCurriculumId(curr.curriculumId);
-          setCurrentSimplified(curr.simplified);
-          setCurrentTraditional(curr.traditional);
-          setCurrentPinyin(curr.pinyin);
-          setCurrentIndex(curr.index);
-          setCurrentHint(curr.hint);
-        }
       } catch (err: unknown) {
         const message =
           err instanceof Error ? err.message : "Failed to load characters";
@@ -51,7 +41,28 @@ export function useCharacters(lessonId: string | null, currentPhrase: number) {
     };
 
     loadCharacters();
-  }, [lessonId, currentPhrase]);
+  }, [lessonId]);
+
+  useEffect(() => {
+    const curr = characters[currentPhrase];
+
+    if (!curr) {
+      setCurrentCurriculumId("1");
+      setCurrentSimplified("");
+      setCurrentTraditional("");
+      setCurrentPinyin("");
+      setCurrentIndex("1");
+      setCurrentHint("");
+      return;
+    }
+
+    setCurrentCurriculumId(curr.curriculumId);
+    setCurrentSimplified(curr.simplified);
+    setCurrentTraditional(curr.traditional);
+    setCurrentPinyin(curr.pinyin);
+    setCurrentIndex(curr.index);
+    setCurrentHint(curr.hint);
+  }, [characters, currentPhrase]);
 
   return {
     characters,

@@ -122,3 +122,28 @@ export const fetchCharacters = async (lessonId: string | null) => {
     throw new Error(message);
   }
 };
+
+export const fetchLessons = async () => {
+  const result = await fetch(`${BASE}/lessons`);
+
+  if (!result.ok) {
+    const error = await result.json();
+    throw new Error(error.detail || "Failed to fetch lessons");
+  }
+
+  return result.json();
+};
+
+export const fetchReferencePitch = async (
+  lessonId: string,
+  curriculumId: string
+) => {
+  const result = await fetch(`${BASE}/reference-pitch/${lessonId}/${curriculumId}`);
+
+  if (!result.ok) {
+    const error = await result.json();
+    throw new Error(error.detail || "Failed to fetch reference pitch");
+  }
+
+  return result.json();
+};

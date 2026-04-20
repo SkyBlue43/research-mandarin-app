@@ -9,12 +9,15 @@ type Props = {
   setCurrentPhrase: (value: number | ((prev: number) => number)) => void;
   clearAllData: () => void;
   completionPath?: string;
+  disabled?: boolean;
 };
 
-export default function NextPhrase(props: Props) {
+export default function PhraseNavigationButton(props: Props) {
   const router = useRouter();
   const isFirstPhrase = props.currentPhrase === 0;
   const isLastPhrase = props.currentPhrase === props.characters.length - 1;
+  const isDisabled =
+    props.disabled || props.characters.length === 0 || Number.isNaN(props.currentPhrase);
 
   const navigateToPhrase = (nextPhrase: number) => {
     props.clearAllData();
@@ -22,7 +25,7 @@ export default function NextPhrase(props: Props) {
   };
 
   const handlePreviousClick = () => {
-    if (isFirstPhrase) {
+    if (isFirstPhrase || isDisabled) {
       return;
     }
 
@@ -30,13 +33,19 @@ export default function NextPhrase(props: Props) {
   };
 
   const handleNextClick = () => {
+    if (isDisabled) {
+      return;
+    }
+
     if (isLastPhrase) {
+      props.clearAllData();
       props.setCurrentPhrase(() => 0);
       const params = new URLSearchParams({ lesson: props.lessonId });
       router.push(`${props.completionPath ?? "/finished"}?${params.toString()}`);
-    } else {
-      navigateToPhrase(props.currentPhrase + 1);
+      return;
     }
+
+    navigateToPhrase(props.currentPhrase + 1);
   };
 
   if (props.direction === "previous") {
@@ -44,7 +53,7 @@ export default function NextPhrase(props: Props) {
       <button
         className="control-btn control-btn-primary text-sm md:text-base px-4 py-2.5 disabled:cursor-not-allowed disabled:opacity-45"
         onClick={handlePreviousClick}
-        disabled={isFirstPhrase}
+        disabled={isDisabled || isFirstPhrase}
       >
         Previous
       </button>
@@ -55,7 +64,7 @@ export default function NextPhrase(props: Props) {
     <button
       className="control-btn control-btn-primary text-sm md:text-base px-4 py-2.5 disabled:cursor-not-allowed disabled:opacity-45"
       onClick={handleNextClick}
-      disabled={props.characters.length === 0}
+      disabled={isDisabled}
     >
       {isLastPhrase ? "Finish Lesson" : "Next"}
     </button>

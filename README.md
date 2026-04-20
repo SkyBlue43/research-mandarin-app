@@ -22,9 +22,18 @@ The frontend defaults to `http://localhost:8000` for the backend, so `frontend/.
 NEXT_PUBLIC_BACKEND_URL=http://localhost:8000
 ```
 
-## Run Locally
+## Quick Start
 
-### 1) Backend
+```bash
+make setup
+make dev
+```
+
+`make setup` installs both sides of the app. `make dev` starts the backend on `http://localhost:8000` and the frontend on `http://localhost:3000`.
+
+## Manual Run
+
+### 1. Backend
 
 ```bash
 cd backend
@@ -34,7 +43,7 @@ pip install -r requirements.txt
 python -m uvicorn main:app --reload --port 8000
 ```
 
-### 2) Frontend
+### 2. Frontend
 
 ```bash
 cd frontend
@@ -47,22 +56,21 @@ Then open `http://localhost:3000`.
 ## First Run Notes
 
 - The backend downloads the Mandarin Vosk speech model the first time you use transcription. That initial run can take a while depending on your connection.
-- Reference lesson audio is served from the backend at `/sounds/*`.
+- Reference lesson audio and its cached pitch analysis are served from the backend.
+- The lesson picker is generated from the numeric CSV files in `backend/curriculum/`.
 
 ## Tests
 
 ### Backend
 
 ```bash
-cd backend
-pytest
+make backend-test
 ```
 
 ### Frontend
 
 ```bash
-cd frontend
-pnpm lint
+make frontend-lint
 ```
 
 ## Notes
